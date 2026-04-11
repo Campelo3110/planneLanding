@@ -1,9 +1,9 @@
 import { motion } from "@/components/motion"
+import { HeroVideo } from "@/components/hero-video"
 import type { getCopy } from "@/lib/i18n"
 import { Check, Star, ArrowDown, Zap } from "lucide-react"
 import Image from "next/image"
 
-const heroVideoSrc = "/videos/hero-bg.webm"
 type HeroCopy = ReturnType<typeof getCopy>["hero"]
 
 export function Hero({ copy }: { copy: HeroCopy }) {
@@ -11,26 +11,7 @@ export function Hero({ copy }: { copy: HeroCopy }) {
     <section className="relative isolate overflow-hidden">
       <div className="relative min-h-[100vh] flex items-center">
         <div className="absolute inset-0 z-0">
-          <Image
-            src="/images/hero-bg.jpg"
-            alt=""
-            fill
-            className="object-cover"
-            priority
-            sizes="100vw"
-          />
-          <video
-            className="absolute inset-0 h-full w-full object-cover brightness-[0.58] saturate-[1.08]"
-            poster="/images/hero-bg.jpg"
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="auto"
-            aria-hidden="true"
-          >
-            <source src={heroVideoSrc} type="video/webm" />
-          </video>
+          <HeroVideo />
           <div className="absolute inset-0 bg-gradient-to-b from-foreground/30 via-foreground/15 to-background/95" />
           <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-background/10 to-foreground/25" />
         </div>
