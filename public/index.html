@@ -4,152 +4,492 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#13b8a7" />
-    <meta name="description" content="Planne organiza tarefas, convidados, orcamento e ideias para eventos em um so lugar." />
-    <title>Planne | Planeje eventos sem estresse</title>
+    <meta
+      name="description"
+      content="Plataforma premium de planejamento de eventos. Transforme o caos em controle com organizacao, inteligencia e design sofisticado."
+    />
+    <title>Planne - Planeje com clareza</title>
+    <link rel="icon" href="./icon.svg" type="image/svg+xml" />
+    <link rel="preload" href="./fonts/inter-var-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
+    <input class="theme-state" type="checkbox" id="theme-toggle" aria-hidden="true" />
     <header class="site-header">
-      <a class="brand" href="#top"><span>P</span>Planne</a>
-      <nav>
-        <a href="#features" data-i18n="nav.features">Funcionalidades</a>
-        <a href="#how" data-i18n="nav.how">Como funciona</a>
-        <a href="#testimonials" data-i18n="nav.testimonials">Depoimentos</a>
+      <nav class="nav-shell" aria-label="Navegacao principal">
+        <a class="brand" href="#top" aria-label="Planne inicio">
+          <span class="brand-mark">P</span>
+          <span class="brand-name">planne</span>
+        </a>
+
+        <input class="menu-state" type="checkbox" id="menu-toggle" aria-hidden="true" />
+        <label class="menu-button" for="menu-toggle">
+          <span class="sr-only">Abrir menu</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 5h16M4 12h16M4 19h16" />
+          </svg>
+        </label>
+
+        <div class="nav-links">
+          <a href="#funcionalidades">Funcionalidades</a>
+          <a href="#como-funciona">Como funciona</a>
+          <a href="#depoimentos">Depoimentos</a>
+        </div>
+
+        <div class="nav-actions">
+          <label class="round-action" for="theme-toggle" role="button" tabindex="0" aria-label="Alternar tema">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.5 6.5 0 0 0 9.8 9.8Z" />
+            </svg>
+          </label>
+          <a class="ghost-link" href="/en">English</a>
+          <a class="nav-cta" href="#download">Baixar o app</a>
+        </div>
+
+        <div class="mobile-menu">
+          <a href="#funcionalidades">Funcionalidades</a>
+          <a href="#como-funciona">Como funciona</a>
+          <a href="#depoimentos">Depoimentos</a>
+          <a href="/en">English</a>
+          <a class="nav-cta" href="#download">Baixar o app</a>
+        </div>
       </nav>
-      <div class="actions">
-        <button type="button" data-lang-toggle>English</button>
-        <button type="button" data-theme-toggle aria-label="Alternar tema">☾</button>
-        <a class="header-cta" href="#download" data-i18n="nav.download">Baixar gratis</a>
-      </div>
     </header>
 
     <main id="top">
-      <section class="hero">
-        <div class="hero-content">
-          <div class="hero-copy">
-            <p class="badge"><b>+2.500</b> <span data-i18n="hero.badge">eventos organizados este mes</span></p>
-            <p class="segment-line" data-i18n="hero.segment">Para casamentos, aniversarios, formaturas e eventos de empresa</p>
-            <h1><span data-i18n="hero.title">Organize seu evento</span><strong data-i18n="hero.accent">sem estresse.</strong></h1>
-            <p data-i18n="hero.description">Centralize tarefas, convidados, orcamento e ideias em um app simples para chegar no grande dia com tudo sob controle.</p>
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-layer hero-layer-base"></div>
+        <div class="hero-layer hero-layer-grid"></div>
+
+        <div class="hero-inner">
+          <div class="hero-copy animate-in">
+            <div class="hero-badge">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M13 2 4 14h7l-1 8 10-13h-7l0-7Z" />
+              </svg>
+              <span><strong>+2.500</strong> eventos organizados este mes</span>
+            </div>
+
+            <h1 id="hero-title">
+              Seu evento dos sonhos,
+              <span>sem estresse.</span>
+            </h1>
+
+            <p class="hero-text">
+              Chega de planilhas confusas e anotacoes perdidas. Com o Planne, voce organiza tudo em um so
+              lugar e <strong>aproveita cada momento da preparacao</strong>.
+            </p>
+
             <div class="store-row">
-              <a class="store primary" href="#download" data-i18n="hero.cta">Baixar gratis agora</a>
+              <a class="store-button store-primary" href="#download">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path
+                    d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11Z"
+                  />
+                </svg>
+                Baixar gratis - App Store
+              </a>
+              <a class="store-button store-dark" href="#download">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path
+                    d="M3 20.5v-17c0-.59.34-1.11.84-1.35L13.69 12 3.84 21.85A1.5 1.5 0 0 1 3 20.5Zm13.81-5.38L6.05 21.34l8.49-8.49 2.27 2.27Zm3.35-4.31c.34.27.59.69.59 1.19s-.22.9-.57 1.18l-2.29 1.32L15.39 12l2.5-2.5 2.27 1.31ZM6.05 2.66l10.76 6.22-2.27 2.27-8.49-8.49Z"
+                  />
+                </svg>
+                Baixar gratis - Google Play
+              </a>
             </div>
-            <small data-i18n="hero.reassurance">Sem cartao de credito. Sem compromisso. Cancele quando quiser.</small>
-            <div class="hero-trust">
-              <span data-i18n="hero.trust1">4.9 App Store</span>
-              <span data-i18n="hero.trust2">+10 mil pessoas</span>
-              <span data-i18n="hero.trust3">Sem anuncios</span>
-            </div>
-          </div>
-          <div class="hero-preview" aria-hidden="true">
-            <div class="preview-head">
-              <span>Planne</span>
-              <b data-i18n="hero.previewDays">42 dias</b>
-            </div>
-            <div class="preview-event">
-              <small data-i18n="app.type">Celebracao</small>
-              <strong>Ana & Pedro</strong>
-            </div>
-            <div class="preview-stats">
-              <span><b>82%</b><span data-i18n="hero.previewBudget">orcado</span></span>
-              <span><b>124</b><span data-i18n="hero.previewGuests">convidados</span></span>
-            </div>
-            <div class="preview-list">
-              <span data-i18n="app.task1">Confirmar buffet</span>
-              <span data-i18n="app.task2">Enviar convites</span>
-              <span data-i18n="app.task3">Ajustar decoracao</span>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      <section class="section problem">
-        <div class="section-title">
-          <p class="eyebrow" data-i18n="problem.badge">Planejar nao precisa pesar</p>
-          <h2><span data-i18n="problem.title">Menos caos.</span> <strong data-i18n="problem.accent">Mais clareza.</strong></h2>
-          <p data-i18n="problem.description">O Planne troca planilhas, grupos e anotacoes soltas por um fluxo simples: veja o que falta, decida o proximo passo e siga em frente.</p>
-        </div>
-        <div class="cards three">
-          <article><h3 data-i18n="problem.p1">Tudo em um lugar</h3><p data-i18n="problem.p1t">Tarefas, convidados, orcamento e ideias ficam juntos desde o primeiro dia.</p></article>
-          <article><h3 data-i18n="problem.p2">Decisoes mais rapidas</h3><p data-i18n="problem.p2t">Voce sabe o que falta, o que custa e o que precisa ser resolvido agora.</p></article>
-          <article><h3 data-i18n="problem.p3">Mais tranquilidade</h3><p data-i18n="problem.p3t">Lembretes e progresso claro reduzem esquecimentos perto do evento.</p></article>
-        </div>
-      </section>
+            <p class="hero-note">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m20 6-11 11-5-5" />
+              </svg>
+              Sem cartao de credito. Sem compromisso. Cancele quando quiser.
+            </p>
 
-      <section class="section app">
-        <div class="section-title">
-          <p class="eyebrow" data-i18n="app.badge">O app em acao</p>
-          <h2 data-i18n="app.title">Tudo claro antes, durante e depois do evento</h2>
-          <p data-i18n="app.description">Acompanhe tarefas, convidados, orcamento e proximos passos sem pular entre planilhas, notas e mensagens.</p>
-        </div>
-        <div class="app-grid">
-          <article class="phone">
-            <div class="phone-cover">
-              <img src="./images/hero-bg.jpg" alt="Evento em celebracao" loading="lazy" />
-              <div><span data-i18n="app.type">Celebracao</span><b>Ana & Pedro</b></div>
+            <div class="trust-row" aria-label="Provas sociais">
+              <div class="trust-pill">
+                <span class="avatar-stack">
+                  <span>A</span>
+                  <span>M</span>
+                  <span>J</span>
+                  <span>R</span>
+                </span>
+                +10 mil pessoas planejando
+              </div>
+              <div class="trust-pill">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="m12 2.5 2.9 5.88 6.49.94-4.7 4.58 1.11 6.46L12 17.3l-5.8 3.06 1.11-6.46-4.7-4.58 6.49-.94L12 2.5Z" />
+                </svg>
+                <strong>4.9</strong> na App Store
+              </div>
             </div>
-            <div class="phone-body">
-              <div class="stats"><span><b>42</b><small data-i18n="hero.previewDaysShort">dias</small></span><span><b>82%</b><small data-i18n="hero.previewBudget">orcado</small></span><span><b>124</b><small data-i18n="hero.previewPeople">pessoas</small></span></div>
-              <h3 data-i18n="app.tasks">Proximas tarefas</h3>
-              <ul><li data-i18n="app.task1">Confirmar buffet</li><li data-i18n="app.task2">Enviar convites</li><li data-i18n="app.task3">Ajustar decoracao</li></ul>
-            </div>
-          </article>
-          <div class="panels">
-            <article><span data-i18n="app.budget">Orcamento</span><b>R$ 45k</b><i><em style="width:68%"></em></i><p data-i18n="app.available">R$ 14.400 ainda disponiveis</p></article>
-            <article><span data-i18n="app.guests">Convidados</span><b>96%</b><p data-i18n="app.confirmed">confirmados em tempo real</p><p class="chip">AM Ana Maria</p><p class="chip">JP Joao Pedro</p></article>
-            <article class="wide"><span data-i18n="app.timeline">Linha do tempo inteligente</span><div class="steps-inline"><b>Fornecedor</b><b>Pagamento</b><b>Checklist</b></div></article>
+
+            <a class="scroll-link" href="#problema">
+              <span>Ver mais</span>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 5v14m7-7-7 7-7-7" />
+              </svg>
+            </a>
           </div>
         </div>
       </section>
 
-      <section class="section alt" id="features">
-        <div class="section-title">
-          <p class="eyebrow" data-i18n="features.badge">Solucao completa</p>
-          <h2><span data-i18n="features.title">Tudo o que voce precisa,</span> <strong data-i18n="features.accent">na palma da sua mao</strong></h2>
-        </div>
-        <div class="cards">
-          <article><h3 data-i18n="features.f1">Visao completa</h3><p data-i18n="features.f1t">Tarefas, orcamento, convidados e prazos em um painel claro.</p></article>
-          <article><h3 data-i18n="features.f2">Orcamento sob controle</h3><p data-i18n="features.f2t">Veja gastos, reservas e o que ainda cabe no bolso.</p></article>
-          <article><h3 data-i18n="features.f3">Convidados inteligentes</h3><p data-i18n="features.f3t">Convide, acompanhe confirmacoes e organize tudo com menos atrito.</p></article>
-          <article><h3 data-i18n="features.f4">Lembretes automaticos</h3><p data-i18n="features.f4t">O Planne lembra reunioes, pagamentos e proximos passos.</p></article>
-          <article><h3 data-i18n="features.f5">Ideias organizadas</h3><p data-i18n="features.f5t">Fotos, referencias e notas ficam juntas e acessiveis.</p></article>
-          <article><h3 data-i18n="features.f6">Memorias do evento</h3><p data-i18n="features.f6t">Guarde fotos e videos em um album especial depois do grande dia.</p></article>
+      <section class="section problem-section" id="problema">
+        <div class="container">
+          <div class="section-head animate-in">
+            <span class="tag tag-rose">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 8v4m0 4h.01M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20Z" />
+              </svg>
+              Voce se identifica?
+            </span>
+            <h2>Planejar um evento nao deveria ser <span class="rose-text">tao dificil</span></h2>
+            <p>Sabemos como e. Voce quer viver um momento especial, mas acaba perdido em meio a tantos detalhes.</p>
+          </div>
+
+          <div class="card-grid three">
+            <article class="problem-card animate-in">
+              <span class="icon-box rose">01</span>
+              <h3>Mil coisas na cabeca</h3>
+              <p>Fornecedores, lista de convidados, orcamento, decoracao... Quando voce pensa que organizou tudo, lembra de mais uma coisa.</p>
+            </article>
+            <article class="problem-card animate-in delay-1">
+              <span class="icon-box rose">02</span>
+              <h3>Tempo que nunca sobra</h3>
+              <p>Entre trabalho, familia e vida pessoal, encontrar tempo para planejar cada detalhe parece impossivel.</p>
+            </article>
+            <article class="problem-card animate-in delay-2">
+              <span class="icon-box rose">03</span>
+              <h3>Estresse desnecessario</h3>
+              <p>Planilhas confusas, anotacoes espalhadas, mensagens perdidas. O caos transforma alegria em preocupacao.</p>
+            </article>
+          </div>
+
+          <div class="section-divider">
+            <span></span>
+            Mas nao precisa ser assim
+            <span></span>
+          </div>
         </div>
       </section>
 
-      <section class="section" id="how">
-        <div class="section-title">
-          <p class="eyebrow" data-i18n="how.badge">Super simples</p>
-          <h2><span data-i18n="how.title">Tres passos.</span> <strong data-i18n="how.accent">Evento organizado.</strong></h2>
-        </div>
-        <div class="cards three">
-          <article><h3 data-i18n="how.s1">Crie seu evento</h3><p data-i18n="how.s1t">Escolha o tipo de evento e comece em poucos segundos.</p></article>
-          <article><h3 data-i18n="how.s2">Adicione detalhes</h3><p data-i18n="how.s2t">Convidados, orcamento, tarefas e ideias entram no seu ritmo.</p></article>
-          <article><h3 data-i18n="how.s3">Aproveite o momento</h3><p data-i18n="how.s3t">Com tudo organizado, sobra espaco para curtir.</p></article>
+      <section class="section feature-section" id="funcionalidades">
+        <div class="container">
+          <div class="section-head animate-in">
+            <span class="tag tag-primary">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m20 6-11 11-5-5" />
+              </svg>
+              Solucao completa
+            </span>
+            <h2>Tudo o que voce precisa, <span>na palma da sua mao</span></h2>
+            <p>Funcionalidades pensadas com carinho para resolver seus problemas reais. Simples de usar, poderoso nos resultados.</p>
+          </div>
+
+          <div class="card-grid features">
+            <article class="feature-card animate-in">
+              <span class="icon-box primary">V</span>
+              <h3>Visao completa do evento</h3>
+              <p>Nunca mais perca de vista o que falta fazer. Dashboard intuitivo com tarefas, orcamento, convidados e prazos.</p>
+            </article>
+            <article class="feature-card animate-in delay-1">
+              <span class="icon-box primary">R$</span>
+              <h3>Orcamento sob controle</h3>
+              <p>Evite surpresas desagradaveis no final. Veja quanto ja gastou e quanto ainda pode investir.</p>
+            </article>
+            <article class="feature-card animate-in delay-2">
+              <span class="icon-box primary">C</span>
+              <h3>Lista de convidados inteligente</h3>
+              <p>Saiba exatamente quem vem e quem nao vem. Convide por WhatsApp e acompanhe confirmacoes em tempo real.</p>
+            </article>
+            <article class="feature-card animate-in">
+              <span class="icon-box primary">L</span>
+              <h3>Lembretes automaticos</h3>
+              <p>Nunca mais esqueca de algo importante. Reuniao com fornecedor? Pagamento? Relaxa, a gente lembra.</p>
+            </article>
+            <article class="feature-card animate-in delay-1">
+              <span class="icon-box primary">I</span>
+              <h3>Suas ideias organizadas</h3>
+              <p>Guarde inspiracoes sem perder nenhuma. Fotos, referencias e anotacoes em um lugar so.</p>
+            </article>
+            <article class="feature-card animate-in delay-2">
+              <span class="icon-box primary">M</span>
+              <h3>Memorias do grande dia</h3>
+              <p>Reviva os melhores momentos sempre. Apos o evento, guarde fotos e videos em um album especial.</p>
+            </article>
+          </div>
+
+          <div class="feature-strip">
+            <span>Funciona offline</span>
+            <span>Sincroniza automaticamente</span>
+            <span>Compartilhe com parceiro(a)</span>
+          </div>
         </div>
       </section>
 
-      <section class="section alt" id="testimonials">
-        <div class="section-title">
-          <p class="eyebrow" data-i18n="testimonials.badge">+10 mil avaliacoes 5 estrelas</p>
-          <h2><span data-i18n="testimonials.title">O que estao dizendo</span> <strong data-i18n="testimonials.accent">sobre o Planne</strong></h2>
-        </div>
-        <div class="cards three">
-          <article><p data-i18n="testimonials.t1">"Em uma semana tudo estava no lugar. Foi um alivio."</p><b>Mariana Costa</b></article>
-          <article><p data-i18n="testimonials.t2">"Consegui fazer a festa que queria gastando menos."</p><b>Rafael Santos</b></article>
-          <article><p data-i18n="testimonials.t3">"As confirmacoes por WhatsApp facilitaram demais."</p><b>Juliana Mendes</b></article>
+      <section class="section how-section" id="como-funciona">
+        <div class="container">
+          <div class="section-head animate-in">
+            <span class="tag tag-primary">Super simples</span>
+            <h2>Tres passos. <span>Evento organizado.</span></h2>
+            <p>Sem complicacao, sem tutoriais longos. O Planne e tao intuitivo que voce aprende usando.</p>
+          </div>
+
+          <div class="step-list">
+            <article class="step-row animate-in">
+              <div class="step-copy">
+                <span class="step-number">01</span>
+                <p class="step-kicker">Menos de 2 minutos</p>
+                <h3>Baixe o app e crie seu evento</h3>
+                <p>Abra o app, escolha o tipo de evento e pronto. Nada de formularios interminaveis ou configuracoes complicadas.</p>
+              </div>
+              <div class="mock-phone compact">
+                <div class="phone-head">
+                  <span>Casamento</span>
+                  <strong>42 dias</strong>
+                </div>
+                <div class="phone-hero">
+                  <p>Ana & Pedro</p>
+                  <span>18 de maio</span>
+                </div>
+                <div class="mini-stats">
+                  <span><strong>124</strong>convidados</span>
+                  <span><strong>82%</strong>orcado</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="step-row reverse animate-in">
+              <div class="step-copy">
+                <span class="step-number">02</span>
+                <p class="step-kicker">Quanto tempo voce quiser</p>
+                <h3>Adicione os detalhes no seu ritmo</h3>
+                <p>Convidados, orcamento, tarefas, ideias... Adicione tudo aos poucos, quando puder. O app se adapta a voce.</p>
+              </div>
+              <div class="budget-card">
+                <div class="budget-top">
+                  <span>Orcamento</span>
+                  <strong>R$ 45k</strong>
+                </div>
+                <div class="progress"><span></span></div>
+                <p>R$ 14.400 ainda disponiveis</p>
+                <div class="budget-line">
+                  <span>Buffet</span>
+                  <strong>R$ 18.000</strong>
+                </div>
+                <div class="budget-line">
+                  <span>Decoracao</span>
+                  <strong>R$ 7.800</strong>
+                </div>
+              </div>
+            </article>
+
+            <article class="step-row animate-in">
+              <div class="step-copy">
+                <span class="step-number">03</span>
+                <p class="step-kicker">O dia que voce sonhou</p>
+                <h3>Relaxe e aproveite o momento</h3>
+                <p>Com tudo organizado, so resta uma coisa: curtir. O Planne cuida da organizacao, voce cuida de ser feliz.</p>
+              </div>
+              <div class="guest-card">
+                <div class="guest-score">
+                  <strong>96%</strong>
+                  <span>confirmados em tempo real</span>
+                </div>
+                <div class="guest-item"><b>AM</b><span>Ana Maria</span><small>Confirmado</small></div>
+                <div class="guest-item"><b>JP</b><span>Joao Pedro</span><small>Confirmado</small></div>
+                <div class="guest-item"><b>LC</b><span>Luiza Costa</span><small>Confirmado</small></div>
+              </div>
+            </article>
+          </div>
         </div>
       </section>
 
-      <section class="download" id="download">
-        <p class="eyebrow" data-i18n="cta.badge">Seu evento esta chegando. Comece agora!</p>
-        <h2 data-i18n="cta.title">Pronto para planejar sem estresse?</h2>
-        <p data-i18n="cta.description">Junte-se a milhares de pessoas criando momentos inesqueciveis com mais clareza.</p>
-        <div class="store-row center"><a class="store primary" href="#" data-i18n="cta.button">Baixar gratis agora</a></div>
+      <section class="section app-section" id="app">
+        <div class="container">
+          <div class="section-head animate-in">
+            <span class="tag tag-primary">O app em acao</span>
+            <h2>Tudo claro antes, durante e depois do evento</h2>
+            <p>Acompanhe tarefas, convidados, orcamento e proximos passos sem pular entre planilhas, notas e mensagens.</p>
+          </div>
+
+          <div class="device-grid">
+            <article class="app-device dashboard animate-in">
+              <div class="device-screen">
+                <div class="device-cover">
+                  <div>
+                    <span>Celebracao</span>
+                    <strong>Ana & Pedro</strong>
+                  </div>
+                </div>
+                <div class="device-body">
+                  <div class="mini-stats">
+                    <span><strong>42</strong>dias</span>
+                    <span><strong>82%</strong>orcado</span>
+                    <span><strong>124</strong>pessoas</span>
+                  </div>
+                  <h3>Proximas tarefas</h3>
+                  <ul class="task-list">
+                    <li>Confirmar buffet</li>
+                    <li>Enviar convites</li>
+                    <li>Ajustar decoracao</li>
+                  </ul>
+                </div>
+              </div>
+              <p class="device-caption">Painel principal</p>
+            </article>
+
+            <article class="app-device budget animate-in delay-1">
+              <div class="device-screen">
+                <div class="device-body">
+                  <span class="device-label">Financas</span>
+                  <h3>R$ 45.000</h3>
+                  <div class="progress tall"><span></span></div>
+                  <ul class="money-list">
+                    <li><span>Buffet</span><strong>R$ 18k</strong></li>
+                    <li><span>Decoracao</span><strong>R$ 7.8k</strong></li>
+                    <li><span>Musica</span><strong>R$ 4.2k</strong></li>
+                  </ul>
+                </div>
+              </div>
+              <p class="device-caption">Orcamento e pagamentos</p>
+            </article>
+
+            <article class="app-device guests animate-in delay-2">
+              <div class="device-screen">
+                <div class="device-body">
+                  <span class="device-label">Lista VIP</span>
+                  <h3>Convidados</h3>
+                  <div class="guest-item"><b>RS</b><span>Rafael Santos</span><small>Confirmado</small></div>
+                  <div class="guest-item"><b>JM</b><span>Juliana Mendes</span><small>Pendente</small></div>
+                  <div class="guest-item"><b>PH</b><span>Pedro Henrique</span><small>Confirmado</small></div>
+                </div>
+              </div>
+              <p class="device-caption">Convidados e confirmacoes</p>
+            </article>
+
+            <article class="app-device ideas animate-in delay-1">
+              <div class="device-screen">
+                <div class="device-body">
+                  <span class="device-label">Moodboard</span>
+                  <h3>Ideias salvas</h3>
+                  <div class="ideas-grid">
+                    <span>Mesa posta</span>
+                    <span>Flores</span>
+                    <span>Convite</span>
+                    <span>Entrada</span>
+                  </div>
+                  <div class="note-box">
+                    <strong>Notas</strong>
+                    <p>Tons claros, flores naturais e mesa com luz quente.</p>
+                  </div>
+                </div>
+              </div>
+              <p class="device-caption">Ideias e referencias</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section testimonial-section" id="depoimentos">
+        <div class="container">
+          <div class="section-head animate-in">
+            <span class="tag tag-primary">+10 mil avaliacoes 5 estrelas</span>
+            <h2>O que estao dizendo <span>sobre o Planne</span></h2>
+            <p>Historias reais de pessoas que transformaram o planejamento em algo prazeroso.</p>
+          </div>
+
+          <div class="testimonial-grid">
+            <article class="testimonial-card animate-in">
+              <div class="stars" aria-label="5 estrelas"><span></span><span></span><span></span><span></span><span></span></div>
+              <h3>Organizou o casamento em 1 semana</h3>
+              <p>"Eu estava surtando com tanta coisa pra organizar. Baixei o Planne e em 1 semana ja estava tudo no lugar. Chorei de alivio!"</p>
+              <div class="person"><span>MC</span><div><strong>Mariana Costa</strong><small>Casamento - SP</small></div></div>
+            </article>
+            <article class="testimonial-card animate-in delay-1">
+              <div class="stars" aria-label="5 estrelas"><span></span><span></span><span></span><span></span><span></span></div>
+              <h3>Economizou 20% no orcamento</h3>
+              <p>"O controle de orcamento e sensacional. Consegui fazer a festa que queria gastando 20% menos do que tinha planejado."</p>
+              <div class="person"><span>RS</span><div><strong>Rafael Santos</strong><small>Aniversario de 30 anos - RJ</small></div></div>
+            </article>
+            <article class="testimonial-card animate-in delay-2">
+              <div class="stars" aria-label="5 estrelas"><span></span><span></span><span></span><span></span><span></span></div>
+              <h3>Confirmacoes em minutos</h3>
+              <p>"A lista de convidados com confirmacao por WhatsApp e genial! Todas minhas amigas confirmaram em minutos."</p>
+              <div class="person"><span>JM</span><div><strong>Juliana Mendes</strong><small>Cha de bebe - MG</small></div></div>
+            </article>
+            <article class="testimonial-card animate-in">
+              <div class="stars" aria-label="5 estrelas"><span></span><span></span><span></span><span></span><span></span></div>
+              <h3>150 convidados organizados</h3>
+              <p>"Planejei a formatura da minha turma inteira pelo app. 150 pessoas, zero estresse. Recomendo demais!"</p>
+              <div class="person"><span>PH</span><div><strong>Pedro Henrique</strong><small>Formatura - PR</small></div></div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="metrics-section">
+        <div class="container metrics-grid">
+          <article><strong>2.5k+</strong><span>eventos este mes</span></article>
+          <article><strong>50k+</strong><span>convidados organizados</span></article>
+          <article><strong>R$ 2M+</strong><span>em orcamentos gerenciados</span></article>
+          <article><strong>98%</strong><span>recomendam para amigos</span></article>
+        </div>
+      </section>
+
+      <section class="download-section" id="download">
+        <div class="container">
+          <div class="download-panel animate-in">
+            <span class="tag tag-light">Seu evento esta chegando. Comece agora!</span>
+            <h2>Pronto para planejar sem estresse?</h2>
+            <p>Junte-se a milhares de pessoas que ja descobriram uma forma mais leve e organizada de criar momentos inesqueciveis.</p>
+            <div class="store-row center">
+              <a class="store-button store-primary" href="#">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path
+                    d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11Z"
+                  />
+                </svg>
+                App Store
+              </a>
+              <a class="store-button store-light" href="#">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path
+                    d="M3 20.5v-17c0-.59.34-1.11.84-1.35L13.69 12 3.84 21.85A1.5 1.5 0 0 1 3 20.5Zm13.81-5.38L6.05 21.34l8.49-8.49 2.27 2.27Zm3.35-4.31c.34.27.59.69.59 1.19s-.22.9-.57 1.18l-2.29 1.32L15.39 12l2.5-2.5 2.27 1.31ZM6.05 2.66l10.76 6.22-2.27 2.27-8.49-8.49Z"
+                  />
+                </svg>
+                Google Play
+              </a>
+            </div>
+            <div class="download-trust">
+              <span>100% gratuito</span>
+              <span>Sem anuncios</span>
+              <span>Seus dados protegidos</span>
+            </div>
+          </div>
+        </div>
       </section>
     </main>
 
-    <footer><a class="brand" href="#top"><span>P</span>Planne</a><p data-i18n="footer.text">Planejamento de eventos com clareza, elegancia e carinho.</p><small>© 2026 Planne</small></footer>
-    <script src="./app.js" defer></script>
+    <footer class="site-footer">
+      <div class="container footer-grid">
+        <div>
+          <a class="brand footer-brand" href="#top">
+            <span class="brand-mark">P</span>
+            <span class="brand-name">planne</span>
+          </a>
+          <p>Planejamento de eventos com clareza, elegancia e aquele carinho que faz a diferenca.</p>
+        </div>
+        <nav aria-label="Links do rodape">
+          <a href="#funcionalidades">Funcionalidades</a>
+          <a href="#como-funciona">Como funciona</a>
+          <a href="#depoimentos">Depoimentos</a>
+          <a href="#download">Baixar o app</a>
+        </nav>
+        <div class="footer-note">
+          <small>&copy; 2026 Planne. Todos os direitos reservados.</small>
+        </div>
+      </div>
+    </footer>
   </body>
 </html>
