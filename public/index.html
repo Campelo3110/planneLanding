@@ -1,495 +1,664 @@
-<!doctype html>
-<html lang="pt-BR">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#13b8a7" />
-    <meta
-      name="description"
-      content="Plataforma premium de planejamento de eventos. Transforme o caos em controle com organizacao, inteligencia e design sofisticado."
-    />
-    <title>Planne - Planeje com clareza</title>
-    <link rel="icon" href="./icon.svg" type="image/svg+xml" />
-    <link rel="preload" href="./fonts/inter-var-latin.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="stylesheet" href="./styles.css" />
-  </head>
-  <body>
-    <input class="theme-state" type="checkbox" id="theme-toggle" aria-hidden="true" />
-    <header class="site-header">
-      <nav class="nav-shell" aria-label="Navegacao principal">
-        <a class="brand" href="#top" aria-label="Planne inicio">
-          <span class="brand-mark">P</span>
-          <span class="brand-name">planne</span>
-        </a>
+<!DOCTYPE html>
+<html lang="pt-br" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planne - Seu evento dos sonhos</title>
+    
+    <link href="./styles.css" rel="stylesheet">
 
-        <input class="menu-state" type="checkbox" id="menu-toggle" aria-hidden="true" />
-        <label class="menu-button" for="menu-toggle">
-          <span class="sr-only">Abrir menu</span>
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M4 5h16M4 12h16M4 19h16" />
-          </svg>
-        </label>
+    <script src="https://unpkg.com/lucide@latest" defer></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
-        <div class="nav-links">
-          <a href="#funcionalidades">Funcionalidades</a>
-          <a href="#como-funciona">Como funciona</a>
-          <a href="#depoimentos">Depoimentos</a>
+    <style>
+        .hover-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px -12px rgba(13, 148, 136, 0.15);
+        }
+        .line-grow {
+            width: 0;
+            transition: width 0.6s ease-out;
+        }
+        .aos-animate .line-grow {
+            width: 48px;
+        }
+        .progress-bar { width: 0; transition: width 1.5s ease-out; }
+        .aos-animate .progress-bar { width: 100%; }
+        
+        #mobile-menu { display: none; }
+        #mobile-menu.open { display: block; }
+    </style>
+</head>
+<body class="bg-background text-foreground font-sans antialiased overflow-x-hidden">
+
+    <header class="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/40">
+        <nav class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+            <a href="/" class="flex items-center gap-2.5 group">
+                <div class="w-10 h-10 rounded-2xl bg-primary flex items-center justify-center shadow-lg shadow-primary/30 group-hover:shadow-primary/50 transition-all group-hover:scale-105">
+                    <span class="text-primary-foreground font-bold text-xl">P</span>
+                </div>
+                <span class="text-xl font-semibold text-foreground tracking-tight">planne</span>
+            </a>
+            
+            <button id="menu-btn" type="button" class="lg:hidden p-2 text-foreground hover:text-primary transition-colors">
+                <i data-lucide="menu" class="h-6 w-6"></i>
+            </button>
+
+            <div class="hidden lg:flex lg:items-center lg:gap-10">
+                <a href="#funcionalidades" class="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">Funcionalidades</a>
+                <a href="#como-funciona" class="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">Como funciona</a>
+                <a href="#depoimentos" class="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">Depoimentos</a>
+            </div>
+
+            <div class="hidden lg:flex lg:items-center lg:gap-3">
+                <button class="text-sm font-medium bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/30 hover:shadow-primary/50 rounded-full px-6 py-2 transition-all">
+                    Baixar o app
+                </button>
+            </div>
+        </nav>
+
+        <div id="mobile-menu" class="absolute top-full left-0 right-0 bg-background/95 backdrop-blur-lg border-b border-border shadow-xl">
+            <div class="px-6 py-6 space-y-4">
+                <a href="#funcionalidades" class="block py-3 text-base font-medium text-foreground hover:text-primary transition-colors">Funcionalidades</a>
+                <a href="#como-funciona" class="block py-3 text-base font-medium text-foreground hover:text-primary transition-colors">Como funciona</a>
+                <a href="#depoimentos" class="block py-3 text-base font-medium text-foreground hover:text-primary transition-colors">Depoimentos</a>
+                <hr class="border-border" />
+                <div class="flex flex-col gap-3 pt-2">
+                    <button class="w-full py-3 justify-center bg-primary text-primary-foreground font-medium shadow-lg shadow-primary/30 rounded-full">
+                        Baixar o app
+                    </button>
+                </div>
+            </div>
         </div>
-
-        <div class="nav-actions">
-          <label class="round-action" for="theme-toggle" role="button" tabindex="0" aria-label="Alternar tema">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.5 6.5 0 0 0 9.8 9.8Z" />
-            </svg>
-          </label>
-          <a class="ghost-link" href="/en">English</a>
-          <a class="nav-cta" href="#download">Baixar o app</a>
-        </div>
-
-        <div class="mobile-menu">
-          <a href="#funcionalidades">Funcionalidades</a>
-          <a href="#como-funciona">Como funciona</a>
-          <a href="#depoimentos">Depoimentos</a>
-          <a href="/en">English</a>
-          <a class="nav-cta" href="#download">Baixar o app</a>
-        </div>
-      </nav>
     </header>
 
-    <main id="top">
-      <section class="hero" aria-labelledby="hero-title">
-        <div class="hero-layer hero-layer-base"></div>
-        <div class="hero-layer hero-layer-grid"></div>
-
-        <div class="hero-inner">
-          <div class="hero-copy animate-in">
-            <div class="hero-badge">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M13 2 4 14h7l-1 8 10-13h-7l0-7Z" />
-              </svg>
-              <span><strong>+2.500</strong> eventos organizados este mes</span>
+    <section class="relative overflow-hidden">
+        <div class="relative min-h-[100vh] flex items-center">
+            <div class="absolute inset-0 -z-10">
+                <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=2000&auto=format&fit=crop" alt="Evento" class="object-cover w-full h-full" />
+                <div class="absolute inset-0 bg-gradient-to-b from-background/95 via-background/80 to-background"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-background/60 via-transparent to-background/60"></div>
             </div>
 
-            <h1 id="hero-title">
-              Seu evento dos sonhos,
-              <span>sem estresse.</span>
-            </h1>
+            <div class="absolute top-40 left-20 w-64 h-64 bg-primary/20 rounded-full blur-3xl animate-subtle-pulse"></div>
+            <div class="absolute bottom-40 right-20 w-80 h-80 bg-accent/30 rounded-full blur-3xl animate-subtle-pulse" style="animation-delay: 1.5s;"></div>
 
-            <p class="hero-text">
-              Chega de planilhas confusas e anotacoes perdidas. Com o Planne, voce organiza tudo em um so
-              lugar e <strong>aproveita cada momento da preparacao</strong>.
-            </p>
+            <div class="mx-auto max-w-6xl px-6 py-32 lg:py-40 w-full mt-10">
+                <div class="mx-auto max-w-3xl text-center">
+                    
+                    <div data-aos="fade-down" data-aos-delay="200" class="mb-8 flex justify-center">
+                        <div class="inline-flex items-center gap-2 rounded-full bg-primary/10 backdrop-blur-sm border border-primary/30 px-5 py-2.5 shadow-lg">
+                            <i data-lucide="zap" class="h-4 w-4 text-primary fill-primary animate-icon-wiggle"></i>
+                            <span class="text-sm font-medium text-foreground">
+                                <span class="text-primary font-bold">+2.500</span> eventos organizados este mês
+                            </span>
+                        </div>
+                    </div>
 
-            <div class="store-row">
-              <a class="store-button store-primary" href="#download">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path
-                    d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11Z"
-                  />
-                </svg>
-                Baixar gratis - App Store
-              </a>
-              <a class="store-button store-dark" href="#download">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path
-                    d="M3 20.5v-17c0-.59.34-1.11.84-1.35L13.69 12 3.84 21.85A1.5 1.5 0 0 1 3 20.5Zm13.81-5.38L6.05 21.34l8.49-8.49 2.27 2.27Zm3.35-4.31c.34.27.59.69.59 1.19s-.22.9-.57 1.18l-2.29 1.32L15.39 12l2.5-2.5 2.27 1.31ZM6.05 2.66l10.76 6.22-2.27 2.27-8.49-8.49Z"
-                  />
-                </svg>
-                Baixar gratis - Google Play
-              </a>
+                    <h1 data-aos="fade-up" data-aos-delay="300" class="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight text-foreground leading-[1.1]">
+                        Seu evento dos sonhos,
+                        <span class="block mt-2 bg-gradient-to-r from-primary via-primary to-teal-400 bg-clip-text text-transparent">
+                            sem estresse.
+                        </span>
+                    </h1>
+
+                    <p data-aos="fade-up" data-aos-delay="400" class="mt-8 text-lg lg:text-xl leading-relaxed text-muted-foreground max-w-2xl mx-auto">
+                        Chega de planilhas confusas e anotações perdidas. 
+                        Com o Planne, você organiza tudo em um só lugar e 
+                        <span class="text-foreground font-medium"> aproveita cada momento da preparação</span>.
+                    </p>
+
+                    <div data-aos="fade-up" data-aos-delay="500" class="mt-10 flex flex-col items-center gap-6">
+                        <div class="flex flex-col sm:flex-row items-center gap-4">
+                            <a href="#" class="inline-flex items-center gap-3 bg-primary hover:bg-primary/90 text-primary-foreground px-8 h-16 rounded-2xl shadow-xl shadow-primary/30 hover:-translate-y-1 transition-all text-lg font-semibold">
+                                <svg class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+                                </svg>
+                                Baixar - App Store
+                            </a>
+                            <a href="#" class="inline-flex items-center gap-3 bg-foreground hover:bg-foreground/90 text-background px-8 h-16 rounded-2xl shadow-xl hover:-translate-y-1 transition-all text-lg font-semibold">
+                                <svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.53,12.9 20.18,13.18L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/>
+                                </svg>
+                                Baixar - Google Play
+                            </a>
+                        </div>
+                        
+                        <p data-aos="fade-in" data-aos-delay="700" class="text-sm text-muted-foreground flex items-center gap-2">
+                            <i data-lucide="check" class="w-4 h-4 text-primary"></i>
+                            Sem cartão de crédito. Sem compromisso. Cancele quando quiser.
+                        </p>
+                    </div>
+
+                    <div data-aos="fade-up" data-aos-delay="600" class="mt-12 flex flex-wrap items-center justify-center gap-6 text-sm">
+                        <div class="flex items-center gap-2 bg-card/80 backdrop-blur-sm rounded-full px-4 py-2 border border-border">
+                            <div class="flex -space-x-2">
+                                <div class="w-7 h-7 rounded-full bg-gradient-to-br from-primary/20 to-primary/40 border-2 border-card flex items-center justify-center"><span class="text-xs font-medium text-primary">A</span></div>
+                                <div class="w-7 h-7 rounded-full bg-gradient-to-br from-primary/20 to-primary/40 border-2 border-card flex items-center justify-center"><span class="text-xs font-medium text-primary">M</span></div>
+                                <div class="w-7 h-7 rounded-full bg-gradient-to-br from-primary/20 to-primary/40 border-2 border-card flex items-center justify-center"><span class="text-xs font-medium text-primary">J</span></div>
+                                <div class="w-7 h-7 rounded-full bg-gradient-to-br from-primary/20 to-primary/40 border-2 border-card flex items-center justify-center"><span class="text-xs font-medium text-primary">R</span></div>
+                            </div>
+                            <span class="text-muted-foreground">+10 mil pessoas planejando</span>
+                        </div>
+                        <div class="flex items-center gap-2 bg-card/80 backdrop-blur-sm rounded-full px-4 py-2 border border-border">
+                            <i data-lucide="star" class="h-5 w-5 text-amber-400 fill-amber-400"></i>
+                            <span class="font-semibold text-foreground">4.9</span>
+                            <span class="text-muted-foreground">na App Store</span>
+                        </div>
+                    </div>
+
+                    <div data-aos="fade-in" data-aos-delay="800" class="mt-16 flex justify-center">
+                        <a href="#problema" class="flex flex-col items-center gap-2 text-muted-foreground hover:text-primary transition-colors animate-bounce">
+                            <span class="text-sm">Ver mais</span>
+                            <i data-lucide="arrow-down" class="w-5 h-5"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="problema" class="py-20 lg:py-28 relative">
+        <div class="mx-auto max-w-6xl px-6">
+            <div class="mx-auto max-w-3xl text-center mb-14" data-aos="fade-up">
+                <div class="inline-flex items-center gap-2 bg-rose-50 border border-rose-200 rounded-full px-4 py-2 mb-6">
+                    <i data-lucide="alert-circle" class="w-4 h-4 text-rose-500"></i>
+                    <span class="text-sm font-medium text-rose-700">Você se identifica?</span>
+                </div>
+                
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-foreground">
+                    Planejar um evento não deveria ser 
+                    <span class="text-rose-500"> tão difícil</span>
+                </h2>
+                
+                <p class="mt-5 text-lg text-muted-foreground">
+                    Sabemos como é. Você quer viver um momento especial, mas acaba perdido em meio a tantos detalhes.
+                </p>
             </div>
 
-            <p class="hero-note">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="m20 6-11 11-5-5" />
-              </svg>
-              Sem cartao de credito. Sem compromisso. Cancele quando quiser.
-            </p>
+            <div class="grid md:grid-cols-3 gap-6">
+                <div data-aos="fade-up" data-aos-delay="100">
+                    <div class="hover-card transition-all duration-300 bg-gradient-to-b from-rose-50/50 to-card rounded-3xl p-8 border border-rose-100 h-full">
+                        <div class="w-12 h-12 rounded-2xl bg-rose-100 flex items-center justify-center mb-5">
+                            <i data-lucide="brain" class="w-6 h-6 text-rose-500"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-foreground mb-3">Mil coisas na cabeça</h3>
+                        <p class="text-muted-foreground leading-relaxed">
+                            Fornecedores, lista de convidados, orçamento, decoração... Quando você pensa que organizou tudo, lembra de mais uma coisa.
+                        </p>
+                    </div>
+                </div>
+                <div data-aos="fade-up" data-aos-delay="200">
+                    <div class="hover-card transition-all duration-300 bg-gradient-to-b from-rose-50/50 to-card rounded-3xl p-8 border border-rose-100 h-full">
+                        <div class="w-12 h-12 rounded-2xl bg-rose-100 flex items-center justify-center mb-5">
+                            <i data-lucide="clock" class="w-6 h-6 text-rose-500"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-foreground mb-3">Tempo que nunca sobra</h3>
+                        <p class="text-muted-foreground leading-relaxed">
+                            Entre trabalho, família e vida pessoal, encontrar tempo para planejar cada detalhe parece impossível.
+                        </p>
+                    </div>
+                </div>
+                <div data-aos="fade-up" data-aos-delay="300">
+                    <div class="hover-card transition-all duration-300 bg-gradient-to-b from-rose-50/50 to-card rounded-3xl p-8 border border-rose-100 h-full">
+                        <div class="w-12 h-12 rounded-2xl bg-rose-100 flex items-center justify-center mb-5">
+                            <i data-lucide="frown" class="w-6 h-6 text-rose-500"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-foreground mb-3">Estresse desnecessário</h3>
+                        <p class="text-muted-foreground leading-relaxed">
+                            Planilhas confusas, anotações espalhadas, mensagens perdidas. O caos transforma alegria em preocupação.
+                        </p>
+                    </div>
+                </div>
+            </div>
 
-            <div class="trust-row" aria-label="Provas sociais">
-              <div class="trust-pill">
-                <span class="avatar-stack">
-                  <span>A</span>
-                  <span>M</span>
-                  <span>J</span>
-                  <span>R</span>
+            <div class="mt-16 text-center" data-aos="fade-up" data-aos-delay="400">
+                <div class="inline-flex items-center gap-3 text-primary font-semibold text-lg">
+                    <div class="line-grow h-px bg-primary/30"></div>
+                    Mas não precisa ser assim
+                    <div class="line-grow h-px bg-primary/30"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="funcionalidades" class="py-24 lg:py-32 bg-muted/30 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl animate-subtle-pulse"></div>
+        <div class="absolute bottom-0 left-0 w-72 h-72 bg-accent/30 rounded-full blur-3xl animate-subtle-pulse" style="animation-delay: 2s;"></div>
+
+        <div class="mx-auto max-w-6xl px-6 relative">
+            <div class="mx-auto max-w-2xl text-center mb-16 lg:mb-20" data-aos="fade-up">
+                <span class="inline-flex items-center gap-2 text-primary font-semibold text-sm tracking-wide uppercase mb-4 bg-primary/10 px-4 py-2 rounded-full">
+                    <i data-lucide="check" class="w-4 h-4"></i>
+                    Solução completa
                 </span>
-                +10 mil pessoas planejando
-              </div>
-              <div class="trust-pill">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="m12 2.5 2.9 5.88 6.49.94-4.7 4.58 1.11 6.46L12 17.3l-5.8 3.06 1.11-6.46-4.7-4.58 6.49-.94L12 2.5Z" />
-                </svg>
-                <strong>4.9</strong> na App Store
-              </div>
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-foreground">
+                    Tudo o que você precisa,
+                    <span class="block text-primary mt-1">na palma da sua mão</span>
+                </h2>
+                <p class="mt-6 text-lg text-muted-foreground">
+                    Funcionalidades pensadas com carinho para resolver seus problemas reais. 
+                    Simples de usar, poderoso nos resultados.
+                </p>
             </div>
 
-            <a class="scroll-link" href="#problema">
-              <span>Ver mais</span>
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M12 5v14m7-7-7 7-7-7" />
-              </svg>
-            </a>
-          </div>
-        </div>
-      </section>
-
-      <section class="section problem-section" id="problema">
-        <div class="container">
-          <div class="section-head animate-in">
-            <span class="tag tag-rose">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M12 8v4m0 4h.01M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20Z" />
-              </svg>
-              Voce se identifica?
-            </span>
-            <h2>Planejar um evento nao deveria ser <span class="rose-text">tao dificil</span></h2>
-            <p>Sabemos como e. Voce quer viver um momento especial, mas acaba perdido em meio a tantos detalhes.</p>
-          </div>
-
-          <div class="card-grid three">
-            <article class="problem-card animate-in">
-              <span class="icon-box rose">01</span>
-              <h3>Mil coisas na cabeca</h3>
-              <p>Fornecedores, lista de convidados, orcamento, decoracao... Quando voce pensa que organizou tudo, lembra de mais uma coisa.</p>
-            </article>
-            <article class="problem-card animate-in delay-1">
-              <span class="icon-box rose">02</span>
-              <h3>Tempo que nunca sobra</h3>
-              <p>Entre trabalho, familia e vida pessoal, encontrar tempo para planejar cada detalhe parece impossivel.</p>
-            </article>
-            <article class="problem-card animate-in delay-2">
-              <span class="icon-box rose">03</span>
-              <h3>Estresse desnecessario</h3>
-              <p>Planilhas confusas, anotacoes espalhadas, mensagens perdidas. O caos transforma alegria em preocupacao.</p>
-            </article>
-          </div>
-
-          <div class="section-divider">
-            <span></span>
-            Mas nao precisa ser assim
-            <span></span>
-          </div>
-        </div>
-      </section>
-
-      <section class="section feature-section" id="funcionalidades">
-        <div class="container">
-          <div class="section-head animate-in">
-            <span class="tag tag-primary">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="m20 6-11 11-5-5" />
-              </svg>
-              Solucao completa
-            </span>
-            <h2>Tudo o que voce precisa, <span>na palma da sua mao</span></h2>
-            <p>Funcionalidades pensadas com carinho para resolver seus problemas reais. Simples de usar, poderoso nos resultados.</p>
-          </div>
-
-          <div class="card-grid features">
-            <article class="feature-card animate-in">
-              <span class="icon-box primary">V</span>
-              <h3>Visao completa do evento</h3>
-              <p>Nunca mais perca de vista o que falta fazer. Dashboard intuitivo com tarefas, orcamento, convidados e prazos.</p>
-            </article>
-            <article class="feature-card animate-in delay-1">
-              <span class="icon-box primary">R$</span>
-              <h3>Orcamento sob controle</h3>
-              <p>Evite surpresas desagradaveis no final. Veja quanto ja gastou e quanto ainda pode investir.</p>
-            </article>
-            <article class="feature-card animate-in delay-2">
-              <span class="icon-box primary">C</span>
-              <h3>Lista de convidados inteligente</h3>
-              <p>Saiba exatamente quem vem e quem nao vem. Convide por WhatsApp e acompanhe confirmacoes em tempo real.</p>
-            </article>
-            <article class="feature-card animate-in">
-              <span class="icon-box primary">L</span>
-              <h3>Lembretes automaticos</h3>
-              <p>Nunca mais esqueca de algo importante. Reuniao com fornecedor? Pagamento? Relaxa, a gente lembra.</p>
-            </article>
-            <article class="feature-card animate-in delay-1">
-              <span class="icon-box primary">I</span>
-              <h3>Suas ideias organizadas</h3>
-              <p>Guarde inspiracoes sem perder nenhuma. Fotos, referencias e anotacoes em um lugar so.</p>
-            </article>
-            <article class="feature-card animate-in delay-2">
-              <span class="icon-box primary">M</span>
-              <h3>Memorias do grande dia</h3>
-              <p>Reviva os melhores momentos sempre. Apos o evento, guarde fotos e videos em um album especial.</p>
-            </article>
-          </div>
-
-          <div class="feature-strip">
-            <span>Funciona offline</span>
-            <span>Sincroniza automaticamente</span>
-            <span>Compartilhe com parceiro(a)</span>
-          </div>
-        </div>
-      </section>
-
-      <section class="section how-section" id="como-funciona">
-        <div class="container">
-          <div class="section-head animate-in">
-            <span class="tag tag-primary">Super simples</span>
-            <h2>Tres passos. <span>Evento organizado.</span></h2>
-            <p>Sem complicacao, sem tutoriais longos. O Planne e tao intuitivo que voce aprende usando.</p>
-          </div>
-
-          <div class="step-list">
-            <article class="step-row animate-in">
-              <div class="step-copy">
-                <span class="step-number">01</span>
-                <p class="step-kicker">Menos de 2 minutos</p>
-                <h3>Baixe o app e crie seu evento</h3>
-                <p>Abra o app, escolha o tipo de evento e pronto. Nada de formularios interminaveis ou configuracoes complicadas.</p>
-              </div>
-              <div class="mock-phone compact">
-                <div class="phone-head">
-                  <span>Casamento</span>
-                  <strong>42 dias</strong>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div data-aos="fade-up" data-aos-delay="100" class="hover-card group relative bg-card rounded-3xl p-8 border border-border hover:border-primary/30 transition-colors h-full">
+                    <div class="w-14 h-14 rounded-2xl bg-primary/10 group-hover:bg-primary/20 flex items-center justify-center mb-6 transition-colors">
+                        <i data-lucide="layout-dashboard" class="w-7 h-7 text-primary"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-foreground mb-2">Visão completa do evento</h3>
+                    <p class="text-primary font-medium text-sm mb-3">Nunca mais perca de vista o que falta fazer</p>
+                    <p class="text-muted-foreground leading-relaxed">Dashboard intuitivo que mostra tudo: tarefas, orçamento, convidados e prazos. Você no controle total.</p>
                 </div>
-                <div class="phone-hero">
-                  <p>Ana & Pedro</p>
-                  <span>18 de maio</span>
+                <div data-aos="fade-up" data-aos-delay="150" class="hover-card group relative bg-card rounded-3xl p-8 border border-border hover:border-primary/30 transition-colors h-full">
+                    <div class="w-14 h-14 rounded-2xl bg-amber-50 group-hover:bg-amber-100 flex items-center justify-center mb-6 transition-colors">
+                        <i data-lucide="wallet" class="w-7 h-7 text-amber-600"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-foreground mb-2">Orçamento sob controle</h3>
+                    <p class="text-primary font-medium text-sm mb-3">Evite surpresas desagradáveis no final</p>
+                    <p class="text-muted-foreground leading-relaxed">Veja quanto já gastou e quanto ainda pode investir. Gráficos simples que qualquer um entende.</p>
                 </div>
-                <div class="mini-stats">
-                  <span><strong>124</strong>convidados</span>
-                  <span><strong>82%</strong>orcado</span>
+                <div data-aos="fade-up" data-aos-delay="200" class="hover-card group relative bg-card rounded-3xl p-8 border border-border hover:border-primary/30 transition-colors h-full">
+                    <div class="w-14 h-14 rounded-2xl bg-blue-50 group-hover:bg-blue-100 flex items-center justify-center mb-6 transition-colors">
+                        <i data-lucide="users" class="w-7 h-7 text-blue-600"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-foreground mb-2">Lista de convidados inteligente</h3>
+                    <p class="text-primary font-medium text-sm mb-3">Saiba exatamente quem vem e quem não vem</p>
+                    <p class="text-muted-foreground leading-relaxed">Convide por WhatsApp, acompanhe confirmações em tempo real e organize mesas facilmente.</p>
                 </div>
-              </div>
-            </article>
-
-            <article class="step-row reverse animate-in">
-              <div class="step-copy">
-                <span class="step-number">02</span>
-                <p class="step-kicker">Quanto tempo voce quiser</p>
-                <h3>Adicione os detalhes no seu ritmo</h3>
-                <p>Convidados, orcamento, tarefas, ideias... Adicione tudo aos poucos, quando puder. O app se adapta a voce.</p>
-              </div>
-              <div class="budget-card">
-                <div class="budget-top">
-                  <span>Orcamento</span>
-                  <strong>R$ 45k</strong>
+                <div data-aos="fade-up" data-aos-delay="250" class="hover-card group relative bg-card rounded-3xl p-8 border border-border hover:border-primary/30 transition-colors h-full">
+                    <div class="w-14 h-14 rounded-2xl bg-purple-50 group-hover:bg-purple-100 flex items-center justify-center mb-6 transition-colors">
+                        <i data-lucide="calendar" class="w-7 h-7 text-purple-600"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-foreground mb-2">Lembretes automáticos</h3>
+                    <p class="text-primary font-medium text-sm mb-3">Nunca mais esqueça de algo importante</p>
+                    <p class="text-muted-foreground leading-relaxed">O Planne avisa você na hora certa. Reunião com fornecedor? Pagamento? Relaxa, a gente lembra.</p>
                 </div>
-                <div class="progress"><span></span></div>
-                <p>R$ 14.400 ainda disponiveis</p>
-                <div class="budget-line">
-                  <span>Buffet</span>
-                  <strong>R$ 18.000</strong>
+                <div data-aos="fade-up" data-aos-delay="300" class="hover-card group relative bg-card rounded-3xl p-8 border border-border hover:border-primary/30 transition-colors h-full">
+                    <div class="w-14 h-14 rounded-2xl bg-rose-50 group-hover:bg-rose-100 flex items-center justify-center mb-6 transition-colors">
+                        <i data-lucide="sticky-note" class="w-7 h-7 text-rose-500"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-foreground mb-2">Suas ideias organizadas</h3>
+                    <p class="text-primary font-medium text-sm mb-3">Guarde inspirações sem perder nenhuma</p>
+                    <p class="text-muted-foreground leading-relaxed">Fotos do Pinterest, referências, anotações... Tudo em um lugar só, sempre acessível.</p>
                 </div>
-                <div class="budget-line">
-                  <span>Decoracao</span>
-                  <strong>R$ 7.800</strong>
+                <div data-aos="fade-up" data-aos-delay="350" class="hover-card group relative bg-card rounded-3xl p-8 border border-border hover:border-primary/30 transition-colors h-full">
+                    <div class="w-14 h-14 rounded-2xl bg-emerald-50 group-hover:bg-emerald-100 flex items-center justify-center mb-6 transition-colors">
+                        <i data-lucide="camera" class="w-7 h-7 text-emerald-600"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-foreground mb-2">Memórias do grande dia</h3>
+                    <p class="text-primary font-medium text-sm mb-3">Reviva os melhores momentos sempre</p>
+                    <p class="text-muted-foreground leading-relaxed">Após o evento, guarde fotos e vídeos em um álbum especial dentro do app.</p>
                 </div>
-              </div>
-            </article>
-
-            <article class="step-row animate-in">
-              <div class="step-copy">
-                <span class="step-number">03</span>
-                <p class="step-kicker">O dia que voce sonhou</p>
-                <h3>Relaxe e aproveite o momento</h3>
-                <p>Com tudo organizado, so resta uma coisa: curtir. O Planne cuida da organizacao, voce cuida de ser feliz.</p>
-              </div>
-              <div class="guest-card">
-                <div class="guest-score">
-                  <strong>96%</strong>
-                  <span>confirmados em tempo real</span>
-                </div>
-                <div class="guest-item"><b>AM</b><span>Ana Maria</span><small>Confirmado</small></div>
-                <div class="guest-item"><b>JP</b><span>Joao Pedro</span><small>Confirmado</small></div>
-                <div class="guest-item"><b>LC</b><span>Luiza Costa</span><small>Confirmado</small></div>
-              </div>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section class="section app-section" id="app">
-        <div class="container">
-          <div class="section-head animate-in">
-            <span class="tag tag-primary">O app em acao</span>
-            <h2>Tudo claro antes, durante e depois do evento</h2>
-            <p>Acompanhe tarefas, convidados, orcamento e proximos passos sem pular entre planilhas, notas e mensagens.</p>
-          </div>
-
-          <div class="device-grid">
-            <article class="app-device dashboard animate-in">
-              <div class="device-screen">
-                <div class="device-cover">
-                  <div>
-                    <span>Celebracao</span>
-                    <strong>Ana & Pedro</strong>
-                  </div>
-                </div>
-                <div class="device-body">
-                  <div class="mini-stats">
-                    <span><strong>42</strong>dias</span>
-                    <span><strong>82%</strong>orcado</span>
-                    <span><strong>124</strong>pessoas</span>
-                  </div>
-                  <h3>Proximas tarefas</h3>
-                  <ul class="task-list">
-                    <li>Confirmar buffet</li>
-                    <li>Enviar convites</li>
-                    <li>Ajustar decoracao</li>
-                  </ul>
-                </div>
-              </div>
-              <p class="device-caption">Painel principal</p>
-            </article>
-
-            <article class="app-device budget animate-in delay-1">
-              <div class="device-screen">
-                <div class="device-body">
-                  <span class="device-label">Financas</span>
-                  <h3>R$ 45.000</h3>
-                  <div class="progress tall"><span></span></div>
-                  <ul class="money-list">
-                    <li><span>Buffet</span><strong>R$ 18k</strong></li>
-                    <li><span>Decoracao</span><strong>R$ 7.8k</strong></li>
-                    <li><span>Musica</span><strong>R$ 4.2k</strong></li>
-                  </ul>
-                </div>
-              </div>
-              <p class="device-caption">Orcamento e pagamentos</p>
-            </article>
-
-            <article class="app-device guests animate-in delay-2">
-              <div class="device-screen">
-                <div class="device-body">
-                  <span class="device-label">Lista VIP</span>
-                  <h3>Convidados</h3>
-                  <div class="guest-item"><b>RS</b><span>Rafael Santos</span><small>Confirmado</small></div>
-                  <div class="guest-item"><b>JM</b><span>Juliana Mendes</span><small>Pendente</small></div>
-                  <div class="guest-item"><b>PH</b><span>Pedro Henrique</span><small>Confirmado</small></div>
-                </div>
-              </div>
-              <p class="device-caption">Convidados e confirmacoes</p>
-            </article>
-
-            <article class="app-device ideas animate-in delay-1">
-              <div class="device-screen">
-                <div class="device-body">
-                  <span class="device-label">Moodboard</span>
-                  <h3>Ideias salvas</h3>
-                  <div class="ideas-grid">
-                    <span>Mesa posta</span>
-                    <span>Flores</span>
-                    <span>Convite</span>
-                    <span>Entrada</span>
-                  </div>
-                  <div class="note-box">
-                    <strong>Notas</strong>
-                    <p>Tons claros, flores naturais e mesa com luz quente.</p>
-                  </div>
-                </div>
-              </div>
-              <p class="device-caption">Ideias e referencias</p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section class="section testimonial-section" id="depoimentos">
-        <div class="container">
-          <div class="section-head animate-in">
-            <span class="tag tag-primary">+10 mil avaliacoes 5 estrelas</span>
-            <h2>O que estao dizendo <span>sobre o Planne</span></h2>
-            <p>Historias reais de pessoas que transformaram o planejamento em algo prazeroso.</p>
-          </div>
-
-          <div class="testimonial-grid">
-            <article class="testimonial-card animate-in">
-              <div class="stars" aria-label="5 estrelas"><span></span><span></span><span></span><span></span><span></span></div>
-              <h3>Organizou o casamento em 1 semana</h3>
-              <p>"Eu estava surtando com tanta coisa pra organizar. Baixei o Planne e em 1 semana ja estava tudo no lugar. Chorei de alivio!"</p>
-              <div class="person"><span>MC</span><div><strong>Mariana Costa</strong><small>Casamento - SP</small></div></div>
-            </article>
-            <article class="testimonial-card animate-in delay-1">
-              <div class="stars" aria-label="5 estrelas"><span></span><span></span><span></span><span></span><span></span></div>
-              <h3>Economizou 20% no orcamento</h3>
-              <p>"O controle de orcamento e sensacional. Consegui fazer a festa que queria gastando 20% menos do que tinha planejado."</p>
-              <div class="person"><span>RS</span><div><strong>Rafael Santos</strong><small>Aniversario de 30 anos - RJ</small></div></div>
-            </article>
-            <article class="testimonial-card animate-in delay-2">
-              <div class="stars" aria-label="5 estrelas"><span></span><span></span><span></span><span></span><span></span></div>
-              <h3>Confirmacoes em minutos</h3>
-              <p>"A lista de convidados com confirmacao por WhatsApp e genial! Todas minhas amigas confirmaram em minutos."</p>
-              <div class="person"><span>JM</span><div><strong>Juliana Mendes</strong><small>Cha de bebe - MG</small></div></div>
-            </article>
-            <article class="testimonial-card animate-in">
-              <div class="stars" aria-label="5 estrelas"><span></span><span></span><span></span><span></span><span></span></div>
-              <h3>150 convidados organizados</h3>
-              <p>"Planejei a formatura da minha turma inteira pelo app. 150 pessoas, zero estresse. Recomendo demais!"</p>
-              <div class="person"><span>PH</span><div><strong>Pedro Henrique</strong><small>Formatura - PR</small></div></div>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section class="metrics-section">
-        <div class="container metrics-grid">
-          <article><strong>2.5k+</strong><span>eventos este mes</span></article>
-          <article><strong>50k+</strong><span>convidados organizados</span></article>
-          <article><strong>R$ 2M+</strong><span>em orcamentos gerenciados</span></article>
-          <article><strong>98%</strong><span>recomendam para amigos</span></article>
-        </div>
-      </section>
-
-      <section class="download-section" id="download">
-        <div class="container">
-          <div class="download-panel animate-in">
-            <span class="tag tag-light">Seu evento esta chegando. Comece agora!</span>
-            <h2>Pronto para planejar sem estresse?</h2>
-            <p>Junte-se a milhares de pessoas que ja descobriram uma forma mais leve e organizada de criar momentos inesqueciveis.</p>
-            <div class="store-row center">
-              <a class="store-button store-primary" href="#">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path
-                    d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11Z"
-                  />
-                </svg>
-                App Store
-              </a>
-              <a class="store-button store-light" href="#">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path
-                    d="M3 20.5v-17c0-.59.34-1.11.84-1.35L13.69 12 3.84 21.85A1.5 1.5 0 0 1 3 20.5Zm13.81-5.38L6.05 21.34l8.49-8.49 2.27 2.27Zm3.35-4.31c.34.27.59.69.59 1.19s-.22.9-.57 1.18l-2.29 1.32L15.39 12l2.5-2.5 2.27 1.31ZM6.05 2.66l10.76 6.22-2.27 2.27-8.49-8.49Z"
-                  />
-                </svg>
-                Google Play
-              </a>
             </div>
-            <div class="download-trust">
-              <span>100% gratuito</span>
-              <span>Sem anuncios</span>
-              <span>Seus dados protegidos</span>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
 
-    <footer class="site-footer">
-      <div class="container footer-grid">
-        <div>
-          <a class="brand footer-brand" href="#top">
-            <span class="brand-mark">P</span>
-            <span class="brand-name">planne</span>
-          </a>
-          <p>Planejamento de eventos com clareza, elegancia e aquele carinho que faz a diferenca.</p>
+            <div class="mt-16 flex flex-wrap items-center justify-center gap-6 text-sm text-muted-foreground" data-aos="fade-up">
+                <div class="flex items-center gap-2"><i data-lucide="check" class="w-5 h-5 text-primary"></i><span>Funciona offline</span></div>
+                <div class="flex items-center gap-2"><i data-lucide="check" class="w-5 h-5 text-primary"></i><span>Sincroniza automaticamente</span></div>
+                <div class="flex items-center gap-2"><i data-lucide="check" class="w-5 h-5 text-primary"></i><span>Compartilhe com parceiro(a)</span></div>
+            </div>
         </div>
-        <nav aria-label="Links do rodape">
-          <a href="#funcionalidades">Funcionalidades</a>
-          <a href="#como-funciona">Como funciona</a>
-          <a href="#depoimentos">Depoimentos</a>
-          <a href="#download">Baixar o app</a>
-        </nav>
-        <div class="footer-note">
-          <small>&copy; 2026 Planne. Todos os direitos reservados.</small>
+    </section>
+
+    <section id="como-funciona" class="py-24 lg:py-32 relative">
+        <div class="mx-auto max-w-6xl px-6">
+            <div class="mx-auto max-w-2xl text-center mb-20" data-aos="fade-up">
+                <span class="inline-flex items-center gap-2 text-primary font-semibold text-sm tracking-wide uppercase mb-4 bg-primary/10 px-4 py-2 rounded-full">
+                    <i data-lucide="smartphone" class="w-4 h-4"></i> Super simples
+                </span>
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-foreground">
+                    Três passos.
+                    <span class="block text-primary mt-1">Evento organizado.</span>
+                </h2>
+                <p class="mt-6 text-lg text-muted-foreground">
+                    Sem complicação, sem tutoriais longos. O Planne é tão intuitivo que você aprende usando.
+                </p>
+            </div>
+
+            <div class="space-y-20 lg:space-y-32">
+                <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+                    <div class="flex-1 text-center lg:text-left" data-aos="fade-right">
+                        <div class="flex items-center gap-4 justify-center lg:justify-start mb-4">
+                            <span class="text-6xl lg:text-7xl font-bold text-primary/20">01</span>
+                            <span class="inline-flex items-center gap-1.5 bg-primary/10 rounded-full px-3 py-1">
+                                <span class="text-xs font-semibold text-primary">Menos de 2 minutos</span>
+                            </span>
+                        </div>
+                        <h3 class="text-2xl lg:text-3xl font-bold text-foreground mb-4">Baixe o app e crie seu evento</h3>
+                        <p class="text-muted-foreground text-lg leading-relaxed max-w-md mx-auto lg:mx-0">
+                            Abra o app, escolha o tipo de evento e pronto. Nada de formulários intermináveis ou configurações complicadas.
+                        </p>
+                    </div>
+                    <div class="flex-1 w-full max-w-md hover-card transition-transform" data-aos="fade-left" data-aos-delay="200">
+                        <div class="bg-card rounded-3xl p-6 border border-border shadow-xl">
+                            <div class="space-y-4">
+                                <div>
+                                    <div class="text-xs text-muted-foreground mb-2 font-medium">Nome do evento</div>
+                                    <div class="h-12 bg-muted rounded-xl flex items-center px-4 text-sm text-foreground font-medium">Casamento Ana & Pedro</div>
+                                </div>
+                                <div>
+                                    <div class="text-xs text-muted-foreground mb-2 font-medium">Data</div>
+                                    <div class="h-12 bg-muted rounded-xl flex items-center px-4 text-sm text-foreground">15 de Março, 2025</div>
+                                </div>
+                                <button class="w-full h-12 bg-primary rounded-xl flex items-center justify-center text-sm text-primary-foreground font-semibold gap-2 shadow-lg shadow-primary/30 hover:shadow-primary/50 transition-shadow">
+                                    <i data-lucide="plus" class="w-4 h-4"></i> Criar evento
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col lg:flex-row-reverse items-center gap-12 lg:gap-20">
+                    <div class="flex-1 text-center lg:text-left" data-aos="fade-left">
+                        <div class="flex items-center gap-4 justify-center lg:justify-start mb-4">
+                            <span class="text-6xl lg:text-7xl font-bold text-primary/20">02</span>
+                            <span class="inline-flex items-center gap-1.5 bg-primary/10 rounded-full px-3 py-1">
+                                <span class="text-xs font-semibold text-primary">Quanto tempo você quiser</span>
+                            </span>
+                        </div>
+                        <h3 class="text-2xl lg:text-3xl font-bold text-foreground mb-4">Adicione os detalhes no seu ritmo</h3>
+                        <p class="text-muted-foreground text-lg leading-relaxed max-w-md mx-auto lg:mx-0">
+                            Convidados, orçamento, tarefas, ideias... Adicione tudo aos poucos, quando puder. O app se adapta a você.
+                        </p>
+                    </div>
+                    <div class="flex-1 w-full max-w-md hover-card transition-transform" data-aos="fade-right" data-aos-delay="200">
+                        <div class="bg-card rounded-3xl p-6 border border-border shadow-xl">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="bg-primary/10 rounded-2xl p-5 text-center cursor-default hover:scale-105 transition-transform">
+                                    <i data-lucide="users" class="w-6 h-6 text-primary mx-auto mb-2"></i>
+                                    <div class="text-2xl font-bold text-primary">124</div>
+                                    <div class="text-xs text-muted-foreground">Convidados</div>
+                                </div>
+                                <div class="bg-amber-50 rounded-2xl p-5 text-center cursor-default hover:scale-105 transition-transform">
+                                    <div class="text-2xl font-bold text-amber-600">R$ 45k</div>
+                                    <div class="text-xs text-muted-foreground mt-1">Orçamento</div>
+                                </div>
+                                <div class="bg-blue-50 rounded-2xl p-5 text-center cursor-default hover:scale-105 transition-transform">
+                                    <div class="text-2xl font-bold text-blue-600">18</div>
+                                    <div class="text-xs text-muted-foreground mt-1">Tarefas</div>
+                                </div>
+                                <div class="bg-purple-50 rounded-2xl p-5 text-center cursor-default hover:scale-105 transition-transform">
+                                    <div class="text-2xl font-bold text-purple-600">7</div>
+                                    <div class="text-xs text-muted-foreground mt-1">Fornecedores</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+                    <div class="flex-1 text-center lg:text-left" data-aos="fade-right">
+                        <div class="flex items-center gap-4 justify-center lg:justify-start mb-4">
+                            <span class="text-6xl lg:text-7xl font-bold text-primary/20">03</span>
+                            <span class="inline-flex items-center gap-1.5 bg-primary/10 rounded-full px-3 py-1">
+                                <span class="text-xs font-semibold text-primary">O dia que você sonhou</span>
+                            </span>
+                        </div>
+                        <h3 class="text-2xl lg:text-3xl font-bold text-foreground mb-4">Relaxe e aproveite o momento</h3>
+                        <p class="text-muted-foreground text-lg leading-relaxed max-w-md mx-auto lg:mx-0">
+                            Com tudo organizado, só resta uma coisa: curtir. O Planne cuida da organização, você cuida de ser feliz.
+                        </p>
+                    </div>
+                    <div class="flex-1 w-full max-w-md hover-card transition-transform" data-aos="fade-left" data-aos-delay="200">
+                        <div class="bg-card rounded-3xl p-6 border border-border shadow-xl">
+                            <div class="flex items-center gap-4 mb-6">
+                                <div class="w-14 h-14 rounded-full bg-green-100 flex items-center justify-center">
+                                    <i data-lucide="check-circle" class="w-7 h-7 text-green-600"></i>
+                                </div>
+                                <div>
+                                    <div class="font-semibold text-foreground text-lg">Tudo pronto!</div>
+                                    <div class="text-sm text-muted-foreground">Seu evento está organizado</div>
+                                </div>
+                            </div>
+                            <div class="h-4 bg-muted rounded-full overflow-hidden">
+                                <div class="progress-bar h-full bg-gradient-to-r from-primary via-teal-400 to-green-500 rounded-full"></div>
+                            </div>
+                            <div class="flex items-center justify-between mt-3">
+                                <span class="text-sm text-muted-foreground">Progresso</span>
+                                <span class="text-sm text-green-600 font-bold">100% completo</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-20" data-aos="fade-up">
+                <a href="#" class="inline-flex items-center gap-3 text-lg px-8 h-16 bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl shadow-primary/30 hover:shadow-primary/50 rounded-2xl transition-all font-semibold group hover:-translate-y-1">
+                    Começar agora - é grátis!
+                    <i data-lucide="arrow-right" class="h-5 w-5 group-hover:translate-x-1 transition-transform"></i>
+                </a>
+                <p class="mt-4 text-sm text-muted-foreground">Baixe o app e crie seu primeiro evento em segundos.</p>
+            </div>
         </div>
-      </div>
+    </section>
+
+    <section id="depoimentos" class="py-24 md:py-32 bg-gradient-to-b from-muted/30 to-background">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center max-w-2xl mx-auto mb-16" data-aos="fade-up">
+                <span class="inline-flex items-center gap-2 text-primary font-semibold text-sm tracking-wide uppercase mb-4 bg-primary/10 px-4 py-2 rounded-full">
+                    <i data-lucide="star" class="w-4 h-4 fill-primary"></i> +10 mil avaliações 5 estrelas
+                </span>
+                <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6">
+                    O que estão dizendo
+                    <span class="block text-primary">sobre o Planne</span>
+                </h2>
+                <p class="text-lg text-muted-foreground">
+                    Histórias reais de pessoas que transformaram o planejamento em algo prazeroso.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div data-aos="fade-up" data-aos-delay="100" class="bg-card rounded-3xl p-8 border border-border hover:border-primary/30 hover:-translate-y-2 transition-all flex flex-col h-full shadow-sm hover:shadow-xl hover:shadow-primary/10">
+                    <div class="inline-flex self-start items-center gap-1.5 bg-primary/10 rounded-full px-3 py-1 mb-5">
+                        <span class="text-xs font-semibold text-primary">Organizou o casamento em 1 semana</span>
+                    </div>
+                    <i data-lucide="quote" class="w-8 h-8 text-primary/20 mb-4"></i>
+                    <p class="text-foreground leading-relaxed mb-6 flex-1">"Eu estava surtando com tanta coisa pra organizar. Baixei o Planne e em 1 semana já estava tudo no lugar. Chorei de alívio!"</p>
+                    <div class="flex gap-1 mb-4"><i data-lucide="star" class="w-4 h-4 fill-amber-400 text-amber-400"></i><i data-lucide="star" class="w-4 h-4 fill-amber-400 text-amber-400"></i><i data-lucide="star" class="w-4 h-4 fill-amber-400 text-amber-400"></i><i data-lucide="star" class="w-4 h-4 fill-amber-400 text-amber-400"></i><i data-lucide="star" class="w-4 h-4 fill-amber-400 text-amber-400"></i></div>
+                    <div class="flex items-center gap-4 pt-4 border-t border-border">
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-primary/20 to-primary/40 flex items-center justify-center"><span class="text-primary font-semibold">MC</span></div>
+                        <div><div class="font-semibold text-foreground">Mariana Costa</div><div class="text-sm text-muted-foreground">Casamento - SP</div></div>
+                    </div>
+                </div>
+                <div data-aos="fade-up" data-aos-delay="200" class="bg-card rounded-3xl p-8 border border-border hover:border-primary/30 hover:-translate-y-2 transition-all flex flex-col h-full shadow-sm hover:shadow-xl hover:shadow-primary/10">
+                    <div class="inline-flex self-start items-center gap-1.5 bg-primary/10 rounded-full px-3 py-1 mb-5">
+                        <span class="text-xs font-semibold text-primary">Economizou 20% no orçamento</span>
+                    </div>
+                    <i data-lucide="quote" class="w-8 h-8 text-primary/20 mb-4"></i>
+                    <p class="text-foreground leading-relaxed mb-6 flex-1">"O controle de orçamento é sensacional. Consegui fazer a festa que queria gastando 20% menos do que tinha planejado."</p>
+                    <div class="flex gap-1 mb-4"><i data-lucide="star" class="w-4 h-4 fill-amber-400 text-amber-400"></i><i data-lucide="star" class="w-4 h-4 fill-amber-400 text-amber-400"></i><i data-lucide="star" class="w-4 h-4 fill-amber-400 text-amber-400"></i><i data-lucide="star" class="w-4 h-4 fill-amber-400 text-amber-400"></i><i data-lucide="star" class="w-4 h-4 fill-amber-400 text-amber-400"></i></div>
+                    <div class="flex items-center gap-4 pt-4 border-t border-border">
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-primary/20 to-primary/40 flex items-center justify-center"><span class="text-primary font-semibold">RS</span></div>
+                        <div><div class="font-semibold text-foreground">Rafael Santos</div><div class="text-sm text-muted-foreground">Aniversário de 30 anos - RJ</div></div>
+                    </div>
+                </div>
+                <div data-aos="fade-up" data-aos-delay="300" class="bg-card rounded-3xl p-8 border border-border hover:border-primary/30 hover:-translate-y-2 transition-all flex flex-col h-full shadow-sm hover:shadow-xl hover:shadow-primary/10">
+                    <div class="inline-flex self-start items-center gap-1.5 bg-primary/10 rounded-full px-3 py-1 mb-5">
+                        <span class="text-xs font-semibold text-primary">Confirmações em minutos</span>
+                    </div>
+                    <i data-lucide="quote" class="w-8 h-8 text-primary/20 mb-4"></i>
+                    <p class="text-foreground leading-relaxed mb-6 flex-1">"A lista de convidados com confirmação por WhatsApp é genial! Todas minhas amigas confirmaram em minutos."</p>
+                    <div class="flex gap-1 mb-4"><i data-lucide="star" class="w-4 h-4 fill-amber-400 text-amber-400"></i><i data-lucide="star" class="w-4 h-4 fill-amber-400 text-amber-400"></i><i data-lucide="star" class="w-4 h-4 fill-amber-400 text-amber-400"></i><i data-lucide="star" class="w-4 h-4 fill-amber-400 text-amber-400"></i><i data-lucide="star" class="w-4 h-4 fill-amber-400 text-amber-400"></i></div>
+                    <div class="flex items-center gap-4 pt-4 border-t border-border">
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-primary/20 to-primary/40 flex items-center justify-center"><span class="text-primary font-semibold">JM</span></div>
+                        <div><div class="font-semibold text-foreground">Juliana Mendes</div><div class="text-sm text-muted-foreground">Chá de bebê - MG</div></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div data-aos="fade-up" data-aos-delay="100" class="text-center p-6 bg-card rounded-2xl border border-border hover:-translate-y-1 transition-transform">
+                    <div class="text-3xl md:text-4xl font-bold text-foreground">2.500+</div>
+                    <div class="text-sm text-muted-foreground mt-1">eventos este mês</div>
+                </div>
+                <div data-aos="fade-up" data-aos-delay="200" class="text-center p-6 bg-card rounded-2xl border border-border hover:-translate-y-1 transition-transform">
+                    <div class="text-3xl md:text-4xl font-bold text-foreground">50.000+</div>
+                    <div class="text-sm text-muted-foreground mt-1">convidados organizados</div>
+                </div>
+                <div data-aos="fade-up" data-aos-delay="300" class="text-center p-6 bg-card rounded-2xl border border-border hover:-translate-y-1 transition-transform">
+                    <div class="text-3xl md:text-4xl font-bold text-primary">R$ 2M+</div>
+                    <div class="text-sm text-muted-foreground mt-1">em orçamentos gerenciados</div>
+                </div>
+                <div data-aos="fade-up" data-aos-delay="400" class="text-center p-6 bg-card rounded-2xl border border-border hover:-translate-y-1 transition-transform">
+                    <div class="text-3xl md:text-4xl font-bold text-foreground">98%</div>
+                    <div class="text-sm text-muted-foreground mt-1">recomendam para amigos</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-12 border-y border-border bg-muted/50">
+        <div class="max-w-6xl mx-auto px-6 text-center">
+            <p class="text-sm font-semibold text-muted-foreground uppercase tracking-widest mb-6">Tecnologia 100% Segura e Aprovada</p>
+            <div class="flex flex-wrap justify-center items-center gap-10 opacity-70 grayscale">
+                <div class="flex items-center gap-2"><i data-lucide="shield-check" class="w-6 h-6"></i><span class="font-bold text-lg">Criptografia Ponta a Ponta</span></div>
+                <div class="flex items-center gap-2"><i data-lucide="lock" class="w-6 h-6"></i><span class="font-bold text-lg">LGPD Compliant</span></div>
+                <div class="flex items-center gap-2"><i data-lucide="cloud-off" class="w-6 h-6"></i><span class="font-bold text-lg">Modo Offline</span></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-24 lg:py-32 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-primary via-primary to-teal-600"></div>
+        <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMiIvPjwvZz48L2c+PC9zdmc+')] opacity-50"></div>
+        
+        <div class="absolute top-20 left-10 w-32 h-32 bg-white/10 rounded-full blur-3xl animate-float"></div>
+        <div class="absolute bottom-20 right-10 w-40 h-40 bg-white/10 rounded-full blur-3xl animate-float-delayed"></div>
+
+        <div class="relative mx-auto max-w-4xl px-6 text-center">
+            <div data-aos="fade-up" class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full px-5 py-2.5 mb-8">
+                <i data-lucide="clock" class="w-4 h-4 text-white"></i>
+                <span class="text-sm font-medium text-white">Seu evento está chegando. Comece agora!</span>
+            </div>
+
+            <h2 data-aos="fade-up" data-aos-delay="100" class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white">
+                Pronto para planejar sem estresse?
+            </h2>
+
+            <p data-aos="fade-up" data-aos-delay="200" class="mt-6 text-lg lg:text-xl leading-relaxed text-white/90 max-w-2xl mx-auto">
+                Junte-se a milhares de pessoas que já descobriram uma forma mais leve e organizada de criar momentos inesquecíveis.
+            </p>
+
+            <div data-aos="fade-up" data-aos-delay="300" class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="#" class="inline-flex items-center gap-3 bg-white hover:bg-white/95 text-primary px-8 h-16 rounded-2xl shadow-xl hover:-translate-y-1 transition-all text-lg font-semibold">
+                    <svg class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+                    </svg>
+                    Baixar na App Store
+                </a>
+                <a href="#" class="inline-flex items-center gap-3 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white border border-white/30 px-8 h-16 rounded-2xl shadow-xl hover:-translate-y-1 transition-all text-lg font-semibold">
+                    <svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.53,12.9 20.18,13.18L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/>
+                    </svg>
+                    Baixar no Google Play
+                </a>
+            </div>
+
+            <div class="mt-10 flex flex-wrap items-center justify-center gap-6 text-white/90">
+                <div data-aos="fade-right" data-aos-delay="400" class="flex items-center gap-2"><i data-lucide="check" class="w-5 h-5"></i><span class="text-sm">100% gratuito</span></div>
+                <div data-aos="fade-right" data-aos-delay="500" class="flex items-center gap-2"><i data-lucide="check" class="w-5 h-5"></i><span class="text-sm">Sem anúncios</span></div>
+                <div data-aos="fade-right" data-aos-delay="600" class="flex items-center gap-2"><i data-lucide="check" class="w-5 h-5"></i><span class="text-sm">Seus dados protegidos</span></div>
+            </div>
+
+            <div data-aos="fade-up" data-aos-delay="700" class="mt-12 flex justify-center">
+                <div class="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center animate-subtle-pulse">
+                    <i data-lucide="heart" class="w-8 h-8 text-white fill-white"></i>
+                </div>
+            </div>
+            <p data-aos="fade-up" data-aos-delay="800" class="mt-6 text-sm text-white/70">
+                Feito com carinho para quem quer viver momentos inesquecíveis.
+            </p>
+        </div>
+    </section>
+
+    <footer class="bg-card border-t border-border">
+        <div class="mx-auto max-w-6xl px-6 py-16 lg:py-20">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12">
+                <div class="col-span-2 md:col-span-1">
+                    <a href="/" class="flex items-center gap-2.5 mb-5">
+                        <div class="w-10 h-10 rounded-2xl bg-primary flex items-center justify-center shadow-lg shadow-primary/25">
+                            <span class="text-primary-foreground font-bold text-xl">P</span>
+                        </div>
+                        <span class="text-xl font-semibold text-foreground">planne</span>
+                    </a>
+                    <p class="text-muted-foreground text-sm leading-relaxed mb-6">
+                        Planejamento de eventos com clareza, elegância e aquele carinho que faz a diferença.
+                    </p>
+                    <div class="flex gap-3">
+                        <a href="#" class="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"><i data-lucide="twitter" class="w-5 h-5"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="font-semibold text-foreground mb-5">Produto</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#funcionalidades" class="text-sm text-muted-foreground hover:text-primary transition-colors">Funcionalidades</a></li>
+                        <li><a href="#como-funciona" class="text-sm text-muted-foreground hover:text-primary transition-colors">Como funciona</a></li>
+                        <li><a href="#precos" class="text-sm text-muted-foreground hover:text-primary transition-colors">Preços</a></li>
+                        <li><a href="#faq" class="text-sm text-muted-foreground hover:text-primary transition-colors">FAQ</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="font-semibold text-foreground mb-5">Empresa</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#sobre" class="text-sm text-muted-foreground hover:text-primary transition-colors">Sobre nós</a></li>
+                        <li><a href="#blog" class="text-sm text-muted-foreground hover:text-primary transition-colors">Blog</a></li>
+                        <li><a href="#carreiras" class="text-sm text-muted-foreground hover:text-primary transition-colors">Carreiras</a></li>
+                        <li><a href="#contato" class="text-sm text-muted-foreground hover:text-primary transition-colors">Contato</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="font-semibold text-foreground mb-5">Legal</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#termos" class="text-sm text-muted-foreground hover:text-primary transition-colors">Termos de uso</a></li>
+                        <li><a href="#privacidade" class="text-sm text-muted-foreground hover:text-primary transition-colors">Privacidade</a></li>
+                        <li><a href="#cookies" class="text-sm text-muted-foreground hover:text-primary transition-colors">Cookies</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mt-16 pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4">
+                <p class="text-sm text-muted-foreground">
+                    &copy; 2024 Planne. Todos os direitos reservados.
+                </p>
+                <p class="text-sm text-muted-foreground flex items-center gap-1.5">
+                    Feito com <i data-lucide="heart" class="w-4 h-4 text-primary fill-primary"></i> para seus momentos especiais.
+                </p>
+            </div>
+        </div>
     </footer>
-  </body>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Inicializa ícones do Lucide
+        lucide.createIcons();
+        
+        // Inicializa animações no scroll (AOS)
+        AOS.init({
+            duration: 800,
+            once: true,
+            easing: 'ease-out'
+        });
+
+        // Toggle do Menu Mobile
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('open');
+        });
+
+        // Fechar menu mobile ao clicar num link
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.remove('open');
+            });
+        });
+    </script>
+</body>
 </html>
