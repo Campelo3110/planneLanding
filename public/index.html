@@ -75,6 +75,26 @@
             transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, fill 0.3s ease !important;
         }
     </style>
+
+    <script>
+    (function() {
+        // Verifica se o usuário já escolheu um idioma manualmente para não forçar o redirecionamento sempre
+        const userLanguagePref = localStorage.getItem('planne-lang');
+        
+        if (!userLanguagePref) {
+            // Obtém o idioma do sistema/navegador (ex: 'pt-BR' ou 'en-US')
+            const browserLang = navigator.language || navigator.userLanguage;
+            
+            // Se o idioma começar com 'pt', redireciona para a versão em português
+            if (browserLang.startsWith('pt')) {
+                // Evita loop de redirecionamento se já estivermos na pasta /pt-br
+                if (!window.location.pathname.includes('/pt-br')) {
+                    window.location.href = '/pt-br';
+                }
+            }
+        }
+    })();
+</script>
 </head>
 <body class="bg-background text-foreground font-sans antialiased overflow-x-hidden">
 
@@ -105,10 +125,16 @@
 
                 <!-- Seletor de Idioma Desktop -->
                 <div class="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-                    <a href="/pt-br" aria-label="Change to Portuguese" class="hover:text-primary transition-colors">PT</a>
+                    <a href="/pt-br" onclick="setLanguage('pt')" aria-label="Change to Portuguese" class="hover:text-primary transition-colors">PT</a>
                     <span aria-hidden="true">|</span>
-                    <span class="lang-active cursor-default">EN</span>
+                    <a href="/" onclick="setLanguage('en')" class="lang-active cursor-default">EN</a>
                 </div>
+                
+                <script>
+                    function setLanguage(lang) {
+                        localStorage.setItem('planne-lang', lang);
+                    }
+                </script>
                 
                 <a href="https://play.google.com/store/apps/details?id=com.planne.planne" target="_blank" rel="noopener noreferrer" class="text-sm font-medium bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/30 hover:shadow-primary/50 rounded-full px-6 py-2 transition-all">
                     Download App
