@@ -1,54 +1,95 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-    
-    <!-- SEO BÁSICO INGLÊS -->
-    <title>Planne - Event Planner & Organizer | Your dream event, stress-free</title>
-    <meta name="description" content="Organize weddings, birthdays, and corporate events all in one place. Planne is your free assistant for guest list, budget, and task management.">
-    <meta name="keywords" content="event planner, event management app, wedding planner, party planner, budget tracker, guest list manager">
-    <meta name="author" content="Planne">
+
+    <!-- SEO -->
+    <title>Planne - Event Planning App for Weddings, Parties & Guests</title>
+
+    <meta name="description"
+        content="Plan weddings, birthdays and corporate events with guests, budgets, tasks and reminders in one elegant app.">
+
     <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://planneapp.com/">
+    <meta name="author" content="Planne">
     <meta name="theme-color" content="#0d9488">
 
-    <!-- HREFLANG (SEO Internacional) -->
+    <link rel="canonical" href="https://planneapp.com/">
+
+    <!-- FAVICONS -->
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+
+    <!-- HREFLANG -->
     <link rel="alternate" hreflang="en" href="https://planneapp.com/" />
     <link rel="alternate" hreflang="pt-BR" href="https://planneapp.com/pt-br" />
     <link rel="alternate" hreflang="x-default" href="https://planneapp.com/" />
 
-    <!-- OPEN GRAPH INGLÊS -->
+    <!-- OPEN GRAPH -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://planneapp.com/">
     <meta property="og:title" content="Planne - Your dream event, stress-free">
-    <meta property="og:description" content="No more confusing spreadsheets. Download the app and organize tasks, budgets, and guests for free.">
-    <meta property="og:image" content="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=1200&auto=format&fit=crop"> 
+    <meta property="og:description" content="Guests, budgets, tasks and reminders in one premium planning experience.">
+
+    <meta property="og:image" content="https://planneapp.com/assets/og-cover.png">
+
     <meta property="og:site_name" content="Planne">
 
-    <!-- TWITTER CARDS INGLÊS -->
+    <!-- TWITTER -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:url" content="https://planneapp.com/">
-    <meta name="twitter:title" content="Planne - Event Planner">
-    <meta name="twitter:description" content="The perfect assistant to organize your next big event.">
-    <meta name="twitter:image" content="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=1200&auto=format&fit=crop">
+    <meta name="twitter:title" content="Planne - Smart Event Planning">
+    <meta name="twitter:description" content="Plan weddings and events with elegance and clarity.">
 
-    <!-- SCHEMA JSON-LD INGLÊS -->
+    <meta name="twitter:image" content="https://planneapp.com/assets/og-cover.png">
+
+    <meta property="al:android:url" content="https://play.google.com/store/apps/details?id=com.planne.planne">
+    <meta property="al:android:package" content="com.planne.planne">
+    <meta property="al:android:app_name" content="Planne">
+
+    <!-- PERFORMANCE -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- ORGANIZATION SCHEMA -->
     <script type="application/ld+json">
     {
-      "@context": "https://schema.org",
-      "@type": "SoftwareApplication",
-      "name": "Planne",
-      "operatingSystem": "ANDROID",
-      "applicationCategory": "LifestyleApplication",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
+      "@context":"https://schema.org",
+      "@type":"Organization",
+      "name":"Planne",
+      "url":"https://planneapp.com",
+      "logo":"https://planneapp.com/assets/logo.png"
+    }
+    </script>
+
+    <!-- WEBSITE SCHEMA -->
+    <script type="application/ld+json">
+    {
+      "@context":"https://schema.org",
+      "@type":"WebSite",
+      "name":"Planne",
+      "url":"https://planneapp.com"
+    }
+    </script>
+
+    <!-- SOFTWARE APPLICATION SCHEMA -->
+    <script type="application/ld+json">
+    {
+      "@context":"https://schema.org",
+      "@type":"SoftwareApplication",
+      "name":"Planne",
+      "operatingSystem":"Android",
+      "applicationCategory":"LifestyleApplication",
+      "applicationSubCategory":"Event Planning",
+      "offers":{
+        "@type":"Offer",
+        "price":"0",
+        "priceCurrency":"USD"
       },
-      "description": "Complete app for organizing and planning events, weddings, birthdays, and corporate parties. Budget control, guest list, and task management.",
-      "url": "https://planneapp.com/",
-      "softwareHelp": "https://planneapp.com/#contact"
+      "description":"Premium app for organizing weddings, birthdays and events with guest management, budgets and tasks.",
+      "url":"https://planneapp.com/",
+        "downloadUrl":"https://play.google.com/store/apps/details?id=com.planne.planne",
+        "installUrl":"https://play.google.com/store/apps/details?id=com.planne.planne"
     }
     </script>
 
@@ -61,101 +102,143 @@
             transform: translateY(-5px);
             box-shadow: 0 25px 50px -12px rgba(13, 148, 136, 0.15);
         }
-        .line-grow { width: 0; transition: width 0.6s ease-out; }
-        .aos-animate .line-grow { width: 48px; }
-        .progress-bar { width: 0; transition: width 1.5s ease-out; }
-        .aos-animate .progress-bar { width: 100%; }
-        
-        #mobile-menu { display: none; }
-        #mobile-menu.open { display: block; }
-        
-        .lang-active { color: var(--primary); font-weight: 700; }
 
-        html.transition-theme, html.transition-theme *, html.transition-theme *:before, html.transition-theme *:after {
+        .line-grow {
+            width: 0;
+            transition: width 0.6s ease-out;
+        }
+
+        .aos-animate .line-grow {
+            width: 48px;
+        }
+
+        .progress-bar {
+            width: 0;
+            transition: width 1.5s ease-out;
+        }
+
+        .aos-animate .progress-bar {
+            width: 100%;
+        }
+
+        #mobile-menu {
+            display: none;
+        }
+
+        #mobile-menu.open {
+            display: block;
+        }
+
+        .lang-active {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        html.transition-theme,
+        html.transition-theme *,
+        html.transition-theme *:before,
+        html.transition-theme *:after {
             transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, fill 0.3s ease !important;
         }
     </style>
 
     <script>
-    (function() {
-        // Verifica se o usuário já escolheu um idioma manualmente para não forçar o redirecionamento sempre
-        const userLanguagePref = localStorage.getItem('planne-lang');
-        
-        if (!userLanguagePref) {
-            // Obtém o idioma do sistema/navegador (ex: 'pt-BR' ou 'en-US')
-            const browserLang = navigator.language || navigator.userLanguage;
-            
-            // Se o idioma começar com 'pt', redireciona para a versão em português
-            if (browserLang.startsWith('pt')) {
-                // Evita loop de redirecionamento se já estivermos na pasta /pt-br
-                if (!window.location.pathname.includes('/pt-br')) {
-                    window.location.href = '/pt-br';
+        (function () {
+            // Verifica se o usuário já escolheu um idioma manualmente para não forçar o redirecionamento sempre
+            const userLanguagePref = localStorage.getItem('planne-lang');
+
+            if (!userLanguagePref) {
+                // Obtém o idioma do sistema/navegador (ex: 'pt-BR' ou 'en-US')
+                const browserLang = navigator.language || navigator.userLanguage;
+
+                // Se o idioma começar com 'pt', redireciona para a versão em português
+                if (browserLang.startsWith('pt')) {
+                    // Evita loop de redirecionamento se já estivermos na pasta /pt-br
+                    if (!window.location.pathname.includes('/pt-br')) {
+                        window.location.href = '/pt-br';
+                    }
                 }
             }
-        }
-    })();
-</script>
+        })();
+    </script>
 </head>
+
 <body class="bg-background text-foreground font-sans antialiased overflow-x-hidden">
 
     <!-- HEADER -->
     <header class="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/40">
         <nav class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
             <a href="/" class="flex items-center gap-2.5 group" aria-label="Home Planne">
-                <div class="w-10 h-10 rounded-2xl bg-primary flex items-center justify-center shadow-lg shadow-primary/30 group-hover:shadow-primary/50 transition-all group-hover:scale-105">
+                <div
+                    class="w-10 h-10 rounded-2xl bg-primary flex items-center justify-center shadow-lg shadow-primary/30 group-hover:shadow-primary/50 transition-all group-hover:scale-105">
                     <span class="text-primary-foreground font-bold text-xl">P</span>
                 </div>
                 <span class="text-xl font-semibold text-foreground tracking-tight">planne</span>
             </a>
-            
-            <button id="menu-btn" type="button" class="lg:hidden p-2 text-foreground hover:text-primary transition-colors" aria-label="Open menu">
+
+            <button id="menu-btn" type="button"
+                class="lg:hidden p-2 text-foreground hover:text-primary transition-colors" aria-label="Open menu">
                 <i data-lucide="menu" class="h-6 w-6"></i>
             </button>
 
             <div class="hidden lg:flex lg:items-center lg:gap-10">
-                <a href="#features" class="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">Features</a>
-                <a href="#how-it-works" class="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">How it works</a>
+                <a href="#features"
+                    class="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">Features</a>
+                <a href="#how-it-works"
+                    class="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">How it
+                    works</a>
             </div>
 
             <div class="hidden lg:flex lg:items-center lg:gap-6">
                 <!-- Controle de Tema -->
-                <button onclick="toggleTheme()" class="text-muted-foreground hover:text-primary transition-colors p-2 rounded-full hover:bg-muted/50" aria-label="Toggle dark and light theme">
+                <button onclick="toggleTheme()"
+                    class="text-muted-foreground hover:text-primary transition-colors p-2 rounded-full hover:bg-muted/50"
+                    aria-label="Toggle dark and light theme">
                     <i data-lucide="sun" id="theme-icon-desktop" class="w-5 h-5"></i>
                 </button>
 
                 <!-- Seletor de Idioma Desktop -->
                 <div class="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-                    <a href="/pt-br" onclick="setLanguage('pt')" aria-label="Change to Portuguese" class="hover:text-primary transition-colors">PT</a>
+                    <a href="/pt-br" onclick="setLanguage('pt')" aria-label="Change to Portuguese"
+                        class="hover:text-primary transition-colors">PT</a>
                     <span aria-hidden="true">|</span>
                     <a href="/" onclick="setLanguage('en')" class="lang-active cursor-default">EN</a>
                 </div>
-                
+
                 <script>
                     function setLanguage(lang) {
                         localStorage.setItem('planne-lang', lang);
                     }
                 </script>
-                
-                <a href="https://play.google.com/store/apps/details?id=com.planne.planne" target="_blank" rel="noopener noreferrer" class="text-sm font-medium bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/30 hover:shadow-primary/50 rounded-full px-6 py-2 transition-all">
+
+                <a href="https://play.google.com/store/apps/details?id=com.planne.planne" target="_blank"
+                    rel="noopener noreferrer"
+                    class="text-sm font-medium bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/30 hover:shadow-primary/50 rounded-full px-6 py-2 transition-all">
                     Download App
                 </a>
             </div>
         </nav>
 
         <!-- Menu Mobile -->
-        <div id="mobile-menu" class="absolute top-full left-0 right-0 bg-background/95 backdrop-blur-lg border-b border-border shadow-xl">
+        <div id="mobile-menu"
+            class="absolute top-full left-0 right-0 bg-background/95 backdrop-blur-lg border-b border-border shadow-xl">
             <div class="px-6 py-6 space-y-4">
-                <a href="#features" class="block py-3 text-base font-medium text-foreground hover:text-primary transition-colors">Features</a>
-                <a href="#how-it-works" class="block py-3 text-base font-medium text-foreground hover:text-primary transition-colors">How it works</a>
-                
+                <a href="#features"
+                    class="block py-3 text-base font-medium text-foreground hover:text-primary transition-colors">Features</a>
+                <a href="#how-it-works"
+                    class="block py-3 text-base font-medium text-foreground hover:text-primary transition-colors">How it
+                    works</a>
+
                 <div class="flex items-center justify-between py-3 border-t border-border mt-2">
                     <div class="flex items-center gap-4">
                         <span class="text-sm text-muted-foreground">Language:</span>
                         <a href="/pt-br" class="text-sm font-medium hover:text-primary text-muted-foreground">PT</a>
                         <span class="text-sm font-medium lang-active">EN</span>
                     </div>
-                    
-                    <button onclick="toggleTheme()" class="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary bg-muted/30 px-3 py-1.5 rounded-full" aria-label="Toggle theme">
+
+                    <button onclick="toggleTheme()"
+                        class="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary bg-muted/30 px-3 py-1.5 rounded-full"
+                        aria-label="Toggle theme">
                         <i data-lucide="sun" id="theme-icon-mobile" class="w-4 h-4"></i>
                         <span id="theme-text-mobile">Theme</span>
                     </button>
@@ -163,7 +246,9 @@
 
                 <hr class="border-border" />
                 <div class="flex flex-col gap-3 pt-2">
-                    <a href="https://play.google.com/store/apps/details?id=com.planne.planne" target="_blank" rel="noopener noreferrer" class="w-full py-3 flex justify-center bg-primary text-primary-foreground font-medium shadow-lg shadow-primary/30 rounded-full">
+                    <a href="https://play.google.com/store/apps/details?id=com.planne.planne" target="_blank"
+                        rel="noopener noreferrer"
+                        class="w-full py-3 flex justify-center bg-primary text-primary-foreground font-medium shadow-lg shadow-primary/30 rounded-full">
                         Download App
                     </a>
                 </div>
@@ -176,19 +261,25 @@
         <section class="relative overflow-hidden">
             <div class="relative min-h-[100vh] flex items-center">
                 <div class="absolute inset-0 -z-10">
-                    <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=2000&auto=format&fit=crop" alt="People celebrating at a well-lit organized event" class="object-cover w-full h-full" />
-                    <div class="absolute inset-0 bg-gradient-to-b from-background/95 via-background/80 to-background"></div>
-                    <div class="absolute inset-0 bg-gradient-to-r from-background/60 via-transparent to-background/60"></div>
+                    <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=2000&auto=format&fit=crop"
+                        alt="People celebrating at a well-lit organized event" class="object-cover w-full h-full" />
+                    <div class="absolute inset-0 bg-gradient-to-b from-background/95 via-background/80 to-background">
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-r from-background/60 via-transparent to-background/60">
+                    </div>
                 </div>
 
-                <div class="absolute top-40 left-20 w-64 h-64 bg-primary/20 rounded-full blur-3xl animate-subtle-pulse"></div>
-                <div class="absolute bottom-40 right-20 w-80 h-80 bg-accent/30 rounded-full blur-3xl animate-subtle-pulse" style="animation-delay: 1.5s;"></div>
+                <div class="absolute top-40 left-20 w-64 h-64 bg-primary/20 rounded-full blur-3xl animate-subtle-pulse">
+                </div>
+                <div class="absolute bottom-40 right-20 w-80 h-80 bg-accent/30 rounded-full blur-3xl animate-subtle-pulse"
+                    style="animation-delay: 1.5s;"></div>
 
                 <div class="mx-auto max-w-6xl px-6 py-32 lg:py-40 w-full mt-10">
                     <div class="mx-auto max-w-3xl text-center">
-                        
+
                         <div data-aos="fade-down" data-aos-delay="200" class="mb-8 flex justify-center">
-                            <div class="inline-flex items-center gap-2 rounded-full bg-primary/10 backdrop-blur-sm border border-primary/30 px-5 py-2.5 shadow-lg">
+                            <div
+                                class="inline-flex items-center gap-2 rounded-full bg-primary/10 backdrop-blur-sm border border-primary/30 px-5 py-2.5 shadow-lg">
                                 <i data-lucide="zap" class="h-4 w-4 text-primary fill-primary animate-icon-wiggle"></i>
                                 <span class="text-sm font-medium text-foreground">
                                     <span class="text-primary font-bold">New</span> Your best event assistant
@@ -196,36 +287,45 @@
                             </div>
                         </div>
 
-                        <h1 data-aos="fade-up" data-aos-delay="300" class="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight text-foreground leading-[1.1]">
+                        <h1 data-aos="fade-up" data-aos-delay="300"
+                            class="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight text-foreground leading-[1.1]">
                             Your dream event,
-                            <span class="block mt-2 bg-gradient-to-r from-primary via-primary to-teal-400 bg-clip-text text-transparent">
+                            <span
+                                class="block mt-2 bg-gradient-to-r from-primary via-primary to-teal-400 bg-clip-text text-transparent">
                                 stress-free.
                             </span>
                         </h1>
 
-                        <p data-aos="fade-up" data-aos-delay="400" class="mt-8 text-lg lg:text-xl leading-relaxed text-muted-foreground max-w-2xl mx-auto">
-                            No more confusing spreadsheets and lost notes. 
-                            With Planne, you organize everything in one place and 
+                        <p data-aos="fade-up" data-aos-delay="400"
+                            class="mt-8 text-lg lg:text-xl leading-relaxed text-muted-foreground max-w-2xl mx-auto">
+                            No more confusing spreadsheets and lost notes.
+                            With Planne, you organize everything in one place and
                             <span class="text-foreground font-medium"> enjoy every moment of the preparation</span>.
                         </p>
 
                         <div data-aos="fade-up" data-aos-delay="500" class="mt-10 flex flex-col items-center gap-6">
                             <div class="flex flex-col sm:flex-row items-center gap-4">
-                                <a href="https://play.google.com/store/apps/details?id=com.planne.planne" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-3 bg-foreground hover:bg-foreground/90 text-background px-8 h-16 rounded-2xl shadow-xl hover:-translate-y-1 transition-all text-lg font-semibold">
+                                <a href="https://play.google.com/store/apps/details?id=com.planne.planne"
+                                    target="_blank" rel="noopener noreferrer"
+                                    class="inline-flex items-center gap-3 bg-foreground hover:bg-foreground/90 text-background px-8 h-16 rounded-2xl shadow-xl hover:-translate-y-1 transition-all text-lg font-semibold">
                                     <svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
-                                        <path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.53,12.9 20.18,13.18L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/>
+                                        <path
+                                            d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.53,12.9 20.18,13.18L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z" />
                                     </svg>
                                     Download - Google Play
                                 </a>
                             </div>
-                            <p data-aos="fade-in" data-aos-delay="700" class="text-sm text-muted-foreground flex items-center gap-2">
+                            <p data-aos="fade-in" data-aos-delay="700"
+                                class="text-sm text-muted-foreground flex items-center gap-2">
                                 <i data-lucide="check" class="w-4 h-4 text-primary"></i>
                                 No credit card. No commitment. Cancel anytime.
                             </p>
                         </div>
 
-                        <div data-aos="fade-up" data-aos-delay="600" class="mt-12 flex flex-wrap items-center justify-center gap-6 text-sm">
-                            <div class="flex items-center gap-2 bg-card/80 backdrop-blur-sm rounded-full px-4 py-2 border border-border">
+                        <div data-aos="fade-up" data-aos-delay="600"
+                            class="mt-12 flex flex-wrap items-center justify-center gap-6 text-sm">
+                            <div
+                                class="flex items-center gap-2 bg-card/80 backdrop-blur-sm rounded-full px-4 py-2 border border-border">
                                 <i data-lucide="sparkles" class="h-5 w-5 text-amber-400"></i>
                                 <span class="font-semibold text-foreground">Exclusive</span>
                                 <span class="text-muted-foreground">for Android on Google Play</span>
@@ -233,7 +333,8 @@
                         </div>
 
                         <div data-aos="fade-in" data-aos-delay="800" class="mt-16 flex justify-center">
-                            <a href="#problem" class="flex flex-col items-center gap-2 text-muted-foreground hover:text-primary transition-colors animate-bounce">
+                            <a href="#problem"
+                                class="flex flex-col items-center gap-2 text-muted-foreground hover:text-primary transition-colors animate-bounce">
                                 <span class="text-sm">See more</span>
                                 <i data-lucide="arrow-down" class="w-5 h-5"></i>
                             </a>
@@ -247,46 +348,56 @@
         <section id="problem" class="py-20 lg:py-28 relative">
             <div class="mx-auto max-w-6xl px-6">
                 <div class="mx-auto max-w-3xl text-center mb-14" data-aos="fade-up">
-                    <div class="inline-flex items-center gap-2 bg-rose-50/80 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900/50 rounded-full px-4 py-2 mb-6">
+                    <div
+                        class="inline-flex items-center gap-2 bg-rose-50/80 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900/50 rounded-full px-4 py-2 mb-6">
                         <i data-lucide="alert-circle" class="w-4 h-4 text-rose-500"></i>
                         <span class="text-sm font-medium text-rose-700 dark:text-rose-400">Sound familiar?</span>
                     </div>
-                    
+
                     <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-foreground">
                         Planning an event shouldn't be <span class="text-rose-500"> so hard</span>
                     </h2>
-                    
+
                     <p class="mt-5 text-lg text-muted-foreground">
-                        We know how it is. You want to experience a special moment, but end up lost amidst so many details.
+                        We know how it is. You want to experience a special moment, but end up lost amidst so many
+                        details.
                     </p>
                 </div>
 
                 <div class="grid md:grid-cols-3 gap-6">
                     <div data-aos="fade-up" data-aos-delay="100">
-                        <div class="hover-card transition-all duration-300 bg-gradient-to-b from-rose-50/50 dark:from-rose-950/20 to-card rounded-3xl p-8 border border-border h-full">
-                            <div class="w-12 h-12 rounded-2xl bg-rose-100 dark:bg-rose-900/40 flex items-center justify-center mb-5">
+                        <div
+                            class="hover-card transition-all duration-300 bg-gradient-to-b from-rose-50/50 dark:from-rose-950/20 to-card rounded-3xl p-8 border border-border h-full">
+                            <div
+                                class="w-12 h-12 rounded-2xl bg-rose-100 dark:bg-rose-900/40 flex items-center justify-center mb-5">
                                 <i data-lucide="brain" class="w-6 h-6 text-rose-500 dark:text-rose-400"></i>
                             </div>
                             <h3 class="text-xl font-semibold text-foreground mb-3">A million things on your mind</h3>
                             <p class="text-muted-foreground leading-relaxed">
-                                Vendors, guest lists, budgets, decorations... Just when you think you've got it all, you remember one more thing.
+                                Vendors, guest lists, budgets, decorations... Just when you think you've got it all, you
+                                remember one more thing.
                             </p>
                         </div>
                     </div>
                     <div data-aos="fade-up" data-aos-delay="200">
-                        <div class="hover-card transition-all duration-300 bg-gradient-to-b from-rose-50/50 dark:from-rose-950/20 to-card rounded-3xl p-8 border border-border h-full">
-                            <div class="w-12 h-12 rounded-2xl bg-rose-100 dark:bg-rose-900/40 flex items-center justify-center mb-5">
+                        <div
+                            class="hover-card transition-all duration-300 bg-gradient-to-b from-rose-50/50 dark:from-rose-950/20 to-card rounded-3xl p-8 border border-border h-full">
+                            <div
+                                class="w-12 h-12 rounded-2xl bg-rose-100 dark:bg-rose-900/40 flex items-center justify-center mb-5">
                                 <i data-lucide="clock" class="w-6 h-6 text-rose-500 dark:text-rose-400"></i>
                             </div>
                             <h3 class="text-xl font-semibold text-foreground mb-3">Never enough time</h3>
                             <p class="text-muted-foreground leading-relaxed">
-                                Between work, family, and personal life, finding the time to plan every detail seems impossible.
+                                Between work, family, and personal life, finding the time to plan every detail seems
+                                impossible.
                             </p>
                         </div>
                     </div>
                     <div data-aos="fade-up" data-aos-delay="300">
-                        <div class="hover-card transition-all duration-300 bg-gradient-to-b from-rose-50/50 dark:from-rose-950/20 to-card rounded-3xl p-8 border border-border h-full">
-                            <div class="w-12 h-12 rounded-2xl bg-rose-100 dark:bg-rose-900/40 flex items-center justify-center mb-5">
+                        <div
+                            class="hover-card transition-all duration-300 bg-gradient-to-b from-rose-50/50 dark:from-rose-950/20 to-card rounded-3xl p-8 border border-border h-full">
+                            <div
+                                class="w-12 h-12 rounded-2xl bg-rose-100 dark:bg-rose-900/40 flex items-center justify-center mb-5">
                                 <i data-lucide="frown" class="w-6 h-6 text-rose-500 dark:text-rose-400"></i>
                             </div>
                             <h3 class="text-xl font-semibold text-foreground mb-3">Unnecessary stress</h3>
@@ -310,11 +421,13 @@
         <!-- SECTION FUNCIONALIDADES -->
         <section id="features" class="py-24 lg:py-32 bg-muted/30 relative overflow-hidden">
             <div class="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl animate-subtle-pulse"></div>
-            <div class="absolute bottom-0 left-0 w-72 h-72 bg-accent/10 dark:bg-accent/5 rounded-full blur-3xl animate-subtle-pulse" style="animation-delay: 2s;"></div>
+            <div class="absolute bottom-0 left-0 w-72 h-72 bg-accent/10 dark:bg-accent/5 rounded-full blur-3xl animate-subtle-pulse"
+                style="animation-delay: 2s;"></div>
 
             <div class="mx-auto max-w-6xl px-6 relative">
                 <div class="mx-auto max-w-2xl text-center mb-16 lg:mb-20" data-aos="fade-up">
-                    <span class="inline-flex items-center gap-2 text-primary font-semibold text-sm tracking-wide uppercase mb-4 bg-primary/10 px-4 py-2 rounded-full">
+                    <span
+                        class="inline-flex items-center gap-2 text-primary font-semibold text-sm tracking-wide uppercase mb-4 bg-primary/10 px-4 py-2 rounded-full">
                         <i data-lucide="check" class="w-4 h-4"></i>
                         <span>Complete solution</span>
                     </span>
@@ -328,60 +441,82 @@
                 </div>
 
                 <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div data-aos="fade-up" data-aos-delay="100" class="hover-card group relative bg-card rounded-3xl p-8 border border-border hover:border-primary/30 transition-colors h-full">
-                        <div class="w-14 h-14 rounded-2xl bg-primary/10 group-hover:bg-primary/20 flex items-center justify-center mb-6 transition-colors">
+                    <div data-aos="fade-up" data-aos-delay="100"
+                        class="hover-card group relative bg-card rounded-3xl p-8 border border-border hover:border-primary/30 transition-colors h-full">
+                        <div
+                            class="w-14 h-14 rounded-2xl bg-primary/10 group-hover:bg-primary/20 flex items-center justify-center mb-6 transition-colors">
                             <i data-lucide="layout-dashboard" class="w-7 h-7 text-primary"></i>
                         </div>
                         <h3 class="text-xl font-semibold text-foreground mb-2">Complete event overview</h3>
                         <p class="text-primary font-medium text-sm mb-3">Never lose sight of what needs to be done</p>
-                        <p class="text-muted-foreground leading-relaxed">Intuitive dashboard showing everything: tasks, budget, guests, and deadlines. You are in full control.</p>
+                        <p class="text-muted-foreground leading-relaxed">Intuitive dashboard showing everything: tasks,
+                            budget, guests, and deadlines. You are in full control.</p>
                     </div>
-                    <div data-aos="fade-up" data-aos-delay="150" class="hover-card group relative bg-card rounded-3xl p-8 border border-border hover:border-primary/30 transition-colors h-full">
-                        <div class="w-14 h-14 rounded-2xl bg-amber-50 dark:bg-amber-950/40 group-hover:bg-amber-100 dark:group-hover:bg-amber-900/40 flex items-center justify-center mb-6 transition-colors">
+                    <div data-aos="fade-up" data-aos-delay="150"
+                        class="hover-card group relative bg-card rounded-3xl p-8 border border-border hover:border-primary/30 transition-colors h-full">
+                        <div
+                            class="w-14 h-14 rounded-2xl bg-amber-50 dark:bg-amber-950/40 group-hover:bg-amber-100 dark:group-hover:bg-amber-900/40 flex items-center justify-center mb-6 transition-colors">
                             <i data-lucide="wallet" class="w-7 h-7 text-amber-600 dark:text-amber-400"></i>
                         </div>
                         <h3 class="text-xl font-semibold text-foreground mb-2">Budget under control</h3>
                         <p class="text-primary font-medium text-sm mb-3">Avoid unpleasant surprises at the end</p>
-                        <p class="text-muted-foreground leading-relaxed">See how much you've spent and what you can still invest. Simple charts anyone can understand.</p>
+                        <p class="text-muted-foreground leading-relaxed">See how much you've spent and what you can
+                            still invest. Simple charts anyone can understand.</p>
                     </div>
-                    <div data-aos="fade-up" data-aos-delay="200" class="hover-card group relative bg-card rounded-3xl p-8 border border-border hover:border-primary/30 transition-colors h-full">
-                        <div class="w-14 h-14 rounded-2xl bg-blue-50 dark:bg-blue-950/40 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/40 flex items-center justify-center mb-6 transition-colors">
+                    <div data-aos="fade-up" data-aos-delay="200"
+                        class="hover-card group relative bg-card rounded-3xl p-8 border border-border hover:border-primary/30 transition-colors h-full">
+                        <div
+                            class="w-14 h-14 rounded-2xl bg-blue-50 dark:bg-blue-950/40 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/40 flex items-center justify-center mb-6 transition-colors">
                             <i data-lucide="users" class="w-7 h-7 text-blue-600 dark:text-blue-400"></i>
                         </div>
                         <h3 class="text-xl font-semibold text-foreground mb-2">Smart guest list</h3>
                         <p class="text-primary font-medium text-sm mb-3">Know exactly who is coming and who isn't</p>
-                        <p class="text-muted-foreground leading-relaxed">Invite via WhatsApp, track RSVPs in real-time, and organize tables easily.</p>
+                        <p class="text-muted-foreground leading-relaxed">Invite via WhatsApp, track RSVPs in real-time,
+                            and organize tables easily.</p>
                     </div>
-                    <div data-aos="fade-up" data-aos-delay="250" class="hover-card group relative bg-card rounded-3xl p-8 border border-border hover:border-primary/30 transition-colors h-full">
-                        <div class="w-14 h-14 rounded-2xl bg-purple-50 dark:bg-purple-950/40 group-hover:bg-purple-100 dark:group-hover:bg-purple-900/40 flex items-center justify-center mb-6 transition-colors">
+                    <div data-aos="fade-up" data-aos-delay="250"
+                        class="hover-card group relative bg-card rounded-3xl p-8 border border-border hover:border-primary/30 transition-colors h-full">
+                        <div
+                            class="w-14 h-14 rounded-2xl bg-purple-50 dark:bg-purple-950/40 group-hover:bg-purple-100 dark:group-hover:bg-purple-900/40 flex items-center justify-center mb-6 transition-colors">
                             <i data-lucide="calendar" class="w-7 h-7 text-purple-600 dark:text-purple-400"></i>
                         </div>
                         <h3 class="text-xl font-semibold text-foreground mb-2">Automatic reminders</h3>
                         <p class="text-primary font-medium text-sm mb-3">Never forget anything important again</p>
-                        <p class="text-muted-foreground leading-relaxed">Planne notifies you at the right time. Vendor meeting? Payment? Relax, we'll remind you.</p>
+                        <p class="text-muted-foreground leading-relaxed">Planne notifies you at the right time. Vendor
+                            meeting? Payment? Relax, we'll remind you.</p>
                     </div>
-                    <div data-aos="fade-up" data-aos-delay="300" class="hover-card group relative bg-card rounded-3xl p-8 border border-border hover:border-primary/30 transition-colors h-full">
-                        <div class="w-14 h-14 rounded-2xl bg-rose-50 dark:bg-rose-950/40 group-hover:bg-rose-100 dark:group-hover:bg-rose-900/40 flex items-center justify-center mb-6 transition-colors">
+                    <div data-aos="fade-up" data-aos-delay="300"
+                        class="hover-card group relative bg-card rounded-3xl p-8 border border-border hover:border-primary/30 transition-colors h-full">
+                        <div
+                            class="w-14 h-14 rounded-2xl bg-rose-50 dark:bg-rose-950/40 group-hover:bg-rose-100 dark:group-hover:bg-rose-900/40 flex items-center justify-center mb-6 transition-colors">
                             <i data-lucide="sticky-note" class="w-7 h-7 text-rose-500 dark:text-rose-400"></i>
                         </div>
                         <h3 class="text-xl font-semibold text-foreground mb-2">Your ideas organized</h3>
                         <p class="text-primary font-medium text-sm mb-3">Keep inspirations without losing any</p>
-                        <p class="text-muted-foreground leading-relaxed">Pinterest photos, references, notes... All in one place, always accessible.</p>
+                        <p class="text-muted-foreground leading-relaxed">Pinterest photos, references, notes... All in
+                            one place, always accessible.</p>
                     </div>
-                    <div data-aos="fade-up" data-aos-delay="350" class="hover-card group relative bg-card rounded-3xl p-8 border border-border hover:border-primary/30 transition-colors h-full">
-                        <div class="w-14 h-14 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 group-hover:bg-emerald-100 dark:group-hover:bg-emerald-900/40 flex items-center justify-center mb-6 transition-colors">
+                    <div data-aos="fade-up" data-aos-delay="350"
+                        class="hover-card group relative bg-card rounded-3xl p-8 border border-border hover:border-primary/30 transition-colors h-full">
+                        <div
+                            class="w-14 h-14 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 group-hover:bg-emerald-100 dark:group-hover:bg-emerald-900/40 flex items-center justify-center mb-6 transition-colors">
                             <i data-lucide="camera" class="w-7 h-7 text-emerald-600 dark:text-emerald-400"></i>
                         </div>
                         <h3 class="text-xl font-semibold text-foreground mb-2">Memories of the big day</h3>
                         <p class="text-primary font-medium text-sm mb-3">Relive the best moments always</p>
-                        <p class="text-muted-foreground leading-relaxed">After the event, keep photos and videos in a special album inside the app.</p>
+                        <p class="text-muted-foreground leading-relaxed">After the event, keep photos and videos in a
+                            special album inside the app.</p>
                     </div>
                 </div>
 
-                <div class="mt-16 flex flex-wrap items-center justify-center gap-6 text-sm text-muted-foreground" data-aos="fade-up">
-                    <div class="flex items-center gap-2"><i data-lucide="check" class="w-5 h-5 text-primary"></i><span>Works offline</span></div>
-                    <div class="flex items-center gap-2"><i data-lucide="check" class="w-5 h-5 text-primary"></i><span>Syncs automatically</span></div>
-                    <div class="flex items-center gap-2"><i data-lucide="check" class="w-5 h-5 text-primary"></i><span>Share with your partner</span></div>
+                <div class="mt-16 flex flex-wrap items-center justify-center gap-6 text-sm text-muted-foreground"
+                    data-aos="fade-up">
+                    <div class="flex items-center gap-2"><i data-lucide="check"
+                            class="w-5 h-5 text-primary"></i><span>Works offline</span></div>
+                    <div class="flex items-center gap-2"><i data-lucide="check"
+                            class="w-5 h-5 text-primary"></i><span>Syncs automatically</span></div>
+                    <div class="flex items-center gap-2"><i data-lucide="check"
+                            class="w-5 h-5 text-primary"></i><span>Share with your partner</span></div>
                 </div>
             </div>
         </section>
@@ -390,7 +525,8 @@
         <section id="how-it-works" class="py-24 lg:py-32 relative">
             <div class="mx-auto max-w-6xl px-6">
                 <div class="mx-auto max-w-2xl text-center mb-20" data-aos="fade-up">
-                    <span class="inline-flex items-center gap-2 text-primary font-semibold text-sm tracking-wide uppercase mb-4 bg-primary/10 px-4 py-2 rounded-full">
+                    <span
+                        class="inline-flex items-center gap-2 text-primary font-semibold text-sm tracking-wide uppercase mb-4 bg-primary/10 px-4 py-2 rounded-full">
                         <i data-lucide="smartphone" class="w-4 h-4"></i> <span>Super simple</span>
                     </span>
                     <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-foreground">
@@ -411,23 +547,31 @@
                                     <span class="text-xs font-semibold text-primary">Less than 2 minutes</span>
                                 </span>
                             </div>
-                            <h3 class="text-2xl lg:text-3xl font-bold text-foreground mb-4">Download the app and create your event</h3>
+                            <h3 class="text-2xl lg:text-3xl font-bold text-foreground mb-4">Download the app and create
+                                your event</h3>
                             <p class="text-muted-foreground text-lg leading-relaxed max-w-md mx-auto lg:mx-0">
-                                Open the app, choose the event type, and you're done. No endless forms or complicated settings.
+                                Open the app, choose the event type, and you're done. No endless forms or complicated
+                                settings.
                             </p>
                         </div>
-                        <div class="flex-1 w-full max-w-md hover-card transition-transform" data-aos="fade-left" data-aos-delay="200">
+                        <div class="flex-1 w-full max-w-md hover-card transition-transform" data-aos="fade-left"
+                            data-aos-delay="200">
                             <div class="bg-card rounded-3xl p-6 border border-border shadow-xl">
                                 <div class="space-y-4">
                                     <div>
                                         <div class="text-xs text-muted-foreground mb-2 font-medium">Event name</div>
-                                        <div class="h-12 bg-muted rounded-xl flex items-center px-4 text-sm text-foreground font-medium">Ana & Pedro's Wedding</div>
+                                        <div
+                                            class="h-12 bg-muted rounded-xl flex items-center px-4 text-sm text-foreground font-medium">
+                                            Ana & Pedro's Wedding</div>
                                     </div>
                                     <div>
                                         <div class="text-xs text-muted-foreground mb-2 font-medium">Date</div>
-                                        <div class="h-12 bg-muted rounded-xl flex items-center px-4 text-sm text-foreground">March 15, 2026</div>
+                                        <div
+                                            class="h-12 bg-muted rounded-xl flex items-center px-4 text-sm text-foreground">
+                                            March 15, 2026</div>
                                     </div>
-                                    <button class="w-full h-12 bg-primary rounded-xl flex items-center justify-center text-sm text-primary-foreground font-semibold gap-2 shadow-lg shadow-primary/30 hover:shadow-primary/50 transition-shadow">
+                                    <button
+                                        class="w-full h-12 bg-primary rounded-xl flex items-center justify-center text-sm text-primary-foreground font-semibold gap-2 shadow-lg shadow-primary/30 hover:shadow-primary/50 transition-shadow">
                                         <i data-lucide="plus" class="w-4 h-4"></i> <span>Create event</span>
                                     </button>
                                 </div>
@@ -443,28 +587,35 @@
                                     <span class="text-xs font-semibold text-primary">Take your time</span>
                                 </span>
                             </div>
-                            <h3 class="text-2xl lg:text-3xl font-bold text-foreground mb-4">Add details at your own pace</h3>
+                            <h3 class="text-2xl lg:text-3xl font-bold text-foreground mb-4">Add details at your own pace
+                            </h3>
                             <p class="text-muted-foreground text-lg leading-relaxed max-w-md mx-auto lg:mx-0">
-                                Guests, budget, tasks, ideas... Add everything little by little, whenever you can. The app adapts to you.
+                                Guests, budget, tasks, ideas... Add everything little by little, whenever you can. The
+                                app adapts to you.
                             </p>
                         </div>
-                        <div class="flex-1 w-full max-w-md hover-card transition-transform" data-aos="fade-right" data-aos-delay="200">
+                        <div class="flex-1 w-full max-w-md hover-card transition-transform" data-aos="fade-right"
+                            data-aos-delay="200">
                             <div class="bg-card rounded-3xl p-6 border border-border shadow-xl">
                                 <div class="grid grid-cols-2 gap-4">
-                                    <div class="bg-primary/10 rounded-2xl p-5 text-center cursor-default hover:scale-105 transition-transform">
+                                    <div
+                                        class="bg-primary/10 rounded-2xl p-5 text-center cursor-default hover:scale-105 transition-transform">
                                         <i data-lucide="users" class="w-6 h-6 text-primary mx-auto mb-2"></i>
                                         <div class="text-2xl font-bold text-primary">124</div>
                                         <div class="text-xs text-muted-foreground">Guests</div>
                                     </div>
-                                    <div class="bg-amber-50 dark:bg-amber-950/40 rounded-2xl p-5 text-center cursor-default hover:scale-105 transition-transform">
+                                    <div
+                                        class="bg-amber-50 dark:bg-amber-950/40 rounded-2xl p-5 text-center cursor-default hover:scale-105 transition-transform">
                                         <div class="text-2xl font-bold text-amber-600 dark:text-amber-400">$ 15k</div>
                                         <div class="text-xs text-muted-foreground mt-1">Budget</div>
                                     </div>
-                                    <div class="bg-blue-50 dark:bg-blue-950/40 rounded-2xl p-5 text-center cursor-default hover:scale-105 transition-transform">
+                                    <div
+                                        class="bg-blue-50 dark:bg-blue-950/40 rounded-2xl p-5 text-center cursor-default hover:scale-105 transition-transform">
                                         <div class="text-2xl font-bold text-blue-600 dark:text-blue-400">18</div>
                                         <div class="text-xs text-muted-foreground mt-1">Tasks</div>
                                     </div>
-                                    <div class="bg-purple-50 dark:bg-purple-950/40 rounded-2xl p-5 text-center cursor-default hover:scale-105 transition-transform">
+                                    <div
+                                        class="bg-purple-50 dark:bg-purple-950/40 rounded-2xl p-5 text-center cursor-default hover:scale-105 transition-transform">
                                         <div class="text-2xl font-bold text-purple-600 dark:text-purple-400">7</div>
                                         <div class="text-xs text-muted-foreground mt-1">Vendors</div>
                                     </div>
@@ -481,16 +632,21 @@
                                     <span class="text-xs font-semibold text-primary">Your dream day</span>
                                 </span>
                             </div>
-                            <h3 class="text-2xl lg:text-3xl font-bold text-foreground mb-4">Relax and enjoy the moment</h3>
+                            <h3 class="text-2xl lg:text-3xl font-bold text-foreground mb-4">Relax and enjoy the moment
+                            </h3>
                             <p class="text-muted-foreground text-lg leading-relaxed max-w-md mx-auto lg:mx-0">
-                                With everything organized, there's only one thing left: enjoy. Planne takes care of the organization, you take care of being happy.
+                                With everything organized, there's only one thing left: enjoy. Planne takes care of the
+                                organization, you take care of being happy.
                             </p>
                         </div>
-                        <div class="flex-1 w-full max-w-md hover-card transition-transform" data-aos="fade-left" data-aos-delay="200">
+                        <div class="flex-1 w-full max-w-md hover-card transition-transform" data-aos="fade-left"
+                            data-aos-delay="200">
                             <div class="bg-card rounded-3xl p-6 border border-border shadow-xl">
                                 <div class="flex items-center gap-4 mb-6">
-                                    <div class="w-14 h-14 rounded-full bg-green-100 dark:bg-green-900/40 flex items-center justify-center">
-                                        <i data-lucide="check-circle" class="w-7 h-7 text-green-600 dark:text-green-400"></i>
+                                    <div
+                                        class="w-14 h-14 rounded-full bg-green-100 dark:bg-green-900/40 flex items-center justify-center">
+                                        <i data-lucide="check-circle"
+                                            class="w-7 h-7 text-green-600 dark:text-green-400"></i>
                                     </div>
                                     <div>
                                         <div class="font-semibold text-foreground text-lg">All set!</div>
@@ -498,11 +654,14 @@
                                     </div>
                                 </div>
                                 <div class="h-4 bg-muted rounded-full overflow-hidden">
-                                    <div class="progress-bar h-full bg-gradient-to-r from-primary via-teal-400 to-green-500 rounded-full"></div>
+                                    <div
+                                        class="progress-bar h-full bg-gradient-to-r from-primary via-teal-400 to-green-500 rounded-full">
+                                    </div>
                                 </div>
                                 <div class="flex items-center justify-between mt-3">
                                     <span class="text-sm text-muted-foreground">Progress</span>
-                                    <span class="text-sm text-green-600 dark:text-green-400 font-bold">100% complete</span>
+                                    <span class="text-sm text-green-600 dark:text-green-400 font-bold">100%
+                                        complete</span>
                                 </div>
                             </div>
                         </div>
@@ -510,11 +669,14 @@
                 </div>
 
                 <div class="text-center mt-20" data-aos="fade-up">
-                    <a href="https://play.google.com/store/apps/details?id=com.planne.planne" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-3 text-lg px-8 h-16 bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl shadow-primary/30 hover:shadow-primary/50 rounded-2xl transition-all font-semibold group hover:-translate-y-1">
+                    <a href="https://play.google.com/store/apps/details?id=com.planne.planne" target="_blank"
+                        rel="noopener noreferrer"
+                        class="inline-flex items-center gap-3 text-lg px-8 h-16 bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl shadow-primary/30 hover:shadow-primary/50 rounded-2xl transition-all font-semibold group hover:-translate-y-1">
                         <span>Prepare my event</span>
                         <i data-lucide="arrow-right" class="h-5 w-5 group-hover:translate-x-1 transition-transform"></i>
                     </a>
-                    <p class="mt-4 text-sm text-muted-foreground">Download the app and create your first event in seconds.</p>
+                    <p class="mt-4 text-sm text-muted-foreground">Download the app and create your first event in
+                        seconds.</p>
                 </div>
             </div>
         </section>
@@ -522,11 +684,15 @@
         <!-- SECTION SEGURANÇA -->
         <section class="py-12 border-y border-border bg-muted/50">
             <div class="max-w-6xl mx-auto px-6 text-center">
-                <p class="text-sm font-semibold text-muted-foreground uppercase tracking-widest mb-6">100% Secure and Approved Technology</p>
+                <p class="text-sm font-semibold text-muted-foreground uppercase tracking-widest mb-6">100% Secure and
+                    Approved Technology</p>
                 <div class="flex flex-wrap justify-center items-center gap-10 opacity-70 grayscale">
-                    <div class="flex items-center gap-2"><i data-lucide="shield-check" class="w-6 h-6"></i><span class="font-bold text-lg">End-to-End Encryption</span></div>
-                    <div class="flex items-center gap-2"><i data-lucide="lock" class="w-6 h-6"></i><span class="font-bold text-lg">GDPR Compliant</span></div>
-                    <div class="flex items-center gap-2"><i data-lucide="cloud-off" class="w-6 h-6"></i><span class="font-bold text-lg">Offline Mode</span></div>
+                    <div class="flex items-center gap-2"><i data-lucide="shield-check" class="w-6 h-6"></i><span
+                            class="font-bold text-lg">End-to-End Encryption</span></div>
+                    <div class="flex items-center gap-2"><i data-lucide="lock" class="w-6 h-6"></i><span
+                            class="font-bold text-lg">GDPR Compliant</span></div>
+                    <div class="flex items-center gap-2"><i data-lucide="cloud-off" class="w-6 h-6"></i><span
+                            class="font-bold text-lg">Offline Mode</span></div>
                 </div>
             </div>
         </section>
@@ -534,42 +700,57 @@
         <!-- CALL TO ACTION FINAL -->
         <section class="py-24 lg:py-32 relative overflow-hidden">
             <div class="absolute inset-0 bg-gradient-to-br from-primary via-primary to-teal-600 dark:to-teal-900"></div>
-            <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMiIvPjwvZz48L2c+PC9zdmc+')] opacity-50"></div>
-            
+            <div
+                class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMiIvPjwvZz48L2c+PC9zdmc+')] opacity-50">
+            </div>
+
             <div class="absolute top-20 left-10 w-32 h-32 bg-white/10 rounded-full blur-3xl animate-float"></div>
-            <div class="absolute bottom-20 right-10 w-40 h-40 bg-white/10 rounded-full blur-3xl animate-float-delayed"></div>
+            <div class="absolute bottom-20 right-10 w-40 h-40 bg-white/10 rounded-full blur-3xl animate-float-delayed">
+            </div>
 
             <div class="relative mx-auto max-w-4xl px-6 text-center">
-                <div data-aos="fade-up" class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full px-5 py-2.5 mb-8">
+                <div data-aos="fade-up"
+                    class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full px-5 py-2.5 mb-8">
                     <i data-lucide="clock" class="w-4 h-4 text-white"></i>
                     <span class="text-sm font-medium text-white">Your event is coming up. Start now!</span>
                 </div>
 
-                <h2 data-aos="fade-up" data-aos-delay="100" class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white">
+                <h2 data-aos="fade-up" data-aos-delay="100"
+                    class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white">
                     Ready to plan without stress?
                 </h2>
 
-                <p data-aos="fade-up" data-aos-delay="200" class="mt-6 text-lg lg:text-xl leading-relaxed text-white/90 max-w-2xl mx-auto">
+                <p data-aos="fade-up" data-aos-delay="200"
+                    class="mt-6 text-lg lg:text-xl leading-relaxed text-white/90 max-w-2xl mx-auto">
                     Discover a lighter and more organized way to create unforgettable moments.
                 </p>
 
-                <div data-aos="fade-up" data-aos-delay="300" class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-                    <a href="https://play.google.com/store/apps/details?id=com.planne.planne" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-3 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white border border-white/30 px-8 h-16 rounded-2xl shadow-xl hover:-translate-y-1 transition-all text-lg font-semibold">
+                <div data-aos="fade-up" data-aos-delay="300"
+                    class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <a href="https://play.google.com/store/apps/details?id=com.planne.planne" target="_blank"
+                        rel="noopener noreferrer"
+                        class="inline-flex items-center gap-3 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white border border-white/30 px-8 h-16 rounded-2xl shadow-xl hover:-translate-y-1 transition-all text-lg font-semibold">
                         <svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.53,12.9 20.18,13.18L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/>
+                            <path
+                                d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.53,12.9 20.18,13.18L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z" />
                         </svg>
                         <span>Download on Google Play</span>
                     </a>
                 </div>
 
                 <div class="mt-10 flex flex-wrap items-center justify-center gap-6 text-white/90">
-                    <div data-aos="fade-right" data-aos-delay="400" class="flex items-center gap-2"><i data-lucide="check" class="w-5 h-5"></i><span class="text-sm">100% free</span></div>
-                    <div data-aos="fade-right" data-aos-delay="500" class="flex items-center gap-2"><i data-lucide="check" class="w-5 h-5"></i><span class="text-sm">No ads</span></div>
-                    <div data-aos="fade-right" data-aos-delay="600" class="flex items-center gap-2"><i data-lucide="check" class="w-5 h-5"></i><span class="text-sm">Your data protected</span></div>
+                    <div data-aos="fade-right" data-aos-delay="400" class="flex items-center gap-2"><i
+                            data-lucide="check" class="w-5 h-5"></i><span class="text-sm">100% free</span></div>
+                    <div data-aos="fade-right" data-aos-delay="500" class="flex items-center gap-2"><i
+                            data-lucide="check" class="w-5 h-5"></i><span class="text-sm">No ads</span></div>
+                    <div data-aos="fade-right" data-aos-delay="600" class="flex items-center gap-2"><i
+                            data-lucide="check" class="w-5 h-5"></i><span class="text-sm">Your data protected</span>
+                    </div>
                 </div>
 
                 <div data-aos="fade-up" data-aos-delay="700" class="mt-12 flex justify-center">
-                    <div class="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center animate-subtle-pulse">
+                    <div
+                        class="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center animate-subtle-pulse">
                         <i data-lucide="heart" class="w-8 h-8 text-white fill-white"></i>
                     </div>
                 </div>
@@ -586,7 +767,8 @@
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12">
                 <div class="col-span-2 md:col-span-1">
                     <a href="/" class="flex items-center gap-2.5 mb-5" aria-label="Home Planne">
-                        <div class="w-10 h-10 rounded-2xl bg-primary flex items-center justify-center shadow-lg shadow-primary/25">
+                        <div
+                            class="w-10 h-10 rounded-2xl bg-primary flex items-center justify-center shadow-lg shadow-primary/25">
                             <span class="text-primary-foreground font-bold text-xl">P</span>
                         </div>
                         <span class="text-xl font-semibold text-foreground">planne</span>
@@ -595,38 +777,62 @@
                         Event planning with clarity, elegance, and that special care that makes a difference.
                     </p>
                     <div class="flex gap-3">
-                        <a href="#" class="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors" aria-label="Instagram"><i data-lucide="instagram" class="w-5 h-5"></i></a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors" aria-label="Twitter"><i data-lucide="twitter" class="w-5 h-5"></i></a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors" aria-label="LinkedIn"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
+                            aria-label="Instagram"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
+                            aria-label="Twitter"><i data-lucide="twitter" class="w-5 h-5"></i></a>
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
+                            aria-label="LinkedIn"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
                     </div>
                 </div>
 
                 <div>
                     <h3 class="font-semibold text-foreground mb-5">Product</h3>
                     <ul class="space-y-3">
-                        <li><a href="#features" class="text-sm text-muted-foreground hover:text-primary transition-colors">Features</a></li>
-                        <li><a href="#how-it-works" class="text-sm text-muted-foreground hover:text-primary transition-colors">How it works</a></li>
-                        <li><a href="#" class="text-sm text-muted-foreground hover:text-primary transition-colors">Pricing</a></li>
-                        <li><a href="#" class="text-sm text-muted-foreground hover:text-primary transition-colors">FAQ</a></li>
+                        <li><a href="#features"
+                                class="text-sm text-muted-foreground hover:text-primary transition-colors">Features</a>
+                        </li>
+                        <li><a href="#how-it-works"
+                                class="text-sm text-muted-foreground hover:text-primary transition-colors">How it
+                                works</a></li>
+                        <li><a href="#"
+                                class="text-sm text-muted-foreground hover:text-primary transition-colors">Pricing</a>
+                        </li>
+                        <li><a href="#"
+                                class="text-sm text-muted-foreground hover:text-primary transition-colors">FAQ</a></li>
                     </ul>
                 </div>
 
                 <div>
                     <h3 class="font-semibold text-foreground mb-5">Company</h3>
                     <ul class="space-y-3">
-                        <li><a href="#" class="text-sm text-muted-foreground hover:text-primary transition-colors">About us</a></li>
-                        <li><a href="#" class="text-sm text-muted-foreground hover:text-primary transition-colors">Blog</a></li>
-                        <li><a href="#" class="text-sm text-muted-foreground hover:text-primary transition-colors">Careers</a></li>
-                        <li><a href="#" class="text-sm text-muted-foreground hover:text-primary transition-colors">Contact us</a></li>
+                        <li><a href="#" class="text-sm text-muted-foreground hover:text-primary transition-colors">About
+                                us</a></li>
+                        <li><a href="#"
+                                class="text-sm text-muted-foreground hover:text-primary transition-colors">Blog</a></li>
+                        <li><a href="#"
+                                class="text-sm text-muted-foreground hover:text-primary transition-colors">Careers</a>
+                        </li>
+                        <li><a href="#"
+                                class="text-sm text-muted-foreground hover:text-primary transition-colors">Contact
+                                us</a></li>
                     </ul>
                 </div>
 
                 <div>
                     <h3 class="font-semibold text-foreground mb-5">Legal</h3>
                     <ul class="space-y-3">
-                        <li><a href="#" class="text-sm text-muted-foreground hover:text-primary transition-colors">Terms of use</a></li>
-                        <li><a href="#" class="text-sm text-muted-foreground hover:text-primary transition-colors">Privacy policy</a></li>
-                        <li><a href="#" class="text-sm text-muted-foreground hover:text-primary transition-colors">Cookies</a></li>
+                        <li><a href="#" class="text-sm text-muted-foreground hover:text-primary transition-colors">Terms
+                                of use</a></li>
+                        <li><a href="#"
+                                class="text-sm text-muted-foreground hover:text-primary transition-colors">Privacy
+                                policy</a></li>
+                        <li><a href="#"
+                                class="text-sm text-muted-foreground hover:text-primary transition-colors">Cookies</a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -636,7 +842,8 @@
                     &copy; 2026 Planne. All rights reserved.
                 </p>
                 <p class="text-sm text-muted-foreground flex items-center gap-1.5">
-                    Made with <i data-lucide="heart" class="w-4 h-4 text-primary fill-primary"></i> for your special moments.
+                    Made with <i data-lucide="heart" class="w-4 h-4 text-primary fill-primary"></i> for your special
+                    moments.
                 </p>
             </div>
         </div>
@@ -660,17 +867,17 @@
         function initTheme() {
             const savedTheme = localStorage.getItem('planne-theme');
             const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            
+
             const isDark = savedTheme === 'dark' || (!savedTheme && systemPrefersDark);
-            
+
             if (isDark) {
                 document.documentElement.classList.add('dark');
             } else {
                 document.documentElement.classList.remove('dark');
             }
-            
+
             updateThemeIcons(isDark);
-            
+
             setTimeout(() => {
                 document.documentElement.classList.add('transition-theme');
             }, 100);
@@ -678,7 +885,7 @@
 
         function toggleTheme() {
             const isDark = document.documentElement.classList.contains('dark');
-            
+
             if (isDark) {
                 document.documentElement.classList.remove('dark');
                 localStorage.setItem('planne-theme', 'light');
@@ -695,10 +902,10 @@
             const desktopIcon = document.getElementById('theme-icon-desktop');
             const mobileIcon = document.getElementById('theme-icon-mobile');
             const textMobile = document.getElementById('theme-text-mobile');
-            
-            if(desktopIcon) desktopIcon.setAttribute('data-lucide', iconName);
-            if(mobileIcon) mobileIcon.setAttribute('data-lucide', iconName);
-            
+
+            if (desktopIcon) desktopIcon.setAttribute('data-lucide', iconName);
+            if (mobileIcon) mobileIcon.setAttribute('data-lucide', iconName);
+
             lucide.createIcons({
                 attrs: { class: ['w-5', 'h-5'] },
                 nameAttr: 'data-lucide',
@@ -709,7 +916,7 @@
                 nameAttr: 'data-lucide',
                 root: document.getElementById('theme-icon-mobile').parentNode
             });
-            
+
             if (textMobile) {
                 textMobile.innerText = isDark ? 'Dark Mode' : 'Light Mode';
             }
@@ -718,4 +925,5 @@
         document.addEventListener('DOMContentLoaded', initTheme);
     </script>
 </body>
+
 </html>
