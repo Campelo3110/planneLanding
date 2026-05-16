@@ -18,7 +18,9 @@
 
     <!-- FAVICONS -->
     <link rel="icon" type="image/png" sizes="32x32" href="/public/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/public/favicon-16x16.png">
+
+    <link rel="shortcut icon" href="https://planneapp.com/favicon.ico" type="image/x-icon">
 
     <!-- HREFLANG -->
     <link rel="alternate" hreflang="en" href="https://planneapp.com/" />
@@ -148,6 +150,37 @@
             transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, fill 0.3s ease !important;
         }
     </style>
+
+    <script>
+        (function () {
+            const userLanguagePref = localStorage.getItem('planne-lang');
+
+            // Se o usuário escolheu 'en' manualmente, interrompe o script e NÃO redireciona
+            if (userLanguagePref === 'en') {
+                return;
+            }
+
+            // Se ele escolheu 'pt' manualmente e não está na pasta certa, manda para lá
+            if (userLanguagePref === 'pt') {
+                if (!window.location.pathname.includes('/pt-br')) {
+                    window.location.href = '/pt-br';
+                }
+                return;
+            }
+
+            // Se NÃO tem preferência salva ainda (primeira visita), olha o navegador
+            if (!userLanguagePref) {
+                const browserLang = navigator.language || navigator.userLanguage;
+
+                if (browserLang.startsWith('pt')) {
+                    if (!window.location.pathname.includes('/pt-br')) {
+                        window.location.href = '/pt-br';
+                    }
+                }
+            }
+        })();
+    </script>
+
 </head>
 
 <body class="bg-background text-foreground font-sans antialiased overflow-x-hidden">
@@ -185,11 +218,29 @@
                 </button>
 
                 <!-- Seletor de Idioma Desktop -->
+                <!-- Seletor de Idioma Desktop -->
                 <div class="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-                    <span class="lang-active cursor-default">PT</span>
+                    <!-- PT agora é o ativo e não tem hover -->
+                    <a href="/pt-br" onclick="setLanguage(event, 'pt', '/pt-br')" aria-label="Mudar para Português"
+                        class="lang-active cursor-default">PT</a>
                     <span aria-hidden="true">|</span>
-                    <a href="/" aria-label="Mudar para Inglês" class="hover:text-primary transition-colors">EN</a>
+                    <!-- EN agora ganha o hover e perde a classe ativa -->
+                    <a href="/" onclick="setLanguage(event, 'en', '/')" aria-label="Change to English"
+                        class="hover:text-primary transition-colors">EN</a>
                 </div>
+
+                <script>
+                    function setLanguage(event, lang, targetUrl) {
+                        // Impede o navegador de seguir o link antes da hora
+                        event.preventDefault();
+
+                        // Grava no localStorage com garantia de execução
+                        localStorage.setItem('planne-lang', lang);
+
+                        // Agora sim, redireciona para a página correta
+                        window.location.href = targetUrl;
+                    }
+                </script>
 
                 <a href="https://play.google.com/store/apps/details?id=com.planne.planne" target="_blank"
                     rel="noopener noreferrer"
