@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>Planne — Account</title>
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#0d9488">
+
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import {
+            getAuth,
+            verifyPasswordResetCode,
+            confirmPasswordReset,
+            applyActionCode,
+            checkActionCode
+        } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+        // ─── SUBSTITUA PELA SUA CONFIG ───────────────────────
+        const firebaseConfig = {
+            apiKey: "AIzaSyB1wOwTWEIjxhx4hvkOzBF8rMZcgLLOVUA",
+            authDomain: "planne-692f7.firebaseapp.com",
+            projectId: "planne-692f7",
+            storageBucket: "planne-692f7.firebasestorage.app",
+            messagingSenderId: "136432930965",
+            appId: "1:136432930965:web:83213ea34af4c013bc0b9c",
+            measurementId: "G-8JCTY94S1L"
+        };
+        // ────────────────────────────────────────────────────
+
+        const app  = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const p    = new URLSearchParams(window.location.search);
+
+        window.__planneAuth = {
+            auth,
+            verifyPasswordResetCode,
+            confirmPasswordReset,
+            applyActionCode,
+            checkActionCode,
+            mode:    p.get("mode"),
+            oobCode: p.get("oobCode"),
+            lang:    p.get("lang") // Firebase pode enviar o lang do usuário
+        };
+    </script>
+
+    <style>
+        :root {
+            --bg:            #F8FAFC;
+            --card:          #FFFFFF;
+            --foreground:    #0F172A;
+            --muted:         #64748B;
+            --border:        #E2E8F0;
+            --primary:       #0d9488;
+            --primary-hover: #0f766e;
+            --primary-light: rgba(13,148,136,0.08);
+            --primary-glow:  rgba(13,148,136,0.18);
+            --error:         #ef4444;
+            --error-light:   rgba(239,68,68,0.08);
+            --success:       #10b981;
+            --success-light: rgba(16,185,129,0.08);
+            --warning:       #f59e0b;
+            --warning-light: rgba(245,158,11,0.08);
+            --shadow-card:   0 4px 32px rgba(15,23,42,0.07), 0 1px 4px rgba(15,23,42,0.04);
+            --shadow-btn:    0 4px 20px rgba(13,148,136,0.28);
+        }
+        html.dark {
+            --bg:            #0B0F1A;
+            --card:          #141B2B;
+            --foreground:    #F9FAFB;
+            --muted:         #9CA3AF;
+            --border:        rgba(255,255,255,0.07);
+            --primary-light: rgba(13,148,136,0.12);
+            --shadow-card:   0 4px 40px rgba(0,0,0,0.4);
+        }
+
+        *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+
+        body {
+            font-family:'Outfit',sans-serif;
+            background:var(--bg);
+            color:var(--foreground);
+            min-height:100vh;
+            display:flex; flex-direction:column;
+            overflow-x:hidden;
+            -webkit-font-smoothing:antialiased;
+        }
+
+        /* ── BLOBS ── */
+        .bg-blobs { position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
+        .bg-blobs span { position:absolute; border-radius:50%; filter:blur(80px); opacity:0.45; }
+        .blob-1 {
+            width:480px; height:480px;
+            background:radial-gradient(circle, var(--primary-glow), transparent 70%);
+            top:-120px; left:-120px;
+            animation:blobFloat 8s ease-in-out infinite;
+        }
+        .blob-2 {
+            width:340px; height:340px;
+            background:radial-gradient(circle, rgba(99,102,241,0.1), transparent 70%);
+            bottom:-80px; right:-80px;
+            animation:blobFloat 10s ease-in-out infinite reverse;
+        }
+        @keyframes blobFloat {
+            0%,100% { transform:translate(0,0) scale(1); }
+            50%     { transform:translate(24px,18px) scale(1.04); }
+        }
+
+        /* ── HEADER ── */
+        header { position:relative; z-index:10; padding:28px 32px; display:flex; align-items:center; justify-content:space-between; }
+        .logo-link { display:inline-flex; align-items:center; gap:10px; text-decoration:none; }
+        .logo-mark {
+            width:40px; height:40px; border-radius:14px; background:var(--primary);
+            display:flex; align-items:center; justify-content:center;
+            box-shadow:0 4px 16px var(--primary-glow);
+        }
+        .logo-mark span { color:#fff; font-weight:700; font-size:20px; }
+        .logo-text { font-size:20px; font-weight:600; color:var(--foreground); letter-spacing:-0.3px; }
+
+        .header-actions { display:flex; align-items:center; gap:12px; }
+        .lang-switcher { display:flex; align-items:center; gap:6px; font-size:13px; }
+        .lang-switcher button {
+            background:none; border:none; cursor:pointer;
+            font-family:'Outfit',sans-serif; font-size:13px; font-weight:500;
+            color:var(--muted); padding:0; transition:color 0.15s;
+        }
+        .lang-switcher button.active { color:var(--primary); font-weight:700; }
+        .lang-switcher button:hover:not(.active) { color:var(--foreground); }
+        .lang-sep { color:var(--border); }
+
+        .theme-btn {
+            width:36px; height:36px; border-radius:10px;
+            border:1.5px solid var(--border); background:var(--card);
+            color:var(--muted); display:flex; align-items:center; justify-content:center;
+            cursor:pointer; transition:color 0.2s, border-color 0.2s;
+        }
+        .theme-btn:hover { color:var(--primary); border-color:var(--primary); }
+        .theme-btn svg { width:16px; height:16px; stroke:currentColor; stroke-width:1.8; fill:none; }
+
+        /* ── MAIN ── */
+        main { position:relative; z-index:1; flex:1; display:flex; align-items:center; justify-content:center; padding:32px 24px 64px; }
+
+        /* ── CARD ── */
+        .card {
+            width:100%; max-width:440px;
+            background:var(--card); border:1px solid var(--border);
+            border-radius:28px; padding:48px 44px;
+            box-shadow:var(--shadow-card);
+            animation:cardIn 0.5s cubic-bezier(0.22,1,0.36,1) both;
+        }
+        @keyframes cardIn {
+            from { opacity:0; transform:translateY(24px) scale(0.98); }
+            to   { opacity:1; transform:translateY(0)    scale(1); }
+        }
+        @media(max-width:480px){ .card{ padding:36px 28px; border-radius:24px; } }
+
+        /* ── STATE WRAPPER — only one visible at a time ── */
+        .state { display:none; }
+        .state.active { display:block; animation:cardIn 0.4s cubic-bezier(0.22,1,0.36,1) both; }
+
+        /* centered states (verify, recover, success, invalid) */
+        .state-centered {
+            display:none;
+            flex-direction:column; align-items:center; text-align:center;
+        }
+        .state-centered.active { display:flex; animation:cardIn 0.4s cubic-bezier(0.22,1,0.36,1) both; }
+
+        /* ── ICON CIRCLE ── */
+        .state-icon {
+            width:64px; height:64px; border-radius:50%;
+            display:flex; align-items:center; justify-content:center; margin-bottom:20px;
+        }
+        .state-icon svg { width:28px; height:28px; stroke-width:2; fill:none; }
+        .icon-primary  { background:var(--primary-light);  border:1.5px solid rgba(13,148,136,0.2); }
+        .icon-primary  svg { stroke:var(--primary); }
+        .icon-success  { background:var(--success-light);  border:1.5px solid rgba(16,185,129,0.2); }
+        .icon-success  svg { stroke:var(--success); }
+        .icon-error    { background:var(--error-light);    border:1.5px solid rgba(239,68,68,0.2); }
+        .icon-error    svg { stroke:var(--error); }
+        .icon-warning  { background:var(--warning-light);  border:1.5px solid rgba(245,158,11,0.2); }
+        .icon-warning  svg { stroke:var(--warning); }
+
+        /* ── CARD ICON (top-left, for form) ── */
+        .card-icon {
+            width:56px; height:56px; border-radius:18px;
+            background:var(--primary-light);
+            display:flex; align-items:center; justify-content:center; margin-bottom:24px;
+        }
+        .card-icon svg { width:26px; height:26px; stroke:var(--primary); stroke-width:1.8; fill:none; }
+
+        /* ── TYPOGRAPHY ── */
+        .card-title {
+            font-family:'Cormorant Garamond',serif;
+            font-size:30px; font-weight:600; color:var(--foreground);
+            line-height:1.2; letter-spacing:-0.3px; margin-bottom:8px;
+        }
+        .card-subtitle { font-size:14px; color:var(--muted); line-height:1.6; margin-bottom:32px; }
+
+        .state-title {
+            font-family:'Cormorant Garamond',serif;
+            font-size:26px; font-weight:600; color:var(--foreground);
+            margin-bottom:10px; line-height:1.2;
+        }
+        .state-sub { font-size:14px; color:var(--muted); line-height:1.6; margin-bottom:28px; white-space:pre-line; }
+
+        /* ── FORM ── */
+        .field { margin-bottom:20px; }
+        label { display:block; font-size:13px; font-weight:500; color:var(--muted); margin-bottom:8px; }
+
+        .input-wrap { position:relative; }
+        input[type="password"] {
+            width:100%; height:52px;
+            border:1.5px solid var(--border); border-radius:14px;
+            padding:0 48px 0 16px;
+            font-family:'Outfit',sans-serif; font-size:15px; color:var(--foreground);
+            background:var(--bg); outline:none;
+            transition:border-color 0.2s, box-shadow 0.2s;
+        }
+        input[type="password"]:focus   { border-color:var(--primary); box-shadow:0 0 0 3px var(--primary-light); }
+        input[type="password"].invalid { border-color:var(--error);   box-shadow:0 0 0 3px var(--error-light); }
+
+        .toggle-pw {
+            position:absolute; right:14px; top:50%; transform:translateY(-50%);
+            background:none; border:none; cursor:pointer; color:var(--muted); padding:4px;
+            display:flex; transition:color 0.15s;
+        }
+        .toggle-pw:hover { color:var(--primary); }
+        .toggle-pw svg { width:18px; height:18px; stroke:currentColor; stroke-width:1.8; fill:none; }
+
+        /* strength */
+        .strength-bar { display:flex; gap:4px; margin-top:8px; }
+        .strength-bar span { flex:1; height:3px; border-radius:99px; background:var(--border); transition:background 0.3s; }
+        .strength-label { font-size:11px; color:var(--muted); margin-top:5px; min-height:16px; }
+
+        /* ── BUTTONS ── */
+        .btn-primary {
+            width:100%; height:52px; border-radius:14px; border:none;
+            background:var(--primary); color:#fff;
+            font-family:'Outfit',sans-serif; font-size:15px; font-weight:600;
+            cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;
+            box-shadow:var(--shadow-btn); margin-top:8px;
+            transition:background 0.2s, transform 0.15s, box-shadow 0.2s, opacity 0.2s;
+        }
+        .btn-primary:hover:not(:disabled) { background:var(--primary-hover); transform:translateY(-1px); box-shadow:0 6px 28px rgba(13,148,136,0.36); }
+        .btn-primary:active:not(:disabled) { transform:scale(0.985); }
+        .btn-primary:disabled { opacity:0.55; cursor:not-allowed; }
+        .btn-primary .spinner {
+            width:18px; height:18px; border:2px solid rgba(255,255,255,0.3);
+            border-top-color:#fff; border-radius:50%;
+            animation:spin 0.7s linear infinite; display:none;
+        }
+        @keyframes spin { to{ transform:rotate(360deg); } }
+
+        .btn-secondary {
+            display:inline-flex; align-items:center; gap:6px;
+            padding:12px 24px; border-radius:12px;
+            border:1.5px solid var(--border); background:transparent;
+            color:var(--foreground); font-family:'Outfit',sans-serif;
+            font-size:14px; font-weight:500; cursor:pointer; text-decoration:none;
+            transition:border-color 0.2s, background 0.2s, color 0.2s;
+        }
+        .btn-secondary:hover { border-color:var(--primary); background:var(--primary-light); color:var(--primary); }
+
+        /* cooldown */
+        .cooldown-wrap { margin-top:10px; height:2px; border-radius:99px; background:var(--border); overflow:hidden; display:none; }
+        .cooldown-bar  { height:100%; background:var(--error); border-radius:99px; width:100%; transition:width 0.1s linear; }
+
+        /* ── MESSAGES ── */
+        .msg {
+            display:none; border-radius:14px; padding:14px 16px;
+            font-size:13.5px; line-height:1.5; margin-bottom:20px;
+            align-items:flex-start; gap:10px;
+        }
+        .msg.show { display:flex; animation:msgIn 0.3s ease; }
+        @keyframes msgIn { from{opacity:0;transform:translateY(-6px);} to{opacity:1;transform:none;} }
+        .msg svg { flex-shrink:0; width:16px; height:16px; stroke-width:2; fill:none; margin-top:1px; }
+        .msg-error { background:var(--error-light); color:var(--error); border:1px solid rgba(239,68,68,0.2); }
+        .msg-error svg { stroke:var(--error); }
+
+        /* loading pulse (for verify/recover auto states) */
+        .loading-pulse {
+            display:flex; flex-direction:column; align-items:center; gap:16px;
+            padding:8px 0;
+        }
+        .pulse-ring {
+            width:56px; height:56px; border-radius:50%;
+            border:2px solid var(--border);
+            border-top-color:var(--primary);
+            animation:spin 1s linear infinite;
+        }
+
+        .divider { display:flex; align-items:center; gap:12px; margin:24px 0 0; color:var(--muted); font-size:12px; }
+        .divider::before,.divider::after { content:''; flex:1; height:1px; background:var(--border); }
+
+        /* ── FOOTER ── */
+        footer { position:relative; z-index:1; text-align:center; padding:0 24px 36px; color:var(--muted); font-size:12px; }
+        footer a { color:var(--primary); text-decoration:none; }
+        footer a:hover { text-decoration:underline; }
+    </style>
+</head>
+
+<body>
+
+<div class="bg-blobs" aria-hidden="true">
+    <span class="blob-1"></span>
+    <span class="blob-2"></span>
+</div>
+
+<header>
+    <a href="/" class="logo-link" aria-label="Planne">
+        <div class="logo-mark"><span>P</span></div>
+        <span class="logo-text">planne</span>
+    </a>
+    <div class="header-actions">
+        <div class="lang-switcher" role="group">
+            <button id="btn-pt" onclick="setLang('pt')">PT</button>
+            <span class="lang-sep" aria-hidden="true">|</span>
+            <button id="btn-en" onclick="setLang('en')">EN</button>
+        </div>
+        <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle theme">
+            <svg id="theme-icon" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="5"/>
+                <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+            </svg>
+        </button>
+    </div>
+</header>
+
+<main>
+<div class="card">
+
+    <!-- ══════════════════════════════════
+         LOADING (initial check)
+    ══════════════════════════════════ -->
+    <div class="state-centered active" id="stateLoading">
+        <div class="loading-pulse">
+            <div class="pulse-ring"></div>
+            <p style="font-size:14px;color:var(--muted)" data-i18n="loading"></p>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════
+         RESET PASSWORD — form
+    ══════════════════════════════════ -->
+    <div class="state" id="stateReset">
+        <div class="card-icon">
+            <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <h1 class="card-title"    data-i18n="resetTitle"></h1>
+        <p  class="card-subtitle" data-i18n="resetSubtitle"></p>
+
+        <div class="msg msg-error" id="resetError" role="alert">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span id="resetErrorText"></span>
+        </div>
+
+        <div class="field">
+            <label for="newPassword" data-i18n="labelNew"></label>
+            <div class="input-wrap">
+                <input type="password" id="newPassword" autocomplete="new-password"
+                       oninput="evalStrength(this.value)"
+                       data-i18n-placeholder="placeholderNew">
+                <button type="button" class="toggle-pw" onclick="togglePw('newPassword',this)" tabindex="-1">
+                    <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                </button>
+            </div>
+            <div class="strength-bar"><span id="s1"></span><span id="s2"></span><span id="s3"></span><span id="s4"></span></div>
+            <p class="strength-label" id="strengthLabel"></p>
+        </div>
+
+        <div class="field">
+            <label for="confirmPassword" data-i18n="labelConfirm"></label>
+            <div class="input-wrap">
+                <input type="password" id="confirmPassword" autocomplete="new-password"
+                       data-i18n-placeholder="placeholderConfirm">
+                <button type="button" class="toggle-pw" onclick="togglePw('confirmPassword',this)" tabindex="-1">
+                    <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                </button>
+            </div>
+        </div>
+
+        <button class="btn-primary" id="submitBtn" onclick="handleReset()">
+            <div class="spinner" id="spinner"></div>
+            <span id="btnText"></span>
+            <svg id="btnIcon" viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#fff;stroke-width:2;fill:none"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+
+        <div class="cooldown-wrap" id="cooldownWrap"><div class="cooldown-bar" id="cooldownBar"></div></div>
+        <div class="divider" data-i18n="secure"></div>
+    </div>
+
+    <!-- ══════════════════════════════════
+         VERIFY EMAIL — auto apply
+    ══════════════════════════════════ -->
+    <div class="state-centered" id="stateVerify">
+        <div class="loading-pulse" id="verifyLoading">
+            <div class="pulse-ring"></div>
+            <p style="font-size:14px;color:var(--muted)" data-i18n="verifying"></p>
+        </div>
+        <div id="verifyResult" style="display:none;flex-direction:column;align-items:center;text-align:center;">
+            <div class="state-icon icon-success" id="verifyIcon">
+                <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <p class="state-title" id="verifyTitle"></p>
+            <p class="state-sub"   id="verifySub"></p>
+            <a href="/" class="btn-secondary">
+                <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;stroke-width:2;fill:none"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                <span data-i18n="backHome"></span>
+            </a>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════
+         RECOVER EMAIL — auto apply
+    ══════════════════════════════════ -->
+    <div class="state-centered" id="stateRecover">
+        <div class="loading-pulse" id="recoverLoading">
+            <div class="pulse-ring"></div>
+            <p style="font-size:14px;color:var(--muted)" data-i18n="recovering"></p>
+        </div>
+        <div id="recoverResult" style="display:none;flex-direction:column;align-items:center;text-align:center;">
+            <div class="state-icon icon-warning" id="recoverIcon">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            </div>
+            <p class="state-title" id="recoverTitle"></p>
+            <p class="state-sub"   id="recoverSub"></p>
+            <a href="/" class="btn-secondary">
+                <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;stroke-width:2;fill:none"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                <span data-i18n="backHome"></span>
+            </a>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════
+         RESET SUCCESS
+    ══════════════════════════════════ -->
+    <div class="state-centered" id="stateResetSuccess">
+        <div class="state-icon icon-success">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <p class="state-title" data-i18n="resetSuccessTitle"></p>
+        <p class="state-sub"   data-i18n="resetSuccessSub"></p>
+        <a href="/" class="btn-secondary">
+            <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;stroke-width:2;fill:none"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+            <span data-i18n="backHome"></span>
+        </a>
+    </div>
+
+    <!-- ══════════════════════════════════
+         INVALID / EXPIRED
+    ══════════════════════════════════ -->
+    <div class="state-centered" id="stateInvalid">
+        <div class="state-icon icon-error">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </div>
+        <p class="state-title" data-i18n="invalidTitle"></p>
+        <p class="state-sub"   id="invalidSub"></p>
+        <a href="/" class="btn-secondary">
+            <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;stroke-width:2;fill:none"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+            <span data-i18n="backHome"></span>
+        </a>
+    </div>
+
+</div>
+</main>
+
+<footer>
+    <p>&copy; 2026 Planne &nbsp;·&nbsp; <a href="/privacy" data-i18n="privacy"></a> &nbsp;·&nbsp; <a href="/terms" data-i18n="terms"></a></p>
+</footer>
+
+<script>
+// ═══════════════════════════════════════════════════════
+//  i18n
+// ═══════════════════════════════════════════════════════
+const STRINGS = {
+    en: {
+        loading:   "Loading…",
+        verifying: "Verifying your email…",
+        recovering:"Restoring your email…",
+        // reset form
+        resetTitle:    "New password",
+        resetSubtitle: "Choose a strong password to keep your account secure.",
+        labelNew:        "New password",
+        placeholderNew:  "At least 8 characters",
+        labelConfirm:    "Confirm password",
+        placeholderConfirm:"Repeat the password",
+        btnReset:    "Reset password",
+        btnUpdating: "Updating…",
+        secure:      "secure connection",
+        // reset success
+        resetSuccessTitle:"Password updated!",
+        resetSuccessSub:  "Your password has been changed.\nOpen the app and log in.",
+        // verify email
+        verifySuccessTitle:"Email verified!",
+        verifySuccessSub:  "Your account is confirmed.\nYou can now use Planne.",
+        verifyErrorTitle:  "Verification failed",
+        verifyErrorSub:    "This link is invalid or has expired.\nRequest a new one through the app.",
+        // recover email
+        recoverSuccessTitle:"Email restored",
+        recoverSuccessSub:  "Your previous email has been restored.\nIf you didn't request this, contact support.",
+        recoverErrorTitle:  "Could not restore",
+        recoverErrorSub:    "This link is invalid or has expired.\nPlease contact support.",
+        // invalid fallback
+        invalidTitle:"Link expired",
+        invalidSubReset:  "This password reset link is no longer valid.\nRequest a new one through the app.",
+        invalidSubVerify: "This email verification link is no longer valid.\nRequest a new one through the app.",
+        invalidSubGeneric:"This link is invalid or has expired.",
+        // errors
+        errShort:   "Password must be at least 8 characters.",
+        errWeak:    "Choose a stronger password (uppercase, numbers or symbols).",
+        errMatch:   "Passwords do not match.",
+        errExpired: "This link has expired. Request a new one.",
+        errInvalid: "Invalid link. Please request a new one.",
+        errWeakFb:  "Password too weak. Try a stronger one.",
+        errDisabled:"This account has been disabled.",
+        errNotFound:"Account not found.",
+        errGeneric: "Something went wrong. Please try again.",
+        errCooldown:"Too many attempts. Wait a moment.",
+        // strength
+        strTooShort:"Too short", strWeak:"Weak", strGood:"Good", strStrong:"Strong",
+        // nav
+        backHome:"Back to Planne",
+        privacy: "Privacy policy",
+        terms:   "Terms of use",
+    },
+    pt: {
+        loading:   "Carregando…",
+        verifying: "Verificando seu email…",
+        recovering:"Restaurando seu email…",
+        resetTitle:    "Nova senha",
+        resetSubtitle: "Escolha uma senha forte para manter sua conta segura.",
+        labelNew:        "Nova senha",
+        placeholderNew:  "Mínimo 8 caracteres",
+        labelConfirm:    "Confirmar senha",
+        placeholderConfirm:"Repita a senha",
+        btnReset:    "Redefinir senha",
+        btnUpdating: "Atualizando…",
+        secure:      "conexão segura",
+        resetSuccessTitle:"Senha atualizada!",
+        resetSuccessSub:  "Sua senha foi alterada com sucesso.\nAbra o app e faça login.",
+        verifySuccessTitle:"Email verificado!",
+        verifySuccessSub:  "Sua conta está confirmada.\nVocê já pode usar o Planne.",
+        verifyErrorTitle:  "Verificação falhou",
+        verifyErrorSub:    "Este link é inválido ou expirou.\nSolicite um novo pelo app.",
+        recoverSuccessTitle:"Email restaurado",
+        recoverSuccessSub:  "Seu email anterior foi restaurado.\nSe não foi você, entre em contato com o suporte.",
+        recoverErrorTitle:  "Não foi possível restaurar",
+        recoverErrorSub:    "Este link é inválido ou expirou.\nEntre em contato com o suporte.",
+        invalidTitle:"Link expirado",
+        invalidSubReset:  "Este link de redefinição não é mais válido.\nSolicite um novo pelo app.",
+        invalidSubVerify: "Este link de verificação não é mais válido.\nSolicite um novo pelo app.",
+        invalidSubGeneric:"Este link é inválido ou expirou.",
+        errShort:   "A senha deve ter pelo menos 8 caracteres.",
+        errWeak:    "Escolha uma senha mais forte (maiúsculas, números ou símbolos).",
+        errMatch:   "As senhas não coincidem.",
+        errExpired: "Este link expirou. Solicite um novo.",
+        errInvalid: "Link inválido. Solicite um novo.",
+        errWeakFb:  "Senha muito fraca. Tente uma mais forte.",
+        errDisabled:"Esta conta foi desativada.",
+        errNotFound:"Conta não encontrada.",
+        errGeneric: "Algo deu errado. Tente novamente.",
+        errCooldown:"Muitas tentativas. Aguarde um momento.",
+        strTooShort:"Muito curta", strWeak:"Fraca", strGood:"Boa", strStrong:"Forte",
+        backHome:"Voltar para o Planne",
+        privacy: "Política de privacidade",
+        terms:   "Termos de uso",
+    }
+};
+
+let currentLang = 'en';
+
+function detectLang() {
+    // 1. preferência salva pelo usuário no site
+    const saved = localStorage.getItem('planne-lang');
+    if (saved === 'pt' || saved === 'en') return saved;
+    // 2. lang enviado pelo Firebase no link (?lang=pt)
+    const fbLang = (window.__planneAuth || {}).lang || '';
+    if (fbLang.startsWith('pt')) return 'pt';
+    // 3. idioma do browser
+    return (navigator.language || '').startsWith('pt') ? 'pt' : 'en';
+}
+
+function applyLang(lang) {
+    currentLang = lang;
+    const s = STRINGS[lang];
+    document.documentElement.lang = lang === 'pt' ? 'pt-BR' : 'en';
+
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const v = s[el.dataset.i18n];
+        if (v !== undefined) el.textContent = v;
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const v = s[el.dataset.i18nPlaceholder];
+        if (v !== undefined) el.placeholder = v;
+    });
+
+    const btn = document.getElementById('submitBtn');
+    if (btn && !btn.disabled) document.getElementById('btnText').textContent = s.btnReset;
+
+    document.getElementById('btn-pt').classList.toggle('active', lang === 'pt');
+    document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+
+    evalStrength(document.getElementById('newPassword')?.value || '');
+}
+
+function setLang(lang) {
+    localStorage.setItem('planne-lang', lang);
+    applyLang(lang);
+}
+
+// ═══════════════════════════════════════════════════════
+//  THEME
+// ═══════════════════════════════════════════════════════
+function initTheme() {
+    const saved = localStorage.getItem('planne-theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (saved === 'dark' || (!saved && prefersDark)) {
+        document.documentElement.classList.add('dark');
+        setMoonIcon();
+    }
+}
+function toggleTheme() {
+    const isDark = document.documentElement.classList.toggle('dark');
+    localStorage.setItem('planne-theme', isDark ? 'dark' : 'light');
+    isDark ? setMoonIcon() : setSunIcon();
+}
+function setSunIcon() {
+    document.getElementById('theme-icon').innerHTML =
+        `<circle cx="12" cy="12" r="5"/>
+         <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+         <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+         <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+         <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>`;
+}
+function setMoonIcon() {
+    document.getElementById('theme-icon').innerHTML = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>`;
+}
+
+// ═══════════════════════════════════════════════════════
+//  STATE SWITCHER
+// ═══════════════════════════════════════════════════════
+function showState(id) {
+    ['stateLoading','stateReset','stateVerify','stateRecover','stateResetSuccess','stateInvalid']
+        .forEach(s => {
+            const el = document.getElementById(s);
+            el.classList.remove('active');
+        });
+    document.getElementById(id).classList.add('active');
+}
+
+// ═══════════════════════════════════════════════════════
+//  PASSWORD VISIBILITY
+// ═══════════════════════════════════════════════════════
+function togglePw(id, btn) {
+    const input = document.getElementById(id);
+    const isText = input.type === 'text';
+    input.type = isText ? 'password' : 'text';
+    btn.innerHTML = isText
+        ? `<svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`
+        : `<svg viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`;
+}
+
+// ═══════════════════════════════════════════════════════
+//  STRENGTH METER
+// ═══════════════════════════════════════════════════════
+const SC = ['#ef4444','#f97316','#eab308','#10b981'];
+
+function getScore(v) {
+    let s = 0;
+    if (v.length >= 8)          s++;
+    if (/[A-Z]/.test(v))        s++;
+    if (/[0-9]/.test(v))        s++;
+    if (/[^A-Za-z0-9]/.test(v)) s++;
+    return s;
+}
+function evalStrength(val) {
+    const score = getScore(val);
+    const s = STRINGS[currentLang];
+    ['s1','s2','s3','s4'].forEach((id,i) => {
+        document.getElementById(id).style.background = i < score ? SC[score-1] : 'var(--border)';
+    });
+    const lbl = document.getElementById('strengthLabel');
+    const labels = [s.strTooShort, s.strWeak, s.strGood, s.strStrong];
+    if (!val.length) { lbl.textContent=''; return; }
+    lbl.textContent  = labels[score-1] || labels[0];
+    lbl.style.color  = SC[score-1] || SC[0];
+}
+
+// ═══════════════════════════════════════════════════════
+//  ERROR MSG
+// ═══════════════════════════════════════════════════════
+function showError(msg) {
+    const el = document.getElementById('resetError');
+    document.getElementById('resetErrorText').textContent = msg;
+    el.classList.add('show');
+}
+function hideError() { document.getElementById('resetError').classList.remove('show'); }
+
+// ═══════════════════════════════════════════════════════
+//  COOLDOWN
+// ═══════════════════════════════════════════════════════
+let failCount  = 0;
+let cooldownEnd = 0;
+const COOLDOWNS = [0, 0, 5, 15, 30];
+
+function startCooldown(secs) {
+    const btn  = document.getElementById('submitBtn');
+    const wrap = document.getElementById('cooldownWrap');
+    const bar  = document.getElementById('cooldownBar');
+    btn.disabled = true;
+    wrap.style.display = 'block';
+    cooldownEnd = Date.now() + secs * 1000;
+    function tick() {
+        const left = cooldownEnd - Date.now();
+        if (left <= 0) {
+            btn.disabled = false;
+            wrap.style.display = 'none';
+            bar.style.width = '100%';
+            document.getElementById('btnText').textContent = STRINGS[currentLang].btnReset;
+            return;
+        }
+        bar.style.width = (left / (secs * 1000) * 100) + '%';
+        setTimeout(tick, 80);
+    }
+    tick();
+}
+
+// ═══════════════════════════════════════════════════════
+//  HANDLE RESET PASSWORD
+// ═══════════════════════════════════════════════════════
+async function handleReset() {
+    if (Date.now() < cooldownEnd) return;
+    hideError();
+
+    const s    = STRINGS[currentLang];
+    const pw   = document.getElementById('newPassword').value;
+    const conf = document.getElementById('confirmPassword').value;
+    const np   = document.getElementById('newPassword');
+    const cp   = document.getElementById('confirmPassword');
+
+    np.classList.remove('invalid');
+    cp.classList.remove('invalid');
+
+    if (pw.length < 8)      { np.classList.add('invalid'); showError(s.errShort); return; }
+    if (getScore(pw) < 2)   { np.classList.add('invalid'); showError(s.errWeak);  return; }
+    if (pw !== conf)         { cp.classList.add('invalid'); showError(s.errMatch); return; }
+
+    const { auth, confirmPasswordReset, oobCode } = window.__planneAuth || {};
+    if (!oobCode) { showError(s.errInvalid); return; }
+
+    // loading
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    document.getElementById('spinner').style.display  = 'block';
+    document.getElementById('btnText').textContent    = s.btnUpdating;
+    document.getElementById('btnIcon').style.display  = 'none';
+
+    try {
+        await confirmPasswordReset(auth, oobCode, pw);
+        failCount = 0;
+        history.replaceState(null, '', window.location.pathname);
+        showState('stateResetSuccess');
+    } catch(err) {
+        failCount++;
+        const secs = COOLDOWNS[Math.min(failCount, COOLDOWNS.length-1)];
+        const map = {
+            'auth/expired-action-code': s.errExpired,
+            'auth/invalid-action-code': s.errInvalid,
+            'auth/weak-password':       s.errWeakFb,
+            'auth/user-disabled':       s.errDisabled,
+            'auth/user-not-found':      s.errNotFound,
+        };
+        const msg = map[err.code] || s.errGeneric;
+        showError(secs > 0 ? `${msg} ${s.errCooldown}` : msg);
+        if (secs > 0) startCooldown(secs);
+        else {
+            btn.disabled = false;
+            document.getElementById('spinner').style.display = 'none';
+            document.getElementById('btnText').textContent   = s.btnReset;
+            document.getElementById('btnIcon').style.display = 'block';
+        }
+    }
+}
+
+// ═══════════════════════════════════════════════════════
+//  HANDLE VERIFY EMAIL
+// ═══════════════════════════════════════════════════════
+async function handleVerifyEmail(auth, applyActionCode, oobCode) {
+    showState('stateVerify');
+    try {
+        await applyActionCode(auth, oobCode);
+        history.replaceState(null, '', window.location.pathname);
+        document.getElementById('verifyLoading').style.display = 'none';
+        const s = STRINGS[currentLang];
+        document.getElementById('verifyTitle').textContent = s.verifySuccessTitle;
+        document.getElementById('verifySub').textContent   = s.verifySuccessSub;
+        document.getElementById('verifyIcon').className    = 'state-icon icon-success';
+        document.getElementById('verifyIcon').innerHTML    = `<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>`;
+        document.getElementById('verifyResult').style.display = 'flex';
+    } catch {
+        document.getElementById('verifyLoading').style.display = 'none';
+        const s = STRINGS[currentLang];
+        document.getElementById('verifyTitle').textContent = s.verifyErrorTitle;
+        document.getElementById('verifySub').textContent   = s.verifyErrorSub;
+        document.getElementById('verifyIcon').className    = 'state-icon icon-error';
+        document.getElementById('verifyIcon').innerHTML    = `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`;
+        document.getElementById('verifyResult').style.display = 'flex';
+    }
+}
+
+// ═══════════════════════════════════════════════════════
+//  HANDLE RECOVER EMAIL
+// ═══════════════════════════════════════════════════════
+async function handleRecoverEmail(auth, applyActionCode, oobCode) {
+    showState('stateRecover');
+    try {
+        await applyActionCode(auth, oobCode);
+        history.replaceState(null, '', window.location.pathname);
+        document.getElementById('recoverLoading').style.display = 'none';
+        const s = STRINGS[currentLang];
+        document.getElementById('recoverTitle').textContent = s.recoverSuccessTitle;
+        document.getElementById('recoverSub').textContent   = s.recoverSuccessSub;
+        document.getElementById('recoverIcon').className    = 'state-icon icon-warning';
+        document.getElementById('recoverResult').style.display = 'flex';
+    } catch {
+        document.getElementById('recoverLoading').style.display = 'none';
+        const s = STRINGS[currentLang];
+        document.getElementById('recoverTitle').textContent = s.recoverErrorTitle;
+        document.getElementById('recoverSub').textContent   = s.recoverErrorSub;
+        document.getElementById('recoverIcon').className    = 'state-icon icon-error';
+        document.getElementById('recoverIcon').innerHTML    = `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`;
+        document.getElementById('recoverResult').style.display = 'flex';
+    }
+}
+
+// ═══════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', async () => {
+    initTheme();
+    applyLang(detectLang());
+
+    // wait for Firebase module
+    let attempts = 0;
+    while (!window.__planneAuth && attempts < 30) {
+        await new Promise(r => setTimeout(r, 100));
+        attempts++;
+    }
+
+    const pa = window.__planneAuth;
+    if (!pa || !pa.oobCode || !pa.mode) {
+        document.getElementById('invalidSub').textContent = STRINGS[currentLang].invalidSubGeneric;
+        showState('stateInvalid');
+        return;
+    }
+
+    const { auth, verifyPasswordResetCode, applyActionCode, confirmPasswordReset, mode, oobCode } = pa;
+
+    if (mode === 'resetPassword') {
+        try {
+            await verifyPasswordResetCode(auth, oobCode);
+            document.getElementById('btnText').textContent = STRINGS[currentLang].btnReset;
+            showState('stateReset');
+        } catch {
+            document.getElementById('invalidSub').textContent = STRINGS[currentLang].invalidSubReset;
+            showState('stateInvalid');
+        }
+    } else if (mode === 'verifyEmail') {
+        await handleVerifyEmail(auth, applyActionCode, oobCode);
+    } else if (mode === 'recoverEmail') {
+        await handleRecoverEmail(auth, applyActionCode, oobCode);
+    } else {
+        document.getElementById('invalidSub').textContent = STRINGS[currentLang].invalidSubGeneric;
+        showState('stateInvalid');
+    }
+});
+
+document.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && document.getElementById('stateReset').classList.contains('active')) {
+        handleReset();
+    }
+});
+</script>
+</body>
+</html>
