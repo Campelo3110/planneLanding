@@ -5,10 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <!-- SEO -->
-    <title>Planne - App de Organização de Eventos, Casamentos e Festas</title>
+    <title>Planne - App para Organizar Eventos, Casamentos, Convidados e Or&ccedil;amentos</title>
 
     <meta name="description"
-        content="Planeje casamentos, aniversários e eventos corporativos com convidados, orçamento, tarefas e lembretes em um único aplicativo elegante.">
+        content="Planeje casamentos, aniversários e eventos corporativos com lista de convidados, orçamento, tarefas, fornecedores e lembretes em um único app para Android.">
 
     <meta name="robots" content="index, follow">
     <meta name="author" content="Planne">
@@ -17,8 +17,8 @@
     <link rel="canonical" href="https://planneapp.com/pt-br">
 
     <!-- FAVICONS -->
-    <link rel="icon" type="image/png" sizes="32x32" href="/public/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/public/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/brand/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/brand/favicon-16x16.png">
 
     <link rel="shortcut icon" href="https://planneapp.com/favicon.ico" type="image/x-icon">
 
@@ -30,13 +30,16 @@
     <!-- OPEN GRAPH -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://planneapp.com/pt-br">
+    <meta property="og:locale" content="pt_BR">
 
     <meta property="og:title" content="Planne - Seu evento dos sonhos, sem estresse">
 
     <meta property="og:description"
         content="Convidados, orçamento, tarefas e lembretes em uma experiência premium de planejamento.">
 
-    <meta property="og:image" content="https://planneapp.com/assets/og-cover.png">
+    <meta property="og:image" content="https://planneapp.com/assets/brand/og-cover.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
 
     <meta property="og:site_name" content="Planne">
 
@@ -47,7 +50,7 @@
 
     <meta name="twitter:description" content="Planeje casamentos e eventos com elegância e clareza.">
 
-    <meta name="twitter:image" content="https://planneapp.com/assets/og-cover.png">
+    <meta name="twitter:image" content="https://planneapp.com/assets/brand/og-cover.png">
 
     <!-- APP LINKS -->
     <meta property="al:android:url" content="https://play.google.com/store/apps/details?id=com.planne.planne">
@@ -67,7 +70,7 @@
   "@type":"Organization",
   "name":"Planne",
   "url":"https://planneapp.com",
-  "logo":"https://planneapp.com/assets/logo.png"
+  "logo":"https://planneapp.com/assets/brand/favicon-32x32.png"
 }
 </script>
 
@@ -102,7 +105,49 @@
 }
 </script>
 
-    <link href="../styles.css" rel="stylesheet">
+    <!-- FAQ SCHEMA -->
+    <script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"FAQPage",
+  "mainEntity":[
+    {
+      "@type":"Question",
+      "name":"O Planne e gratuito?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"O Planne esta disponivel para baixar na Google Play e permite comecar a organizar seu evento pelo Android."
+      }
+    },
+    {
+      "@type":"Question",
+      "name":"Posso usar o Planne como app para organizar casamento?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"Sim. O Planne ajuda a organizar casamentos, aniversarios, festas e eventos corporativos com convidados, orcamento, tarefas, fornecedores e lembretes."
+      }
+    },
+    {
+      "@type":"Question",
+      "name":"O Planne ajuda com lista de convidados e orcamento?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"Sim. O Planne reune ferramentas para lista de convidados, controle de orcamento, tarefas, fornecedores e lembretes do evento."
+      }
+    },
+    {
+      "@type":"Question",
+      "name":"O Planne esta disponivel para iPhone?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"No momento, o Planne e focado em Android e esta disponivel pela Google Play."
+      }
+    }
+  ]
+}
+</script>
+
+    <link href="/assets/css/styles.css" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
@@ -155,7 +200,7 @@
         (function () {
             const userLanguagePref = localStorage.getItem('planne-lang');
 
-            // Se o usuário escolheu 'en' manualmente, interrompe o script e NÃO redireciona
+            // Se o usuário escolheu 'en' manualmente, interrompe o script e NÒO redireciona
             if (userLanguagePref === 'en') {
                 return;
             }
@@ -168,7 +213,7 @@
                 return;
             }
 
-            // Se NÃO tem preferência salva ainda (primeira visita), olha o navegador
+            // Se NÒO tem preferência salva ainda (primeira visita), olha o navegador
             if (!userLanguagePref) {
                 const browserLang = navigator.language || navigator.userLanguage;
 
@@ -189,11 +234,7 @@
     <header class="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/40">
         <nav class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
             <a href="/pt-br" class="flex items-center gap-2.5 group" aria-label="Início Planne">
-                <div
-                    class="w-10 h-10 rounded-2xl bg-primary flex items-center justify-center shadow-lg shadow-primary/30 group-hover:shadow-primary/50 transition-all group-hover:scale-105">
-                    <span class="text-primary-foreground font-bold text-xl">P</span>
-                </div>
-                <span class="text-xl font-semibold text-foreground tracking-tight">planne</span>
+                <img src="/assets/brand/favicon-32x32.png" alt="Planne" class="w-10 h-10 rounded-2xl shadow-lg shadow-primary/30 group-hover:shadow-primary/50 transition-all group-hover:scale-105">
             </a>
 
             <button id="menu-btn" type="button"
@@ -207,6 +248,8 @@
                 <a href="#como-funciona"
                     class="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">Como
                     funciona</a>
+                <a href="#faq"
+                    class="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">FAQ</a>
             </div>
 
             <div class="hidden lg:flex lg:items-center lg:gap-6">
@@ -259,6 +302,8 @@
                 <a href="#como-funciona"
                     class="block py-3 text-base font-medium text-foreground hover:text-primary transition-colors">Como
                     funciona</a>
+                <a href="#faq"
+                    class="block py-3 text-base font-medium text-foreground hover:text-primary transition-colors">FAQ</a>
 
                 <div class="flex items-center justify-between py-3 border-t border-border mt-2">
                     <div class="flex items-center gap-4">
@@ -556,6 +601,80 @@
             </div>
         </section>
 
+        <!-- APP PREVIEW SECTION -->
+        <section class="py-24 lg:py-32 bg-background relative overflow-hidden">
+            <div class="mx-auto max-w-6xl px-6">
+                <div class="grid md:grid-cols-2 gap-12 lg:gap-20 items-center">
+                    <div data-aos="fade-right">
+                        <div
+                            class="inline-flex items-center gap-2 bg-primary/10 border border-primary/30 rounded-full px-4 py-2 mb-6">
+                            <i data-lucide="smartphone" class="w-4 h-4 text-primary"></i>
+                            <span class="text-sm font-semibold text-primary">Prévia do app</span>
+                        </div>
+                        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-foreground">
+                            Um app completo para organizar eventos
+                        </h2>
+                        <p class="mt-5 text-lg text-muted-foreground leading-relaxed">
+                            O Planne reúne as principais ferramentas de planejamento em um único app para Android:
+                            lista de convidados, controle de orçamento, checklist de tarefas, fornecedores e lembretes
+                            para casamentos, aniversários, festas e eventos corporativos.
+                        </p>
+                        <div class="mt-8 grid sm:grid-cols-2 gap-4">
+                            <div class="bg-muted/50 rounded-2xl p-5 border border-border">
+                                <i data-lucide="users" class="w-6 h-6 text-primary mb-3"></i>
+                                <h3 class="font-semibold text-foreground mb-1">Lista de convidados</h3>
+                                <p class="text-sm text-muted-foreground">Acompanhe confirmações, pendências e totais.</p>
+                            </div>
+                            <div class="bg-muted/50 rounded-2xl p-5 border border-border">
+                                <i data-lucide="wallet" class="w-6 h-6 text-primary mb-3"></i>
+                                <h3 class="font-semibold text-foreground mb-1">Controle de orçamento</h3>
+                                <p class="text-sm text-muted-foreground">Mantenha os gastos do evento claros e organizados.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div data-aos="fade-left" class="relative">
+                        <div class="bg-card rounded-3xl border border-border shadow-xl p-6">
+                            <div class="flex items-center justify-between mb-6">
+                                <div>
+                                    <p class="text-sm text-muted-foreground">Painel do casamento</p>
+                                    <h3 class="text-2xl font-bold text-foreground">24 de maio de 2026</h3>
+                                </div>
+                                <div class="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center">
+                                    <i data-lucide="calendar-heart" class="w-6 h-6 text-primary"></i>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="bg-primary/10 rounded-2xl p-5">
+                                    <div class="text-3xl font-bold text-primary">124</div>
+                                    <div class="text-sm text-muted-foreground">Convidados</div>
+                                </div>
+                                <div class="bg-amber-50 dark:bg-amber-950/40 rounded-2xl p-5">
+                                    <div class="text-3xl font-bold text-amber-600 dark:text-amber-400">R$8,4k</div>
+                                    <div class="text-sm text-muted-foreground">Registrados</div>
+                                </div>
+                                <div class="bg-blue-50 dark:bg-blue-950/40 rounded-2xl p-5">
+                                    <div class="text-3xl font-bold text-blue-600 dark:text-blue-400">18</div>
+                                    <div class="text-sm text-muted-foreground">Tarefas</div>
+                                </div>
+                                <div class="bg-purple-50 dark:bg-purple-950/40 rounded-2xl p-5">
+                                    <div class="text-3xl font-bold text-purple-600 dark:text-purple-400">7</div>
+                                    <div class="text-sm text-muted-foreground">Fornecedores</div>
+                                </div>
+                            </div>
+                            <div class="mt-6 h-4 bg-muted rounded-full overflow-hidden">
+                                <div class="h-full w-72 bg-gradient-to-r from-primary to-teal-400 rounded-full"></div>
+                            </div>
+                            <div class="mt-4 flex items-center justify-between text-sm">
+                                <span class="text-muted-foreground">Progresso do planejamento</span>
+                                <span class="text-primary font-bold">72%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- SECTION COMO FUNCIONA -->
         <section id="como-funciona" class="py-24 lg:py-32 relative">
             <div class="mx-auto max-w-6xl px-6">
@@ -716,7 +835,7 @@
             </div>
         </section>
 
-        <!-- SECTION SEGURANÇA -->
+        <!-- SECTION SEGURAN!A -->
         <section class="py-12 border-y border-border bg-muted/50">
             <div class="max-w-6xl mx-auto px-6 text-center">
                 <p class="text-sm font-semibold text-muted-foreground uppercase tracking-widest mb-6">Tecnologia 100%
@@ -728,6 +847,56 @@
                             class="font-bold text-lg">LGPD Compliant</span></div>
                     <div class="flex items-center gap-2"><i data-lucide="cloud-off" class="w-6 h-6"></i><span
                             class="font-bold text-lg">Modo Offline</span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ SECTION -->
+        <section id="faq" class="py-24 lg:py-32 bg-muted/30">
+            <div class="mx-auto max-w-6xl px-6">
+                <div class="mx-auto max-w-3xl text-center mb-14" data-aos="fade-up">
+                    <div
+                        class="inline-flex items-center gap-2 bg-primary/10 border border-primary/30 rounded-full px-4 py-2 mb-6">
+                        <i data-lucide="circle-help" class="w-4 h-4 text-primary"></i>
+                        <span class="text-sm font-semibold text-primary">FAQ</span>
+                    </div>
+                    <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-foreground">
+                        Dúvidas sobre o app para organizar eventos
+                    </h2>
+                    <p class="mt-5 text-lg text-muted-foreground">
+                        Respostas rápidas sobre como usar o Planne para organizar casamentos, festas, convidados,
+                        orçamentos e tarefas.
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-card rounded-3xl p-8 border border-border" data-aos="fade-up">
+                        <h3 class="text-xl font-semibold text-foreground mb-3">O Planne é gratuito?</h3>
+                        <p class="text-muted-foreground leading-relaxed">
+                            O Planne está disponível para baixar na Google Play e ajuda você a começar a organizar seu
+                            primeiro evento pelo Android.
+                        </p>
+                    </div>
+                    <div class="bg-card rounded-3xl p-8 border border-border" data-aos="fade-up" data-aos-delay="100">
+                        <h3 class="text-xl font-semibold text-foreground mb-3">Posso organizar casamento pelo app?</h3>
+                        <p class="text-muted-foreground leading-relaxed">
+                            Sim. O Planne funciona como app para organizar casamento e também ajuda com aniversários,
+                            festas e eventos corporativos.
+                        </p>
+                    </div>
+                    <div class="bg-card rounded-3xl p-8 border border-border" data-aos="fade-up" data-aos-delay="200">
+                        <h3 class="text-xl font-semibold text-foreground mb-3">Ele gerencia convidados e orçamento?</h3>
+                        <p class="text-muted-foreground leading-relaxed">
+                            Sim. Você pode organizar lista de convidados, controle de orçamento, tarefas, fornecedores
+                            e lembretes em uma única experiência.
+                        </p>
+                    </div>
+                    <div class="bg-card rounded-3xl p-8 border border-border" data-aos="fade-up" data-aos-delay="300">
+                        <h3 class="text-xl font-semibold text-foreground mb-3">O Planne está disponível para iPhone?</h3>
+                        <p class="text-muted-foreground leading-relaxed">
+                            No momento, o Planne é focado em Android e está disponível pela Google Play.
+                        </p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -799,29 +968,14 @@
     <!-- FOOTER -->
     <footer class="bg-card border-t border-border">
         <div class="mx-auto max-w-6xl px-6 py-16 lg:py-20">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12">
+            <div class="grid md:grid-cols-3 gap-8 lg:gap-12">
                 <div class="col-span-2 md:col-span-1">
                     <a href="/pt-br" class="flex items-center gap-2.5 mb-5" aria-label="Início Planne">
-                        <div
-                            class="w-10 h-10 rounded-2xl bg-primary flex items-center justify-center shadow-lg shadow-primary/25">
-                            <span class="text-primary-foreground font-bold text-xl">P</span>
-                        </div>
-                        <span class="text-xl font-semibold text-foreground">planne</span>
+                        <img src="/assets/brand/favicon-32x32.png" alt="Planne" class="w-10 h-10 rounded-2xl shadow-lg shadow-primary/25">
                     </a>
-                    <p class="text-muted-foreground text-sm leading-relaxed mb-6">
+                    <p class="text-muted-foreground text-sm leading-relaxed">
                         Planejamento de eventos com clareza, elegância e aquele carinho que faz a diferença.
                     </p>
-                    <div class="flex gap-3">
-                        <a href="#"
-                            class="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
-                            aria-label="Instagram"><i data-lucide="instagram" class="w-5 h-5"></i></a>
-                        <a href="#"
-                            class="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
-                            aria-label="Twitter"><i data-lucide="twitter" class="w-5 h-5"></i></a>
-                        <a href="#"
-                            class="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
-                            aria-label="LinkedIn"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
-                    </div>
                 </div>
 
                 <div>
@@ -833,41 +987,23 @@
                         <li><a href="#como-funciona"
                                 class="text-sm text-muted-foreground hover:text-primary transition-colors">Como
                                 funciona</a></li>
-                        <li><a href="#"
-                                class="text-sm text-muted-foreground hover:text-primary transition-colors">Preços</a>
-                        </li>
-                        <li><a href="#"
+                        <li><a href="#faq"
                                 class="text-sm text-muted-foreground hover:text-primary transition-colors">FAQ</a></li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h3 class="font-semibold text-foreground mb-5">Empresa</h3>
-                    <ul class="space-y-3">
-                        <li><a href="#" class="text-sm text-muted-foreground hover:text-primary transition-colors">Sobre
-                                nós</a></li>
-                        <li><a href="#"
-                                class="text-sm text-muted-foreground hover:text-primary transition-colors">Blog</a></li>
-                        <li><a href="#"
-                                class="text-sm text-muted-foreground hover:text-primary transition-colors">Carreiras</a>
-                        </li>
-                        <li><a href="#"
-                                class="text-sm text-muted-foreground hover:text-primary transition-colors">Contato</a>
-                        </li>
+                        <li><a href="https://play.google.com/store/apps/details?id=com.planne.planne" target="_blank"
+                                rel="noopener noreferrer"
+                                class="text-sm text-muted-foreground hover:text-primary transition-colors">Baixar o
+                                app</a></li>
                     </ul>
                 </div>
 
                 <div>
                     <h3 class="font-semibold text-foreground mb-5">Legal</h3>
                     <ul class="space-y-3">
-                        <li><a href="#"
+                        <li><a href="/terms"
                                 class="text-sm text-muted-foreground hover:text-primary transition-colors">Termos de
                                 uso</a></li>
-                        <li><a href="#"
+                        <li><a href="/privacy"
                                 class="text-sm text-muted-foreground hover:text-primary transition-colors">Privacidade</a>
-                        </li>
-                        <li><a href="#"
-                                class="text-sm text-muted-foreground hover:text-primary transition-colors">Cookies</a>
                         </li>
                     </ul>
                 </div>

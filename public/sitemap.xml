@@ -16,4 +16,12 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://planneapp.com/" />
   </url>
 
+  <url>
+    <loc>https://planneapp.com/privacy</loc>
+  </url>
+
+  <url>
+    <loc>https://planneapp.com/terms</loc>
+  </url>
+
 </urlset>
