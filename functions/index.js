@@ -131,12 +131,15 @@ function verifyGuestPublicId(publicId, expectedEventId) {
 function publicEventData(eventDoc) {
   const data = eventDoc.data() || {};
   const maxCompanions = Number(data.rsvpMaxCompanions || 0);
+  const allowedDesigns = new Set(["clean", "warm", "formal"]);
+  const rsvpDesign = allowedDesigns.has(data.rsvpDesign) ? data.rsvpDesign : "clean";
 
   return {
     valid: true,
     eventName: sanitizeString(data.name || "Evento Planne", 160),
     eventDate: asDateString(data.date),
     rsvpMode: data.rsvpMode === "open" ? "open" : "reserved",
+    rsvpDesign,
     allowCompanions: data.rsvpAllowCompanions === true,
     maxCompanions: Number.isInteger(maxCompanions) && maxCompanions > 0
       ? Math.min(maxCompanions, 20)

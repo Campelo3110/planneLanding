@@ -24,6 +24,7 @@ A funcao `rsvp` ja declara esse segredo no runtime. Sem ele, o RSVP aberto conti
 ```txt
 rsvpEnabled: boolean
 rsvpMode: "open" | "reserved"
+rsvpDesign: "clean" | "warm" | "formal"
 rsvpPublicToken: string
 rsvpRequireApproval: boolean
 rsvpAllowCompanions: boolean
@@ -80,6 +81,7 @@ O site nao grava no Firestore diretamente. Todas as leituras e escritas publicas
 ## Pontos de integracao no app
 
 - Tela de evento/configuracoes: ativar `rsvpEnabled`, escolher `rsvpMode`, gerar `rsvpPublicToken` e copiar o link.
+- Tela de criacao/configuracao do RSVP: permitir escolher `rsvpDesign` entre `clean`, `warm` e `formal`.
 - Tela de convidados: incluir acao para copiar/enviar `https://planneapp.com/rsvp.html?e=<token>`.
 - Sync de eventos: incluir os campos `rsvp*`.
 - Sync de convidados: incluir `normalizedName`, `rsvpRespondedAt`, `rsvpResponseSource`, `rsvpCompanionsCount` e `rsvpFoodRestriction`.

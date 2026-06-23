@@ -18,9 +18,59 @@
       --text: #10202A;
       --muted: #64747C;
       --line: #DFE8EA;
+      --input-bg: #FBFDFD;
+      --secondary-bg: #EEF6F6;
+      --secondary-text: #1E3B43;
+      --result-selected: rgba(19, 184, 167, 0.08);
+      --message-info-bg: rgba(19, 184, 167, 0.09);
+      --message-info-text: #17645D;
+      --shell-bg: #F7FAFA;
+      --shell-accent: rgba(19, 184, 167, 0.14);
       --error: #D84A4A;
       --success: #0F9F77;
-      --shadow: 0 20px 70px rgba(15, 32, 42, 0.10);
+      --shadow: 0 8px 28px rgba(15, 32, 42, 0.08);
+      --radius: 12px;
+      --logo-radius: 8px;
+    }
+
+    body[data-design="warm"] {
+      --primary: #B45309;
+      --primary-dark: #7C2D12;
+      --bg: #FAF8F5;
+      --card: #FFFFFF;
+      --text: #292524;
+      --muted: #6B5E55;
+      --line: #E7DCD1;
+      --input-bg: #FFFCF8;
+      --secondary-bg: #F4EBDD;
+      --secondary-text: #4A2B16;
+      --result-selected: rgba(180, 83, 9, 0.08);
+      --message-info-bg: rgba(180, 83, 9, 0.09);
+      --message-info-text: #7C2D12;
+      --shell-bg: #FAF8F5;
+      --shell-accent: rgba(180, 83, 9, 0.10);
+      --success: #0F766E;
+    }
+
+    body[data-design="formal"] {
+      --primary: #E5D2A3;
+      --primary-dark: #F4E5BE;
+      --bg: #111111;
+      --card: #1B1B1B;
+      --text: #F6F1E7;
+      --muted: #B5AA98;
+      --line: #34302A;
+      --input-bg: #141414;
+      --secondary-bg: #2A2620;
+      --secondary-text: #F6F1E7;
+      --result-selected: rgba(229, 210, 163, 0.12);
+      --message-info-bg: rgba(229, 210, 163, 0.12);
+      --message-info-text: #F4E5BE;
+      --shell-bg: #111111;
+      --shell-accent: rgba(229, 210, 163, 0.10);
+      --error: #F87171;
+      --success: #86EFAC;
+      --shadow: none;
     }
 
     * { box-sizing: border-box; }
@@ -30,8 +80,8 @@
       min-height: 100vh;
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background:
-        radial-gradient(circle at top left, rgba(19, 184, 167, 0.14), transparent 34rem),
-        linear-gradient(180deg, #F9FCFC 0%, var(--bg) 100%);
+        linear-gradient(135deg, var(--shell-accent), transparent 22rem),
+        var(--shell-bg);
       color: var(--text);
     }
 
@@ -48,10 +98,18 @@
       width: 100%;
       max-width: 520px;
       background: var(--card);
-      border: 1px solid rgba(223, 232, 234, 0.9);
-      border-radius: 28px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
       box-shadow: var(--shadow);
       padding: 28px;
+    }
+
+    body[data-design="warm"] .card {
+      border-top: 4px solid var(--primary);
+    }
+
+    body[data-design="formal"] .card {
+      border-top: 4px solid var(--primary);
     }
 
     .brand {
@@ -64,7 +122,7 @@
     .brand img {
       width: 42px;
       height: 42px;
-      border-radius: 12px;
+      border-radius: var(--logo-radius);
     }
 
     .brand strong {
@@ -78,8 +136,7 @@
       color: var(--primary-dark);
       font-size: 13px;
       font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0;
     }
 
     h1 {
@@ -87,6 +144,7 @@
       font-size: clamp(28px, 7vw, 40px);
       line-height: 1.08;
       letter-spacing: 0;
+      font-weight: 780;
     }
 
     .event-meta {
@@ -117,11 +175,11 @@
       width: 100%;
       min-height: 50px;
       border: 1.5px solid var(--line);
-      border-radius: 16px;
+      border-radius: var(--radius);
       padding: 13px 15px;
       font: inherit;
       color: var(--text);
-      background: #FBFDFD;
+      background: var(--input-bg);
       outline: none;
       transition: border-color 0.16s ease, box-shadow 0.16s ease;
     }
@@ -152,28 +210,26 @@
     button {
       min-height: 52px;
       border: 0;
-      border-radius: 16px;
+      border-radius: var(--radius);
       padding: 13px 16px;
       font: inherit;
       font-weight: 750;
       cursor: pointer;
-      transition: transform 0.16s ease, opacity 0.16s ease, background 0.16s ease;
+      transition: opacity 0.16s ease, background 0.16s ease, border-color 0.16s ease;
     }
 
-    button:active { transform: translateY(1px); }
     button:disabled { cursor: not-allowed; opacity: 0.55; }
 
     .primary {
       background: var(--primary);
-      color: #FFFFFF;
-      box-shadow: 0 12px 30px rgba(19, 184, 167, 0.24);
+      color: var(--card);
     }
 
     .primary:hover { background: var(--primary-dark); }
 
     .secondary {
-      background: #EEF6F6;
-      color: #1E3B43;
+      background: var(--secondary-bg);
+      color: var(--secondary-text);
     }
 
     .ghost {
@@ -197,7 +253,7 @@
       gap: 12px;
       min-height: 56px;
       border: 1px solid var(--line);
-      background: #FBFDFD;
+      background: var(--input-bg);
       color: var(--text);
       text-align: left;
       font-weight: 700;
@@ -205,14 +261,14 @@
 
     .result[aria-pressed="true"] {
       border-color: var(--primary);
-      background: rgba(19, 184, 167, 0.08);
+      background: var(--result-selected);
       color: var(--primary-dark);
     }
 
     .message {
       display: none;
       margin-top: 18px;
-      border-radius: 16px;
+      border-radius: var(--radius);
       padding: 14px 15px;
       font-size: 14px;
       line-height: 1.45;
@@ -221,7 +277,7 @@
     .message.show { display: block; }
     .message.error { background: rgba(216, 74, 74, 0.09); color: var(--error); }
     .message.success { background: rgba(15, 159, 119, 0.10); color: var(--success); }
-    .message.info { background: rgba(19, 184, 167, 0.09); color: #17645D; }
+    .message.info { background: var(--message-info-bg); color: var(--message-info-text); }
 
     .state {
       display: none;
@@ -253,7 +309,7 @@
 
     @media (max-width: 520px) {
       .shell { padding: 16px; align-items: stretch; }
-      .card { border-radius: 24px; padding: 22px; }
+      .card { padding: 22px; }
       .row, .actions { grid-template-columns: 1fr; }
     }
   </style>
@@ -410,6 +466,11 @@
       $("companionsField").hidden = max <= 0;
     }
 
+    function applyDesign(value) {
+      const allowedDesigns = ["clean", "warm", "formal"];
+      document.body.dataset.design = allowedDesigns.includes(value) ? value : "clean";
+    }
+
     async function api(path, options = {}) {
       const response = await fetch(path, {
         ...options,
@@ -441,6 +502,7 @@
 
         state.event = eventData;
         state.mode = eventData.rsvpMode === "open" ? "open" : "reserved";
+        applyDesign(eventData.rsvpDesign);
         $("eventName").textContent = eventData.eventName || "Evento Planne";
         $("eventDate").textContent = formatDate(eventData.eventDate);
         setupCompanions(eventData);
