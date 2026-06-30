@@ -57,3 +57,7 @@ coverage/
 
 # Generated Firebase/Data Connect files
 .dataconnect/
+
+# Generated SEO audit cache
+.seo-cache/
+.codex/

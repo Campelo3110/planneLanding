@@ -1,7 +1,4 @@
 {
-  "functions": {
-    "source": "functions"
-  },
   "hosting": {
     "public": "public",
     "ignore": [
@@ -42,10 +39,6 @@
       }
     ],
     "rewrites": [
-      {
-        "source": "/rsvp/**",
-        "function": "rsvp"
-      },
       {
         "source": "**",
         "destination": "/404.html"
