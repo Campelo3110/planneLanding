@@ -1,0 +1,222 @@
+@font-face {
+  font-family: "Patua One";
+  src: url("/assets/fonts/PatuaOne-Regular.ttf") format("truetype");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "Planne Inter";
+  src: url("/assets/fonts/inter-var-latin.woff2") format("woff2");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 100 900;
+}
+
+:root {
+  color-scheme: light;
+  --paper: #f8fafc;
+  --surface: #fafbfc;
+  --ink: #111827;
+  --muted: #6b7280;
+  --line: #e5e7eb;
+  --teal: #13b8a7;
+  --teal-dark: color-mix(in srgb, #13b8a7 78%, #111827);
+  --mist: #f0fdfa;
+  --coral: #ef4444;
+  --danger-soft: #fef2f2;
+  --radius-sm: 8px;
+  --radius-lg: 12px;
+}
+
+:root.dark,
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --paper: #101715;
+  --surface: #16201d;
+  --ink: #e8efec;
+  --muted: #a7b5b0;
+  --line: #31413c;
+  --teal: #13b8a7;
+  --teal-dark: color-mix(in srgb, #13b8a7 78%, #e8efec);
+  --mist: #1b2b27;
+  --coral: #ff6b6b;
+  --danger-soft: #442a25;
+}
+
+* { box-sizing: border-box; }
+html { min-height: 100%; }
+body {
+  min-height: 100vh;
+  margin: 0;
+  background: var(--paper) !important;
+  color: var(--ink);
+  font-family: "Planne Inter", system-ui, sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+.utility-header,
+body > header {
+  position: relative;
+  z-index: 10;
+  width: min(1180px, calc(100% - 40px));
+  min-height: 72px;
+  margin: 0 auto;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--line);
+}
+
+.utility-brand,
+.logo-link {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  gap: .65rem;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.utility-brand img,
+.logo-link img { width: 36px; height: 36px; }
+.utility-brand span,
+.logo-text { color: var(--ink); font-family: "Patua One", serif; font-size: 1.2rem; font-weight: 400; letter-spacing: .01em; }
+.logo-link .logo-text { display: inline-block; color: var(--ink) !important; }
+
+.utility-main,
+body > main {
+  position: relative;
+  z-index: 1;
+  min-height: calc(100vh - 144px);
+  padding: clamp(3rem, 8vw, 7rem) 20px;
+  display: grid;
+  place-items: center;
+}
+
+.utility-sheet,
+.card {
+  position: relative;
+  width: min(520px, calc(100vw - 40px));
+  max-width: 520px;
+  padding: clamp(2rem, 6vw, 3.5rem);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: none;
+}
+
+.utility-sheet::before,
+.card::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 10px -10px -10px 10px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  transform: rotate(1.2deg);
+}
+
+.utility-code {
+  margin: 0 0 1rem;
+  color: var(--teal-dark);
+  font-size: .78rem;
+  font-weight: 600;
+}
+.utility-sheet h1 { max-width: 420px; margin: 0; font-size: clamp(2.6rem, 8vw, 4.7rem); line-height: .98; letter-spacing: -.045em; }
+.utility-sheet > p:not(.utility-code) { max-width: 420px; margin: 1.4rem 0 2rem; color: var(--muted); }
+
+.utility-actions { display: flex; flex-wrap: wrap; gap: .75rem; }
+.utility-button,
+.btn-primary,
+.btn-secondary {
+  min-height: 48px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  padding: .7rem 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .55rem;
+  background: var(--ink);
+  color: var(--surface);
+  font: 600 .9rem/1 "Planne Inter", system-ui, sans-serif;
+  text-decoration: none;
+  box-shadow: none;
+  cursor: pointer;
+}
+.utility-button:hover,
+.btn-primary:hover:not(:disabled) { background: var(--teal-dark); transform: none; box-shadow: none; }
+.utility-button.secondary,
+.btn-secondary { border-color: var(--line); background: transparent; color: var(--ink); }
+.utility-button.secondary:hover,
+.btn-secondary:hover { border-color: var(--teal); background: var(--mist); color: var(--teal-dark); }
+.utility-button svg,
+.btn-secondary svg { width: 17px; height: 17px; }
+
+.utility-footer,
+body > footer { position: relative; z-index: 1; padding: 0 20px 2rem; color: var(--muted); text-align: center; font-size: .75rem; }
+.utility-footer a,
+body > footer a { color: inherit; text-decoration: none; }
+.utility-footer a:hover,
+body > footer a:hover { color: var(--teal-dark); text-decoration: none; }
+
+.bg-blobs,
+.logo-mark { display: none; }
+.header-actions { display: flex; align-items: center; gap: .8rem; }
+.lang-switcher { display: flex; align-items: center; gap: .4rem; }
+.lang-switcher button { padding: .25rem; border: 0; background: transparent; color: var(--muted); font: 500 .78rem "Planne Inter", sans-serif; cursor: pointer; }
+.lang-switcher button.active { color: var(--ink); font-weight: 600; }
+.lang-sep { color: var(--line); }
+.theme-btn,
+.theme-toggle { width: 40px; height: 40px; padding: 0; border: 1px solid var(--line); border-radius: var(--radius-sm); background: transparent; color: var(--ink); display: grid; place-items: center; cursor: pointer; }
+.theme-btn:hover,
+.theme-toggle:hover { border-color: var(--teal); background: var(--mist); color: var(--teal-dark); }
+.theme-btn svg,
+.theme-toggle svg { width: 18px; height: 18px; }
+
+.state-icon,
+.card-icon { width: 52px; height: 52px; margin-bottom: 1.4rem; border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--mist); display: grid; place-items: center; }
+.state-icon svg,
+.card-icon svg { width: 24px; height: 24px; stroke: var(--teal-dark); }
+.icon-error { background: var(--danger-soft); }
+.icon-error svg { stroke: var(--coral); }
+.card-title,
+.state-title { margin: 0 0 .65rem; color: var(--ink); font-family: "Planne Inter", system-ui, sans-serif; font-size: clamp(1.8rem, 5vw, 2.4rem); font-weight: 650; line-height: 1.1; letter-spacing: -.035em; }
+.card-subtitle,
+.state-sub { margin: 0 0 2rem; color: var(--muted); font-size: .9rem; line-height: 1.6; }
+.state-centered { text-align: left; align-items: flex-start; }
+.state-centered.active { display: flex; }
+.loading-pulse { width: 100%; align-items: flex-start; }
+.pulse-ring { width: 36px; height: 36px; border-color: var(--line); border-top-color: var(--teal); }
+.field { margin-bottom: 1.25rem; }
+label { margin-bottom: .45rem; color: var(--muted); font-size: .78rem; font-weight: 600; }
+input[type="password"],
+input[type="text"] { height: 50px; border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--paper); color: var(--ink); font-family: "Planne Inter", sans-serif; }
+input[type="password"]:focus,
+input[type="text"]:focus { border-color: var(--teal); box-shadow: 0 0 0 3px color-mix(in srgb, var(--teal) 18%, transparent); }
+.btn-primary { width: 100%; height: 50px; margin-top: .5rem; background: var(--ink); }
+.btn-primary .spinner { border-top-color: var(--surface); }
+.divider { color: var(--muted); }
+.msg { border-radius: var(--radius-sm); }
+.msg-error { border-color: color-mix(in srgb, var(--coral) 35%, var(--line)); background: var(--danger-soft); color: var(--coral); }
+
+:focus-visible { outline: 3px solid color-mix(in srgb, var(--teal) 35%, transparent); outline-offset: 3px; }
+
+@media (max-width: 560px) {
+  .utility-header,
+  body > header { width: min(100% - 28px, 1180px); }
+  .utility-main,
+  body > main { padding: 3rem 14px 4rem; }
+  .utility-sheet,
+  .card { width: min(100% - 28px, 520px); padding: 2rem 1.4rem; }
+  .utility-sheet::before,
+  .card::before { inset: 7px -5px -7px 5px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}

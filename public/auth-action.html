@@ -6,15 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <title>Planne — Account</title>
     <meta name="robots" content="noindex, nofollow">
-    <meta name="theme-color" content="#0d9488">
+    <meta name="theme-color" content="#f8fafc">
+    <script>try{const t=localStorage.getItem('planne-theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.classList.add('dark')}catch(e){}</script>
 
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/brand/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/assets/brand/favicon-16x16.png">
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -307,6 +304,7 @@
         footer a { color:var(--primary); text-decoration:none; }
         footer a:hover { text-decoration:underline; }
     </style>
+    <link rel="stylesheet" href="/assets/css/utility-pages.css">
 </head>
 
 <body>
@@ -318,11 +316,11 @@
 
 <header>
     <a href="/" class="logo-link" aria-label="Planne">
-        <div class="logo-mark"><span>P</span></div>
-        <span class="logo-text">planne</span>
+        <img src="/assets/brand/logo-64x64.png" alt="" width="36" height="36">
+        <span class="logo-text">Planne</span>
     </a>
     <div class="header-actions">
-        <div class="lang-switcher" role="group">
+        <div class="lang-switcher" role="group" aria-label="Language / Idioma">
             <button id="btn-pt" onclick="setLang('pt')">PT</button>
             <span class="lang-sep" aria-hidden="true">|</span>
             <button id="btn-en" onclick="setLang('en')">EN</button>
@@ -478,7 +476,7 @@
 </main>
 
 <footer>
-    <p>&copy; 2026 Planne &nbsp;·&nbsp; <a href="/privacy" data-i18n="privacy"></a> &nbsp;·&nbsp; <a href="/terms" data-i18n="terms"></a></p>
+    <p>&copy; 2026 Planne &nbsp;·&nbsp; <a href="/privacy.html" data-i18n="privacy"></a> &nbsp;·&nbsp; <a href="/terms.html" data-i18n="terms"></a></p>
 </footer>
 
 <script>
@@ -584,7 +582,8 @@ let currentLang = 'en';
 
 function detectLang() {
     // 1. preferência salva pelo usuário no site
-    const saved = localStorage.getItem('planne-lang');
+    const savedValue = localStorage.getItem('planne-language') || localStorage.getItem('planne-lang');
+    const saved = savedValue?.startsWith('pt') ? 'pt' : savedValue;
     if (saved === 'pt' || saved === 'en') return saved;
     // 2. lang enviado pelo Firebase no link (?lang=pt)
     const fbLang = (window.__planneAuth || {}).lang || '';
@@ -618,6 +617,7 @@ function applyLang(lang) {
 
 function setLang(lang) {
     localStorage.setItem('planne-lang', lang);
+    localStorage.setItem('planne-language', lang === 'pt' ? 'pt-BR' : 'en');
     applyLang(lang);
 }
 
@@ -631,11 +631,16 @@ function initTheme() {
         document.documentElement.classList.add('dark');
         setMoonIcon();
     }
+    updateThemeColor();
 }
 function toggleTheme() {
     const isDark = document.documentElement.classList.toggle('dark');
     localStorage.setItem('planne-theme', isDark ? 'dark' : 'light');
     isDark ? setMoonIcon() : setSunIcon();
+    updateThemeColor();
+}
+function updateThemeColor() {
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', document.documentElement.classList.contains('dark') ? '#101715' : '#F8FAFC');
 }
 function setSunIcon() {
     document.getElementById('theme-icon').innerHTML =

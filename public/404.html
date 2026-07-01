@@ -1,24 +1,53 @@
 <!doctype html>
 <html lang="pt-BR">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Pagina nao encontrada - Planne</title>
-    <style>
-      :root { color-scheme: light; --bg: #f8fafc; --text: #1e293b; --muted: #64748b; --primary: #13b8a7; }
-      * { box-sizing: border-box; }
-      body { display: grid; min-height: 100vh; place-items: center; margin: 0; background: var(--bg); color: var(--text); font-family: Inter, system-ui, sans-serif; }
-      main { width: min(420px, calc(100% - 32px)); text-align: center; }
-      h1 { margin: 0; font-size: 3rem; line-height: 1; }
-      p { margin: 16px 0 24px; color: var(--muted); }
-      a { display: inline-flex; min-height: 44px; align-items: center; justify-content: center; border-radius: 999px; background: var(--primary); color: #fff; padding: 0 20px; font-weight: 700; text-decoration: none; }
-    </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Página não encontrada — Planne</title>
+    <meta name="robots" content="noindex, follow">
+    <meta name="theme-color" content="#f8fafc">
+    <script>try{const t=localStorage.getItem('planne-theme');document.documentElement.dataset.theme=t||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/brand/favicon-32x32.png">
+    <link rel="stylesheet" href="/assets/css/utility-pages.css">
+    <script src="https://unpkg.com/lucide@latest" defer></script>
   </head>
   <body>
-    <main>
-      <h1>404</h1>
-      <p>Essa pagina nao existe ou foi movida.</p>
-      <a href="/">Voltar para a Planne</a>
+    <header class="utility-header">
+      <a class="utility-brand" id="home-brand" href="/pt-br" aria-label="Planne — início"><img src="/assets/brand/logo-64x64.png" alt="" width="36" height="36"><span>Planne</span></a>
+      <button class="theme-toggle" type="button" aria-label="Usar tema escuro"><i data-lucide="moon"></i></button>
+    </header>
+    <main class="utility-main">
+      <section class="utility-sheet" aria-labelledby="not-found-title">
+        <p class="utility-code" data-copy="code">Erro 404 · Página não encontrada</p>
+        <h1 id="not-found-title" data-copy="title">Este item saiu do planejamento.</h1>
+        <p data-copy="description">O endereço pode ter mudado ou não existir mais. Volte para o início e continue organizando seu evento.</p>
+        <div class="utility-actions">
+          <a class="utility-button" id="home-button" href="/pt-br"><i data-lucide="arrow-left"></i><span data-copy="back">Voltar para o início</span></a>
+          <a class="utility-button secondary" href="https://play.google.com/store/apps/details?id=com.planne.planne" target="_blank" rel="noopener noreferrer" data-copy="store">Abrir na Google Play</a>
+        </div>
+      </section>
     </main>
+    <footer class="utility-footer">© 2026 Planne · <a href="/privacy.html" data-copy="privacy">Privacidade</a> · <a href="/terms.html" data-copy="terms">Termos</a></footer>
+    <script>
+      (() => {
+        const saved = localStorage.getItem('planne-language');
+        const portuguese = saved ? saved.toLowerCase().startsWith('pt') : (navigator.language || '').toLowerCase().startsWith('pt');
+        const copy = portuguese ? {
+          code: 'Erro 404 · Página não encontrada', title: 'Este item saiu do planejamento.',
+          description: 'O endereço pode ter mudado ou não existir mais. Volte para o início e continue organizando seu evento.',
+          back: 'Voltar para o início', store: 'Abrir na Google Play', privacy: 'Privacidade', terms: 'Termos'
+        } : {
+          code: 'Error 404 · Page not found', title: 'This item left the plan.',
+          description: 'This address may have changed or no longer exists. Return home and keep organizing your event.',
+          back: 'Back to home', store: 'Open Google Play', privacy: 'Privacy', terms: 'Terms'
+        };
+        document.documentElement.lang = portuguese ? 'pt-BR' : 'en';
+        document.querySelectorAll('[data-copy]').forEach((element) => { element.textContent = copy[element.dataset.copy]; });
+        const home = portuguese ? '/pt-br' : '/';
+        document.getElementById('home-brand').href = home;
+        document.getElementById('home-button').href = home;
+      })();
+    </script>
+    <script src="/assets/js/site-preferences.js"></script>
   </body>
 </html>
