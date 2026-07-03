@@ -8,6 +8,10 @@
   const applyTheme = (theme) => {
     root.dataset.theme = theme;
     document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#101715' : '#f8fafc');
+    document.querySelectorAll('[data-theme-image]').forEach((image) => {
+      const source = theme === 'dark' ? image.dataset.darkSrc : image.dataset.lightSrc;
+      if (source && image.getAttribute('src') !== source) image.setAttribute('src', source);
+    });
   };
 
   applyTheme(storage.get('planne-theme') || (themeMedia.matches ? 'dark' : 'light'));
@@ -20,6 +24,7 @@
   document.addEventListener('DOMContentLoaded', () => {
     const isPortuguese = root.lang.toLowerCase().startsWith('pt');
     const toggle = document.querySelector('.theme-toggle');
+    applyTheme(root.dataset.theme);
     const updateToggle = () => {
       const dark = root.dataset.theme === 'dark';
       const label = dark ? (isPortuguese ? 'Usar tema claro' : 'Use light theme') : (isPortuguese ? 'Usar tema escuro' : 'Use dark theme');
