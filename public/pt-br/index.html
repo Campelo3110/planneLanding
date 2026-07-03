@@ -65,18 +65,26 @@
       </div>
 
       <div class="planning-desk" aria-label="Exemplo demonstrativo de um planejamento no Planne">
-        <article class="plan-sheet">
-          <div class="sheet-head">
-            <div><p class="sheet-label">Casamento de Ana e Pedro</p><p class="sheet-title">Visão do planejamento</p></div>
-            <p class="sheet-date">24 mai 2026</p>
-          </div>
-          <div class="plan-list">
-            <div class="plan-row"><i data-lucide="users"></i><div><strong>Lista de convidados</strong><small>124 pessoas · 8 grupos</small></div><span class="plan-status">Organizada</span></div>
-            <div class="plan-row pending"><i data-lucide="circle-alert"></i><div><strong>Confirmar buffet</strong><small>Proposta válida até sexta-feira</small></div><span class="plan-status">Pendente</span></div>
-            <div class="plan-row"><i data-lucide="wallet-cards"></i><div><strong>Orçamento</strong><small>R$ 8.430 de R$ 12.000</small></div><span class="plan-status">70%</span></div>
-          </div>
+        <div class="desk-greeting">
+          <span class="desk-avatar" aria-hidden="true">AP</span>
+          <div><p>Boa tarde, Ana</p><span>Faltam 240 dias para o casamento. Seu plano está evoluindo.</span></div>
+          <i data-lucide="sparkles" aria-hidden="true"></i>
+        </div>
+        <nav class="desk-shortcuts" aria-label="Áreas do planejamento demonstrativo">
+          <div class="desk-shortcut violet"><i data-lucide="circle-check-big"></i><span>Tarefas</span><strong>8</strong></div>
+          <div class="desk-shortcut orange"><i data-lucide="calendar-days"></i><span>Agenda</span></div>
+          <div class="desk-shortcut green"><i data-lucide="users"></i><span>Convidados</span><strong>124</strong></div>
+          <div class="desk-shortcut red"><i data-lucide="wallet-cards"></i><span>Orçamento</span></div>
+          <div class="desk-shortcut blue"><i data-lucide="building-2"></i><span>Fornecedores</span></div>
+          <div class="desk-shortcut pink"><i data-lucide="image"></i><span>Galeria</span></div>
+          <div class="desk-shortcut cyan"><i data-lucide="notebook-pen"></i><span>Anotações</span></div>
+          <div class="desk-shortcut gray"><i data-lucide="settings"></i><span>Ajustes</span></div>
+        </nav>
+        <article class="desk-tasks">
+          <header><div><span>Próximas tarefas</span><small>2 pendências nesta semana</small></div><span class="desk-all">Ver todas <i data-lucide="chevron-right"></i></span></header>
+          <div class="desk-task"><span class="task-check"><i data-lucide="video"></i></span><div><strong>Contratar videomaker</strong><small>19 jun · Fornecedores</small></div><span class="task-urgent">Atrasado</span></div>
+          <div class="desk-task"><span class="task-check"><i data-lucide="utensils"></i></span><div><strong>Revisar proposta do buffet</strong><small>21 jun · Orçamento</small></div><span class="task-important">Importante</span></div>
         </article>
-        <aside class="next-card"><small>Próxima decisão</small><p>Revisar proposta do buffet até sexta</p></aside>
       </div>
     </section>
 

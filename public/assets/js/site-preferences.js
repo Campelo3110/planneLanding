@@ -1,5 +1,6 @@
 (() => {
   const root = document.documentElement;
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) root.classList.add('has-motion');
   const themeMedia = window.matchMedia('(prefers-color-scheme: dark)');
   const storage = {
     get(key) { try { return localStorage.getItem(key); } catch (_) { return null; } },
@@ -52,6 +53,20 @@
     const links = document.querySelector('.nav-links');
     menu?.addEventListener('click', () => { const open = links.classList.toggle('open'); menu.setAttribute('aria-expanded', String(open)); });
     document.querySelectorAll('.faq-question').forEach((button) => button.addEventListener('click', () => button.setAttribute('aria-expanded', String(button.getAttribute('aria-expanded') !== 'true'))));
+    const revealItems = document.querySelectorAll('.section-heading, .chapter, .process-intro, .step, .privacy-copy, .privacy-item, .faq-grid, .final-cta');
+    revealItems.forEach((item) => item.classList.add('motion-reveal'));
+    if ('IntersectionObserver' in window && root.classList.contains('has-motion')) {
+      const revealObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        });
+      }, { threshold: .12, rootMargin: '0px 0px -6% 0px' });
+      revealItems.forEach((item) => revealObserver.observe(item));
+    } else {
+      revealItems.forEach((item) => item.classList.add('is-visible'));
+    }
     updateToggle();
   });
 })();
