@@ -1,0 +1,8 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.planne.planne",
+    "sha256_cert_fingerprints": ["E7:54:BB:46:20:31:11:E1:F8:37:A8:23:D5:51:93:3C:E6:7D:9D:D6:59:E2:98:9A:A1:51:40:68:EE:82:DE:F7"]
+  }
+}]
