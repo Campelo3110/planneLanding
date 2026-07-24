@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Planne — RSVP</title>
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#f8fafc">
+    <script>try{document.documentElement.dataset.theme=localStorage.getItem('planne-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/brand/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/brand/favicon-16x16.png">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
+    <script>
+        // ─── CONFIG ───────────────────────────────────────────
+        // Endpoint da Cloud Function `rsvp` (Admin SDK, ver plano —
+        // implementação/deploy ficam fora deste repo). Ajuste a URL se o
+        // projeto físico usar outra região/geração/domínio customizado.
+        window.__RSVP_ENDPOINT = "https://southamerica-east1-planne-692f7.cloudfunctions.net/rsvp";
+        // ────────────────────────────────────────────────────
+
+        const __p = new URLSearchParams(window.location.search);
+        window.__rsvpToken = __p.get("token");
+    </script>
+
+    <link rel="stylesheet" href="/assets/css/utility-pages.css">
+    <style>
+        body { overflow-x: hidden; }
+
+        main.utility-main { padding-top: clamp(2rem, 6vw, 4rem); padding-bottom: clamp(2rem, 6vw, 4rem); }
+
+        .card { position: relative; }
+
+        /* utility-pages.css sets stroke color for these icons but not fill,
+           so unstyled paths render as solid black shapes — fix here. */
+        .card-icon svg, .state-icon svg { fill: none; stroke-width: 1.8; }
+
+        /* alert banners: utility-pages.css only carries the border color,
+           not the show/hide + layout behaviour this page needs. */
+        .msg {
+            display: none; padding: 14px 16px; font-size: .84rem; line-height: 1.5;
+            margin-bottom: 1.25rem; align-items: flex-start; gap: 10px;
+        }
+        .msg.show { display: flex; animation: msgIn .3s ease; }
+        @keyframes msgIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+        .msg svg { flex-shrink: 0; width: 16px; height: 16px; stroke-width: 2; fill: none; margin-top: 1px; }
+        .msg-error { border: 1px solid color-mix(in srgb, var(--coral) 35%, var(--line)); background: var(--danger-soft); color: var(--coral); }
+        .msg-error svg { stroke: var(--coral); }
+
+        /* ── signature: a torn ticket-stub tag, pinned to the reply card.
+           Hidden on states that aren't an actual invitation form. ── */
+        .rsvp-tab {
+            position: absolute; top: -14px; left: 30px; z-index: 2;
+            background: var(--teal); color: #fff;
+            font: 700 .7rem/1 "Planne Inter", sans-serif;
+            letter-spacing: .09em; text-transform: uppercase;
+            padding: .5rem .85rem; border-radius: 3px;
+            transform: rotate(-3deg);
+            box-shadow: 0 6px 16px color-mix(in srgb, var(--teal) 45%, transparent);
+            transition: opacity .25s ease;
+        }
+        .rsvp-tab::after {
+            content: ""; position: absolute; left: 11px; bottom: -5px;
+            width: 10px; height: 10px; background: inherit;
+            transform: rotate(45deg); border-radius: 0 0 2px 0;
+        }
+        .card:has(#stateLoading.active) .rsvp-tab,
+        .card:has(#stateInvalid.active) .rsvp-tab,
+        .card:has(#stateSuccess.active) .rsvp-tab { opacity: 0; pointer-events: none; }
+
+        /* ── state machine ── */
+        .state { display: none; }
+        .state.active { display: block; animation: cardIn .4s cubic-bezier(.22,1,.36,1) both; }
+        @keyframes cardIn {
+            from { opacity: 0; transform: translateY(18px) scale(.98) rotate(-.5deg); }
+            to   { opacity: 1; transform: translateY(0) scale(1) rotate(0); }
+        }
+        @media (prefers-reduced-motion: no-preference) {
+            .card { animation: cardIn .55s cubic-bezier(.22,1,.36,1) both; }
+        }
+
+        .loading-pulse { display: flex; flex-direction: column; align-items: flex-start; gap: 1rem; }
+        .loading-pulse p { color: var(--muted); font-size: .9rem; }
+
+        /* ── step indicator: private mode is genuinely a two-step flow ── */
+        .step-track { display: flex; gap: 6px; margin-bottom: 1.2rem; }
+        .step-dot { width: 22px; height: 4px; border-radius: 2px; background: var(--line); }
+        .step-dot.active { background: var(--teal); }
+        .step-dot.done { background: var(--teal-dark); }
+
+        /* ── eyebrow reuses .utility-code look, but toggled by JS ── */
+        #publicEyebrow { display: block; }
+        #publicEyebrow[hidden] { display: none; }
+
+        /* ── fields not already covered by the shared utility form styles ── */
+        input[type="tel"] {
+            width: 100%; height: 50px; border: 1px solid var(--line); border-radius: var(--radius-sm);
+            padding: 0 14px; font-family: "Planne Inter", sans-serif; font-size: .95rem; color: var(--ink);
+            background: var(--paper); outline: none; transition: border-color .2s, box-shadow .2s;
+        }
+        input[type="tel"]:focus { border-color: var(--teal); box-shadow: 0 0 0 3px color-mix(in srgb, var(--teal) 18%, transparent); }
+        input.invalid, .otp-box.invalid { border-color: var(--coral) !important; box-shadow: 0 0 0 3px color-mix(in srgb, var(--coral) 18%, transparent) !important; }
+
+        @keyframes shake {
+            10%, 90% { transform: translateX(-1px); } 20%, 80% { transform: translateX(2px); }
+            30%, 50%, 70% { transform: translateX(-4px); } 40%, 60% { transform: translateX(4px); }
+        }
+        .shake { animation: shake .5s cubic-bezier(.36,.07,.19,.97) both; }
+
+        /* ── presence toggle ── */
+        .presence-toggle { display: flex; gap: 10px; }
+        .presence-opt {
+            flex: 1; height: 52px; border-radius: var(--radius-sm); border: 1px solid var(--line);
+            background: var(--paper); color: var(--ink); font: 600 .9rem "Planne Inter", sans-serif;
+            cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+            transition: border-color .2s, background .2s, color .2s, transform .15s;
+        }
+        .presence-opt svg { width: 16px; height: 16px; stroke: currentColor; stroke-width: 2.2; fill: none; }
+        .presence-opt:active { transform: scale(.97); }
+        .presence-opt.selected-yes { border-color: var(--teal); background: var(--mist); color: var(--teal-dark); }
+        .presence-opt.selected-no  { border-color: var(--coral); background: var(--danger-soft); color: var(--coral); }
+
+        .companions-field, .otp-field { display: none; }
+        .companions-field.show { display: block; }
+
+        /* ── companions quantity stepper ── */
+        .stepper { display: flex; align-items: stretch; height: 50px; border: 1px solid var(--line); border-radius: var(--radius-sm); overflow: hidden; }
+        .stepper-btn {
+            width: 46px; border: none; background: var(--surface); color: var(--ink);
+            font: 600 1.15rem "Planne Inter", sans-serif; cursor: pointer;
+            transition: background .15s, color .15s;
+        }
+        .stepper-btn:hover:not(:disabled) { background: var(--mist); color: var(--teal-dark); }
+        .stepper-btn:active:not(:disabled) { transform: scale(.94); }
+        .stepper-btn:disabled { opacity: .35; cursor: not-allowed; }
+        .stepper input {
+            flex: 1; min-width: 0; text-align: center; border: none; height: 100%;
+            background: var(--paper); font: 700 1rem "Planne Inter", sans-serif; color: var(--ink);
+            border-left: 1px solid var(--line); border-right: 1px solid var(--line);
+        }
+        .stepper input:focus { outline: none; }
+
+        /* ── phone-verification digits, styled like a code entry ── */
+        .otp-group { display: flex; gap: .6rem; }
+        .otp-box {
+            flex: 1; min-width: 0; height: 56px; text-align: center;
+            font: 700 1.3rem "Planne Inter", sans-serif; color: var(--ink);
+            border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--paper);
+            outline: none; transition: border-color .2s, box-shadow .2s, transform .15s;
+        }
+        .otp-box:focus { border-color: var(--teal); box-shadow: 0 0 0 3px color-mix(in srgb, var(--teal) 18%, transparent); transform: translateY(-1px); }
+
+        /* ── success: a stamped wax seal, not a generic checkmark circle ── */
+        .seal {
+            width: 68px; height: 68px; border-radius: 50%; position: relative;
+            display: flex; align-items: center; justify-content: center; margin-bottom: 1.3rem;
+        }
+        .seal svg { width: 28px; height: 28px; stroke-width: 2.2; fill: none; }
+        @media (prefers-reduced-motion: no-preference) {
+            .seal { animation: sealStamp .5s cubic-bezier(.34,1.56,.64,1) both; }
+            .seal::before { content: ""; position: absolute; inset: -10px; border-radius: 50%; background: inherit; opacity: 0; animation: sealBloom .6s ease-out .05s both; }
+        }
+        @keyframes sealStamp { 0% { transform: scale(1.6) rotate(-8deg); opacity: 0; } 60% { transform: scale(.94) rotate(2deg); opacity: 1; } 100% { transform: scale(1) rotate(0); } }
+        @keyframes sealBloom { 0% { transform: scale(.6); opacity: .35; } 100% { transform: scale(1.5); opacity: 0; } }
+        .seal-yes { background: var(--teal); box-shadow: 0 10px 26px color-mix(in srgb, var(--teal) 45%, transparent); }
+        .seal-yes svg { stroke: #fff; }
+        .seal-no { background: var(--surface); border: 1.5px solid var(--line); }
+        .seal-no svg { stroke: var(--muted); }
+        .seal-pending { background: #fef3c7; border: 1.5px solid #f59e0b88; }
+        .seal-pending svg { stroke: #b45309; }
+        :root[data-theme="dark"] .seal-pending, html.dark .seal-pending { background: #3a2a12; border-color: #f59e0b55; }
+        :root[data-theme="dark"] .seal-pending svg, html.dark .seal-pending svg { stroke: #fbbf24; }
+
+        .btn-primary .spinner {
+            width: 18px; height: 18px; border: 2px solid rgba(255,255,255,.3);
+            border-radius: 50%; animation: spin .7s linear infinite; display: none;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+
+<body>
+
+<header class="utility-header">
+    <a href="/" class="utility-brand" aria-label="Planne">
+        <img src="/assets/brand/logo-64x64.png" alt="" width="36" height="36">
+        <span>Planne</span>
+    </a>
+    <div class="header-actions">
+        <div class="lang-switcher" role="group" aria-label="Language / Idioma">
+            <button id="btn-pt" onclick="setLang('pt')">PT</button>
+            <span class="lang-sep" aria-hidden="true">|</span>
+            <button id="btn-en" onclick="setLang('en')">EN</button>
+        </div>
+        <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle theme">
+            <svg id="theme-icon" viewBox="0 0 24 24" aria-hidden="true" stroke="currentColor" stroke-width="1.8" fill="none">
+                <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41"/>
+            </svg>
+        </button>
+    </div>
+</header>
+
+<main class="utility-main">
+<div class="card" aria-live="polite">
+    <span class="rsvp-tab" aria-hidden="true">RSVP</span>
+
+    <!-- LOADING (resolve token) -->
+    <div class="state active" id="stateLoading">
+        <div class="loading-pulse">
+            <div class="pulse-ring"></div>
+            <p data-i18n="loading"></p>
+        </div>
+    </div>
+
+    <!-- INVALID TOKEN / DISABLED -->
+    <div class="state" id="stateInvalid">
+        <div class="state-icon icon-error">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </div>
+        <p class="state-title" data-i18n="invalidTitle"></p>
+        <p class="state-sub" data-i18n="invalidSub"></p>
+    </div>
+
+    <!-- MODO PÚBLICO — formulário de autocadastro -->
+    <div class="state" id="statePublicForm">
+        <div class="card-icon">
+            <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <p class="utility-code" id="publicEyebrow" hidden></p>
+        <h1 class="card-title" id="publicEventTitle"></h1>
+        <p class="card-subtitle" id="publicSubtitleText"></p>
+
+        <div class="msg msg-error" id="publicError" role="alert">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span id="publicErrorText"></span>
+        </div>
+
+        <div class="field">
+            <label for="pubName" data-i18n="labelName"></label>
+            <input type="text" id="pubName" autocomplete="name">
+        </div>
+        <div class="field">
+            <label for="pubPhone" data-i18n="labelPhone"></label>
+            <input type="tel" id="pubPhone" autocomplete="tel" data-i18n-placeholder="placeholderPhone">
+        </div>
+        <div class="field">
+            <label data-i18n="labelPresence"></label>
+            <div class="presence-toggle" id="pubPresenceToggle">
+                <button type="button" class="presence-opt" id="pubYes" onclick="setPresence('pub', true)">
+                    <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                    <span data-i18n="presenceYes"></span>
+                </button>
+                <button type="button" class="presence-opt" id="pubNo" onclick="setPresence('pub', false)">
+                    <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    <span data-i18n="presenceNo"></span>
+                </button>
+            </div>
+        </div>
+        <div class="field companions-field" id="pubCompanionsField">
+            <label for="pubCompanions" data-i18n="labelCompanions"></label>
+            <div class="stepper">
+                <button type="button" class="stepper-btn" data-step="-1" data-target="pubCompanions" aria-label="−">−</button>
+                <input type="text" inputmode="numeric" id="pubCompanions" value="0" readonly>
+                <button type="button" class="stepper-btn" data-step="1" data-target="pubCompanions" aria-label="+">+</button>
+            </div>
+        </div>
+        <div class="field">
+            <label for="pubMenu" data-i18n="labelMenu"></label>
+            <input type="text" id="pubMenu" data-i18n-placeholder="placeholderMenu">
+        </div>
+
+        <button class="btn-primary" id="pubSubmitBtn" onclick="submitPublic()">
+            <div class="spinner" id="pubSpinner"></div>
+            <span data-i18n="btnSend"></span>
+        </button>
+    </div>
+
+    <!-- MODO PRIVADO — passo 1: buscar nome -->
+    <div class="state" id="statePrivateSearch">
+        <div class="step-track" aria-hidden="true"><span class="step-dot active"></span><span class="step-dot"></span></div>
+        <div class="card-icon">
+            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <h1 class="card-title" data-i18n="privateSearchTitle"></h1>
+        <p class="card-subtitle" data-i18n="privateSearchSubtitle"></p>
+
+        <div class="msg msg-error" id="searchError" role="alert">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span id="searchErrorText"></span>
+        </div>
+
+        <div class="field">
+            <label for="searchName" data-i18n="labelName"></label>
+            <input type="text" id="searchName" autocomplete="name">
+        </div>
+
+        <button class="btn-primary" id="searchBtn" onclick="lookupGuest()">
+            <div class="spinner" id="searchSpinner"></div>
+            <span data-i18n="btnSearch"></span>
+        </button>
+    </div>
+
+    <!-- MODO PRIVADO — passo 2: confirmar telefone + responder -->
+    <div class="state" id="statePrivateConfirm">
+        <div class="step-track" aria-hidden="true"><span class="step-dot done"></span><span class="step-dot active"></span></div>
+        <div class="card-icon">
+            <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+        </div>
+        <h1 class="card-title" data-i18n="privateConfirmTitle"></h1>
+        <p class="card-subtitle" id="privateConfirmSubtitle"></p>
+
+        <div class="msg msg-error" id="confirmError" role="alert">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span id="confirmErrorText"></span>
+        </div>
+
+        <div class="field">
+            <label id="phoneLast4Label" data-i18n="labelPhoneLast4"></label>
+            <div class="otp-group" role="group" aria-labelledby="phoneLast4Label">
+                <input type="text" inputmode="numeric" maxlength="1" class="otp-box" aria-label="Digit 1">
+                <input type="text" inputmode="numeric" maxlength="1" class="otp-box" aria-label="Digit 2">
+                <input type="text" inputmode="numeric" maxlength="1" class="otp-box" aria-label="Digit 3">
+                <input type="text" inputmode="numeric" maxlength="1" class="otp-box" aria-label="Digit 4">
+            </div>
+            <input type="hidden" id="phoneLast4">
+        </div>
+        <div class="field">
+            <label data-i18n="labelPresence"></label>
+            <div class="presence-toggle" id="privPresenceToggle">
+                <button type="button" class="presence-opt" id="privYes" onclick="setPresence('priv', true)">
+                    <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                    <span data-i18n="presenceYes"></span>
+                </button>
+                <button type="button" class="presence-opt" id="privNo" onclick="setPresence('priv', false)">
+                    <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    <span data-i18n="presenceNo"></span>
+                </button>
+            </div>
+        </div>
+        <div class="field companions-field" id="privCompanionsField">
+            <label for="privCompanions" data-i18n="labelCompanions"></label>
+            <div class="stepper">
+                <button type="button" class="stepper-btn" data-step="-1" data-target="privCompanions" aria-label="−">−</button>
+                <input type="text" inputmode="numeric" id="privCompanions" value="0" readonly>
+                <button type="button" class="stepper-btn" data-step="1" data-target="privCompanions" aria-label="+">+</button>
+            </div>
+        </div>
+        <div class="field">
+            <label for="privMenu" data-i18n="labelMenu"></label>
+            <input type="text" id="privMenu" data-i18n-placeholder="placeholderMenu">
+        </div>
+
+        <button class="btn-primary" id="confirmBtn" onclick="submitPrivate()">
+            <div class="spinner" id="confirmSpinner"></div>
+            <span data-i18n="btnSend"></span>
+        </button>
+    </div>
+
+    <!-- SUCESSO -->
+    <div class="state" id="stateSuccess">
+        <div class="seal" id="successIcon">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <p class="state-title" id="successTitle"></p>
+        <p class="state-sub" id="successSub"></p>
+    </div>
+
+</div>
+</main>
+
+<footer class="utility-footer">
+    <span>&copy; 2026 Planne</span> · <a href="/privacy.html" data-i18n="privacy"></a> · <a href="/terms.html" data-i18n="terms"></a>
+</footer>
+
+<script>
+// ═══════════════════════════════════════════════════════
+//  i18n
+// ═══════════════════════════════════════════════════════
+const STRINGS = {
+    en: {
+        loading: "Loading your invitation…",
+        invalidTitle: "Invitation not found",
+        invalidSub: "This invitation link is invalid or has been disabled.\nAsk the organizer for a new one.",
+
+        invitedEyebrow: "You're invited",
+        publicTitle: "You're invited!",
+        publicSubtitle: "Fill in your details to confirm your presence.",
+        privateSearchTitle: "Find your invitation",
+        privateSearchSubtitle: "Enter your name the way it was invited to find your RSVP.",
+        privateConfirmTitle: "Confirm it's you",
+        privateConfirmSubtitleFound: "We found your invitation. Confirm the last 4 digits of the phone number the organizer registered.",
+
+        labelName: "Full name",
+        labelPhone: "Phone",
+        placeholderPhone: "(00) 00000-0000",
+        labelPresence: "Will you attend?",
+        presenceYes: "I'll be there",
+        presenceNo: "Can't make it",
+        labelCompanions: "Companions",
+        labelMenu: "Meal / dietary notes",
+        placeholderMenu: "e.g. vegetarian, no restrictions…",
+        labelPhoneLast4: "Last 4 digits of your phone",
+
+        btnSend: "Send RSVP",
+        btnSearch: "Search",
+
+        errMissingName: "Please enter your name.",
+        errMissingPhone: "Please enter your phone number.",
+        errMissingPresence: "Please let us know if you'll attend.",
+        errNotFound: "We couldn't find an invitation under that name.",
+        errPhoneMismatch: "Those digits don't match our records. Please try again.",
+        errGeneric: "Something went wrong. Please try again.",
+
+        successYesTitle: "You're confirmed!",
+        successYesSub: "Thanks for letting us know — see you there!",
+        successNoTitle: "Thanks for letting us know",
+        successNoSub: "We're sorry you can't make it. Thanks for responding!",
+        successPendingTitle: "Response received",
+        successPendingSub: "The organizer will review your RSVP shortly.",
+
+        privacy: "Privacy policy",
+        terms: "Terms of use",
+    },
+    pt: {
+        loading: "Carregando seu convite…",
+        invalidTitle: "Convite não encontrado",
+        invalidSub: "Este link de convite é inválido ou foi desativado.\nPeça um novo link ao organizador.",
+
+        invitedEyebrow: "Você foi convidado",
+        publicTitle: "Você foi convidado!",
+        publicSubtitle: "Preencha seus dados para confirmar presença.",
+        privateSearchTitle: "Encontre seu convite",
+        privateSearchSubtitle: "Digite seu nome como foi convidado pra encontrarmos sua confirmação.",
+        privateConfirmTitle: "Confirme que é você",
+        privateConfirmSubtitleFound: "Encontramos seu convite. Confirme os últimos 4 dígitos do telefone cadastrado pelo organizador.",
+
+        labelName: "Nome completo",
+        labelPhone: "Telefone",
+        placeholderPhone: "(00) 00000-0000",
+        labelPresence: "Você vai comparecer?",
+        presenceYes: "Vou comparecer",
+        presenceNo: "Não vou poder ir",
+        labelCompanions: "Acompanhantes",
+        labelMenu: "Menu / restrição alimentar",
+        placeholderMenu: "ex.: vegetariano, sem restrições…",
+        labelPhoneLast4: "Últimos 4 dígitos do seu telefone",
+
+        btnSend: "Enviar confirmação",
+        btnSearch: "Buscar",
+
+        errMissingName: "Digite seu nome.",
+        errMissingPhone: "Digite seu telefone.",
+        errMissingPresence: "Diga se você vai comparecer.",
+        errNotFound: "Não encontramos um convite com esse nome.",
+        errPhoneMismatch: "Esses dígitos não batem com o que temos cadastrado. Tente de novo.",
+        errGeneric: "Algo deu errado. Tente novamente.",
+
+        successYesTitle: "Presença confirmada!",
+        successYesSub: "Obrigado por avisar — te esperamos lá!",
+        successNoTitle: "Obrigado por avisar",
+        successNoSub: "Sentimos muito que você não poderá vir. Obrigado por responder!",
+        successPendingTitle: "Resposta recebida",
+        successPendingSub: "O organizador vai revisar sua confirmação em breve.",
+
+        privacy: "Política de privacidade",
+        terms: "Termos de uso",
+    }
+};
+
+let currentLang = 'en';
+let currentEventTitle = null;
+
+function detectLang() {
+    const savedValue = localStorage.getItem('planne-language') || localStorage.getItem('planne-lang');
+    const saved = savedValue?.startsWith('pt') ? 'pt' : savedValue;
+    if (saved === 'pt' || saved === 'en') return saved;
+    return (navigator.language || '').startsWith('pt') ? 'pt' : 'en';
+}
+
+function renderPublicHeader() {
+    const s = STRINGS[currentLang];
+    const eyebrow = document.getElementById('publicEyebrow');
+    const title = document.getElementById('publicEventTitle');
+    const subtitle = document.getElementById('publicSubtitleText');
+    if (currentEventTitle) {
+        eyebrow.textContent = s.invitedEyebrow;
+        eyebrow.hidden = false;
+        title.textContent = currentEventTitle;
+    } else {
+        eyebrow.hidden = true;
+        title.textContent = s.publicTitle;
+    }
+    subtitle.textContent = s.publicSubtitle;
+}
+
+function applyLang(lang) {
+    currentLang = lang;
+    const s = STRINGS[lang];
+    document.documentElement.lang = lang === 'pt' ? 'pt-BR' : 'en';
+
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const v = s[el.dataset.i18n];
+        if (v !== undefined) el.textContent = v;
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const v = s[el.dataset.i18nPlaceholder];
+        if (v !== undefined) el.placeholder = v;
+    });
+    renderPublicHeader();
+
+    document.getElementById('btn-pt').classList.toggle('active', lang === 'pt');
+    document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+}
+
+function setLang(lang) {
+    localStorage.setItem('planne-lang', lang);
+    localStorage.setItem('planne-language', lang === 'pt' ? 'pt-BR' : 'en');
+    applyLang(lang);
+}
+
+// ═══════════════════════════════════════════════════════
+//  THEME
+// ═══════════════════════════════════════════════════════
+const SUN_ICON = `<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41"/>`;
+const MOON_ICON = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/>`;
+
+function initTheme() {
+    document.getElementById('theme-icon').innerHTML = document.documentElement.dataset.theme === 'dark' ? MOON_ICON : SUN_ICON;
+    updateThemeColor();
+}
+function toggleTheme() {
+    const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = next;
+    localStorage.setItem('planne-theme', next);
+    document.getElementById('theme-icon').innerHTML = next === 'dark' ? MOON_ICON : SUN_ICON;
+    updateThemeColor();
+}
+function updateThemeColor() {
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', document.documentElement.dataset.theme === 'dark' ? '#101715' : '#f8fafc');
+}
+
+// ═══════════════════════════════════════════════════════
+//  STATE SWITCHER
+// ═══════════════════════════════════════════════════════
+const ALL_STATES = ['stateLoading','stateInvalid','statePublicForm','statePrivateSearch','statePrivateConfirm','stateSuccess'];
+function showState(id) {
+    ALL_STATES.forEach(s => document.getElementById(s).classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+}
+
+// ═══════════════════════════════════════════════════════
+//  API — contrato esperado da Cloud Function `rsvp`
+//  (implementação/deploy fora deste repo). Ver comentário no topo.
+//
+//    POST { action: 'resolveEvent', publicToken }
+//      -> { rsvpEnabled, rsvpMode: 'publico'|'privado',
+//           rsvpAllowCompanions, rsvpMaxCompanions, eventTitle? }
+//    POST { action: 'lookup', publicToken, name }
+//      -> { found: boolean }
+//    POST { action: 'verifyAndSubmitPrivate', publicToken, name,
+//           phoneLast4, confirmationStatus, menu, companions }
+//      -> { ok: true } | { error }
+//    POST { action: 'submitPublic', publicToken, name, phone,
+//           phoneCountry, confirmationStatus, menu, companions }
+//      -> { ok: true, pendingApproval: boolean } | { error }
+//
+//  confirmationStatus: 1 = Confirmado, 0 = Recusado
+//  (mesmo mapeamento usado no app — ver dropdown de status do convidado)
+// ═══════════════════════════════════════════════════════
+async function callRsvpApi(payload) {
+    const res = await fetch(window.__RSVP_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ publicToken: window.__rsvpToken, ...payload }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+        const err = new Error(data.error || 'request_failed');
+        err.code = data.error;
+        throw err;
+    }
+    return data;
+}
+
+// ═══════════════════════════════════════════════════════
+//  INLINE VALIDATION FEEDBACK
+// ═══════════════════════════════════════════════════════
+function markInvalid(id) {
+    const el = document.getElementById(id);
+    el.classList.add('invalid');
+    el.addEventListener('input', () => el.classList.remove('invalid'), { once: true });
+    el.focus();
+}
+function pulseAttention(id) {
+    const el = document.getElementById(id);
+    el.classList.remove('shake');
+    void el.offsetWidth;
+    el.classList.add('shake');
+}
+
+// ═══════════════════════════════════════════════════════
+//  QUANTITY STEPPER (companions)
+// ═══════════════════════════════════════════════════════
+function updateStepperState(input) {
+    const max = window.__rsvpMaxCompanions ?? Infinity;
+    const v = parseInt(input.value || '0', 10);
+    const wrap = input.closest('.stepper');
+    wrap.querySelector('[data-step="-1"]').disabled = v <= 0;
+    wrap.querySelector('[data-step="1"]').disabled = v >= max;
+}
+function initSteppers() {
+    document.querySelectorAll('.stepper-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const input = document.getElementById(btn.dataset.target);
+            const max = window.__rsvpMaxCompanions ?? Infinity;
+            const next = Math.max(0, Math.min(max, parseInt(input.value || '0', 10) + parseInt(btn.dataset.step, 10)));
+            input.value = next;
+            updateStepperState(input);
+        });
+    });
+}
+
+// ═══════════════════════════════════════════════════════
+//  PHONE VERIFICATION — four-digit code entry
+// ═══════════════════════════════════════════════════════
+function initOtpBoxes() {
+    const boxes = [...document.querySelectorAll('.otp-box')];
+    const hidden = document.getElementById('phoneLast4');
+    const sync = () => { hidden.value = boxes.map(b => b.value).join(''); };
+
+    boxes.forEach((box, i) => {
+        box.addEventListener('input', () => {
+            box.value = box.value.replace(/\D/g, '').slice(-1);
+            box.classList.remove('invalid');
+            if (box.value && boxes[i + 1]) boxes[i + 1].focus();
+            sync();
+        });
+        box.addEventListener('keydown', e => {
+            if (e.key === 'Backspace' && !box.value && boxes[i - 1]) boxes[i - 1].focus();
+        });
+        box.addEventListener('paste', e => {
+            const text = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
+            if (!text) return;
+            e.preventDefault();
+            text.slice(0, 4).split('').forEach((d, idx) => { if (boxes[idx]) boxes[idx].value = d; });
+            sync();
+            boxes[Math.min(text.length, 4) - 1]?.focus();
+        });
+    });
+}
+function resetOtpBoxes(markAsInvalid) {
+    const boxes = [...document.querySelectorAll('.otp-box')];
+    boxes.forEach(b => { b.value = ''; if (markAsInvalid) b.classList.add('invalid'); });
+    document.getElementById('phoneLast4').value = '';
+    if (markAsInvalid) document.querySelector('.otp-group').classList.add('shake');
+    boxes[0]?.focus();
+}
+
+// ═══════════════════════════════════════════════════════
+//  PRESENCE TOGGLE
+// ═══════════════════════════════════════════════════════
+const presenceState = { pub: null, priv: null };
+
+function setPresence(scope, attending) {
+    presenceState[scope] = attending;
+    const yesBtn = document.getElementById(scope === 'pub' ? 'pubYes' : 'privYes');
+    const noBtn  = document.getElementById(scope === 'pub' ? 'pubNo'  : 'privNo');
+    yesBtn.classList.toggle('selected-yes', attending === true);
+    noBtn.classList.toggle('selected-no', attending === false);
+
+    const companionsField = document.getElementById(scope === 'pub' ? 'pubCompanionsField' : 'privCompanionsField');
+    if (companionsField) {
+        companionsField.classList.toggle('show', attending === true && window.__rsvpAllowCompanions === true);
+    }
+}
+
+// ═══════════════════════════════════════════════════════
+//  MODO PÚBLICO
+// ═══════════════════════════════════════════════════════
+function showPublicError(msg) {
+    document.getElementById('publicErrorText').textContent = msg;
+    document.getElementById('publicError').classList.add('show');
+}
+function hidePublicError() { document.getElementById('publicError').classList.remove('show'); }
+
+async function submitPublic() {
+    hidePublicError();
+    const s = STRINGS[currentLang];
+    const name = document.getElementById('pubName').value.trim();
+    const phone = document.getElementById('pubPhone').value.trim();
+    const attending = presenceState.pub;
+
+    if (!name) { markInvalid('pubName'); return showPublicError(s.errMissingName); }
+    if (!phone) { markInvalid('pubPhone'); return showPublicError(s.errMissingPhone); }
+    if (attending === null) { pulseAttention('pubPresenceToggle'); return showPublicError(s.errMissingPresence); }
+
+    const btn = document.getElementById('pubSubmitBtn');
+    btn.disabled = true;
+    document.getElementById('pubSpinner').style.display = 'block';
+
+    try {
+        const companions = window.__rsvpAllowCompanions
+            ? parseInt(document.getElementById('pubCompanions').value || '0', 10)
+            : 0;
+        const result = await callRsvpApi({
+            action: 'submitPublic',
+            name,
+            phone,
+            confirmationStatus: attending ? 1 : 0,
+            menu: document.getElementById('pubMenu').value.trim(),
+            companions,
+        });
+        showSuccess(attending, result.pendingApproval === true);
+    } catch (e) {
+        showPublicError(s.errGeneric);
+        btn.disabled = false;
+        document.getElementById('pubSpinner').style.display = 'none';
+    }
+}
+
+// ═══════════════════════════════════════════════════════
+//  MODO PRIVADO
+// ═══════════════════════════════════════════════════════
+let confirmedName = '';
+
+function showSearchError(msg) {
+    document.getElementById('searchErrorText').textContent = msg;
+    document.getElementById('searchError').classList.add('show');
+}
+function hideSearchError() { document.getElementById('searchError').classList.remove('show'); }
+
+async function lookupGuest() {
+    hideSearchError();
+    const s = STRINGS[currentLang];
+    const name = document.getElementById('searchName').value.trim();
+    if (!name) { markInvalid('searchName'); return showSearchError(s.errMissingName); }
+
+    const btn = document.getElementById('searchBtn');
+    btn.disabled = true;
+    document.getElementById('searchSpinner').style.display = 'block';
+
+    try {
+        const result = await callRsvpApi({ action: 'lookup', name });
+        btn.disabled = false;
+        document.getElementById('searchSpinner').style.display = 'none';
+
+        if (!result.found) {
+            return showSearchError(s.errNotFound);
+        }
+        confirmedName = name;
+        document.getElementById('privateConfirmSubtitle').textContent = s.privateConfirmSubtitleFound;
+        showState('statePrivateConfirm');
+    } catch (e) {
+        btn.disabled = false;
+        document.getElementById('searchSpinner').style.display = 'none';
+        showSearchError(s.errGeneric);
+    }
+}
+
+function showConfirmError(msg) {
+    document.getElementById('confirmErrorText').textContent = msg;
+    document.getElementById('confirmError').classList.add('show');
+}
+function hideConfirmError() { document.getElementById('confirmError').classList.remove('show'); }
+
+async function submitPrivate() {
+    hideConfirmError();
+    const s = STRINGS[currentLang];
+    const phoneLast4 = document.getElementById('phoneLast4').value.trim();
+    const attending = presenceState.priv;
+
+    if (phoneLast4.length !== 4) {
+        document.querySelector('.otp-group').classList.add('shake');
+        document.querySelectorAll('.otp-box')[0]?.focus();
+        return showConfirmError(s.errPhoneMismatch);
+    }
+    if (attending === null) { pulseAttention('privPresenceToggle'); return showConfirmError(s.errMissingPresence); }
+
+    const btn = document.getElementById('confirmBtn');
+    btn.disabled = true;
+    document.getElementById('confirmSpinner').style.display = 'block';
+
+    try {
+        const companions = window.__rsvpAllowCompanions
+            ? parseInt(document.getElementById('privCompanions').value || '0', 10)
+            : 0;
+        await callRsvpApi({
+            action: 'verifyAndSubmitPrivate',
+            name: confirmedName,
+            phoneLast4,
+            confirmationStatus: attending ? 1 : 0,
+            menu: document.getElementById('privMenu').value.trim(),
+            companions,
+        });
+        showSuccess(attending, false);
+    } catch (e) {
+        btn.disabled = false;
+        document.getElementById('confirmSpinner').style.display = 'none';
+        if (e.code === 'not_found') {
+            resetOtpBoxes(true);
+            showConfirmError(s.errPhoneMismatch);
+        } else {
+            showConfirmError(s.errGeneric);
+        }
+    }
+}
+
+// ═══════════════════════════════════════════════════════
+//  SUCCESS
+// ═══════════════════════════════════════════════════════
+function showSuccess(attending, pendingApproval) {
+    const s = STRINGS[currentLang];
+    const icon = document.getElementById('successIcon');
+    if (pendingApproval) {
+        icon.className = 'seal seal-pending';
+        icon.innerHTML = `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`;
+        document.getElementById('successTitle').textContent = s.successPendingTitle;
+        document.getElementById('successSub').textContent = s.successPendingSub;
+    } else if (attending) {
+        icon.className = 'seal seal-yes';
+        icon.innerHTML = `<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>`;
+        document.getElementById('successTitle').textContent = s.successYesTitle;
+        document.getElementById('successSub').textContent = s.successYesSub;
+    } else {
+        icon.className = 'seal seal-no';
+        icon.innerHTML = `<svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
+        document.getElementById('successTitle').textContent = s.successNoTitle;
+        document.getElementById('successSub').textContent = s.successNoSub;
+    }
+    showState('stateSuccess');
+}
+
+// ═══════════════════════════════════════════════════════
+//  INIT — resolve o evento pelo token e escolhe o modo certo
+// ═══════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', async () => {
+    initTheme();
+    applyLang(detectLang());
+    initSteppers();
+    initOtpBoxes();
+
+    if (!window.__rsvpToken) {
+        showState('stateInvalid');
+        return;
+    }
+
+    try {
+        const event = await callRsvpApi({ action: 'resolveEvent' });
+        if (!event.rsvpEnabled) {
+            showState('stateInvalid');
+            return;
+        }
+        window.__rsvpAllowCompanions = event.rsvpAllowCompanions === true;
+        window.__rsvpMaxCompanions = typeof event.rsvpMaxCompanions === 'number' && event.rsvpMaxCompanions > 0
+            ? event.rsvpMaxCompanions : Infinity;
+        currentEventTitle = event.eventTitle || null;
+        renderPublicHeader();
+
+        if (event.rsvpMode === 'privado') {
+            showState('statePrivateSearch');
+        } else {
+            showState('statePublicForm');
+        }
+    } catch (e) {
+        showState('stateInvalid');
+    }
+});
+
+document.addEventListener('keydown', e => {
+    if (e.key !== 'Enter') return;
+    if (document.getElementById('statePublicForm').classList.contains('active')) submitPublic();
+    else if (document.getElementById('statePrivateSearch').classList.contains('active')) lookupGuest();
+    else if (document.getElementById('statePrivateConfirm').classList.contains('active')) submitPrivate();
+});
+</script>
+</body>
+</html>
