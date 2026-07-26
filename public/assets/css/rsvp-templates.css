@@ -1,0 +1,240 @@
+/* ═══════════════════════════════════════════════════════════════
+   rsvp.html — SISTEMA DE TEMPLATES (rsvpTemplateId) + REVEAL ANIMATION
+   (rsvpRevealStyle)
+   ═══════════════════════════════════════════════════════════════
+   6 identidades visuais reais, não uma paleta reskinada 6x: cada
+   template tem uma referência concreta (papelaria gravada, placa de
+   galeria suíça, ticket de parquinho, cartão-postal de correio aéreo,
+   etiqueta de sementes prensadas, crachá de conferência), um par
+   tipográfico próprio (ver rsvp-templates.js:TEMPLATE_FONTS) e UM
+   motivo-assinatura — o resto fica quieto/disciplinado por design.
+
+   --coral (erro/recusa) NUNCA muda entre templates — só --teal/
+   --teal-dark/--mist/--paper (destaque + tom de fundo) e a geometria
+   (--radius/--card-padding/--display-font) variam, pra manter os
+   estados de erro sempre legíveis.
+   ═══════════════════════════════════════════════════════════════ */
+
+:root {
+    --radius: 16px;
+    --card-padding: 32px;
+    --display-font: "Planne Inter", system-ui, sans-serif;
+}
+
+.card-title, .state-title { font-family: var(--display-font); }
+
+/* ───────────────────────────────────────────────────────────────
+   1) ELEGANTE — papelaria de gala gravada: tinta-navy + ouro
+   escovado, serifada de alto contraste usada com restrição.
+   ─────────────────────────────────────────────────────────────── */
+:root[data-invite-template="elegante"] {
+    --teal: #a9822f; --teal-dark: #16213e; --mist: #f6efdd;
+    --paper: #fbf7ee; --radius: 14px; --card-padding: 34px;
+    --display-font: "Fraunces", Georgia, serif;
+}
+:root[data-theme="dark"][data-invite-template="elegante"] {
+    --teal: #d4b667; --teal-dark: #93a5c9; --mist: #241f14; --paper: #17130f;
+}
+[data-invite-template="elegante"] .card-title { font-style: italic; font-weight: 500; letter-spacing: -.01em; }
+
+/* ───────────────────────────────────────────────────────────────
+   2) MINIMALISTA — placa de galeria: grafite neutro, grid preciso,
+   um único filete como única ornamentação.
+   ─────────────────────────────────────────────────────────────── */
+:root[data-invite-template="minimalista"] {
+    --teal: #2b2f36; --teal-dark: #0a0a0a; --mist: #f2f3f5;
+    --paper: #ffffff; --radius: 4px; --card-padding: 28px;
+    --display-font: "Space Grotesk", "Planne Inter", sans-serif;
+}
+:root[data-theme="dark"][data-invite-template="minimalista"] {
+    --teal: #94a3b8; --teal-dark: #cbd5e1; --mist: #1e293b; --paper: #0a0a0a;
+}
+[data-invite-template="minimalista"] .card-title {
+    text-transform: uppercase; letter-spacing: .06em; font-weight: 500; font-size: clamp(1.4rem, 4vw, 1.9rem);
+}
+[data-invite-template="minimalista"] .card-title::after {
+    content: ""; display: block; width: 36px; height: 2px; background: var(--teal); margin-top: .7rem;
+}
+[data-invite-template="minimalista"] .rsvp-tab { display: none; }
+[data-invite-template="minimalista"] .seal { box-shadow: none; border-radius: 8px; }
+[data-invite-template="minimalista"] .seal::before { display: none; }
+[data-invite-template="minimalista"] .countdown-unit { border-radius: 4px; }
+
+/* ───────────────────────────────────────────────────────────────
+   3) FESTA INFANTIL — ticket de parquinho: vermelho-circo + amanteigado,
+   cantos-bolha, linha de rasgar no rodapé do cartão.
+   ─────────────────────────────────────────────────────────────── */
+:root[data-invite-template="infantil"] {
+    --teal: #e23d5b; --teal-dark: #7c1d3e; --mist: #fff6da;
+    --paper: #fffdf6; --radius: 26px; --card-padding: 32px;
+    --display-font: "Baloo 2", "Planne Inter", sans-serif;
+}
+:root[data-theme="dark"][data-invite-template="infantil"] {
+    --teal: #fb7185; --teal-dark: #ffb3c1; --mist: #3f1725; --paper: #241019;
+}
+[data-invite-template="infantil"] .card-title { font-weight: 600; }
+[data-invite-template="infantil"] .rsvp-tab { border-radius: 14px; transform: rotate(-2deg); }
+[data-invite-template="infantil"] .presence-opt,
+[data-invite-template="infantil"] .stepper,
+[data-invite-template="infantil"] .otp-box,
+[data-invite-template="infantil"] .countdown-unit { border-radius: 20px; }
+[data-invite-template="infantil"] .step-dot { border-radius: 8px; height: 6px; }
+[data-invite-template="infantil"] .card::after {
+    content: ""; position: absolute; left: 18px; right: 18px; bottom: 10px; height: 2px;
+    background-image: linear-gradient(to right, var(--line) 50%, transparent 0%);
+    background-size: 10px 2px; background-repeat: repeat-x;
+}
+
+/* ───────────────────────────────────────────────────────────────
+   4) TROPICAL — cartão-postal de correio aéreo: coral queimado-de-sol
+   + verde-mar, faixa diagonal estilo airmail no topo do cartão.
+   ─────────────────────────────────────────────────────────────── */
+:root[data-invite-template="tropical"] {
+    --teal: #e8623a; --teal-dark: #7a2e17; --mist: #e4f5ee;
+    --paper: #fbf3e7; --radius: 18px; --card-padding: 32px;
+    --display-font: "Bricolage Grotesque", "Planne Inter", sans-serif;
+}
+:root[data-theme="dark"][data-invite-template="tropical"] {
+    --teal: #2dd4bf; --teal-dark: #5eead4; --mist: #122420; --paper: #16211d;
+}
+[data-invite-template="tropical"] .card-title { font-weight: 600; }
+[data-invite-template="tropical"] .rsvp-tab {
+    border-radius: 50%; width: 54px; height: 54px; padding: 0;
+    display: flex; align-items: center; justify-content: center; left: 24px;
+}
+[data-invite-template="tropical"] .card::after {
+    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 6px;
+    background: repeating-linear-gradient(-45deg,
+        var(--teal) 0 10px, var(--paper) 10px 20px,
+        var(--teal-dark) 20px 30px, var(--paper) 30px 40px);
+    border-radius: var(--radius) var(--radius) 0 0;
+}
+
+/* ───────────────────────────────────────────────────────────────
+   5) RÚSTICO — etiqueta de sementes prensadas: ameixa empoeirada +
+   musgo (nunca terracota+serifa — ver nota da skill sobre clichê de
+   IA), serifa literária + um toque cursivo só na tag decorativa,
+   raminho line-art no canto do cartão.
+   ─────────────────────────────────────────────────────────────── */
+:root[data-invite-template="rustico"] {
+    --teal: #7a4b5e; --teal-dark: #4a2e3a; --mist: #eef0e4;
+    --paper: #f7f3e9; --radius: 14px; --card-padding: 34px;
+    --display-font: "Newsreader", Georgia, serif;
+}
+:root[data-theme="dark"][data-invite-template="rustico"] {
+    --teal: #c98aa3; --teal-dark: #e8b8c9; --mist: #1b1f16; --paper: #1e1a22;
+}
+[data-invite-template="rustico"] .card-title { font-style: italic; font-weight: 500; }
+[data-invite-template="rustico"] .rsvp-tab {
+    font-family: "Caveat", cursive; font-size: 1.05rem; font-weight: 600;
+    letter-spacing: 0; text-transform: none; padding: .4rem 1rem;
+}
+[data-invite-template="rustico"] .card::after {
+    content: ""; position: absolute; top: 16px; right: 16px; width: 34px; height: 34px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237A4B5E' stroke-width='1.4'%3E%3Cpath d='M12 21V9M12 9c-3 0-5-2-5-5 3 0 5 2 5 5zM12 9c3 0 5-2 5-5-3 0-5 2-5 5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-size: contain; opacity: .55; pointer-events: none;
+}
+:root[data-theme="dark"] [data-invite-template="rustico"] .card::after {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23C98AA3' stroke-width='1.4'%3E%3Cpath d='M12 21V9M12 9c-3 0-5-2-5-5 3 0 5 2 5 5zM12 9c3 0 5-2 5-5-3 0-5 2-5 5z'/%3E%3C/svg%3E");
+}
+
+/* ───────────────────────────────────────────────────────────────
+   6) CORPORATE — crachá de conferência / boarding pass: indigo-tinta,
+   monoespaçada tracked, linha tracejada de "destacar aqui" sob o título.
+   ─────────────────────────────────────────────────────────────── */
+:root[data-invite-template="corporate"] {
+    --teal: #2e3b52; --teal-dark: #131a26; --mist: #eef1f5;
+    --paper: #ffffff; --radius: 6px; --card-padding: 30px;
+    --display-font: "IBM Plex Mono", ui-monospace, monospace;
+}
+:root[data-theme="dark"][data-invite-template="corporate"] {
+    --teal: #7fa8d9; --teal-dark: #bcd6f2; --mist: #111c2e; --paper: #0d1117;
+}
+[data-invite-template="corporate"] .card-title {
+    text-transform: uppercase; letter-spacing: .04em; font-weight: 500; font-size: clamp(1.3rem, 4vw, 1.75rem);
+}
+[data-invite-template="corporate"] .card-title::after {
+    content: ""; display: block; width: 100%; border-top: 1px dashed var(--line); margin-top: .8rem;
+}
+[data-invite-template="corporate"] .rsvp-tab { border-radius: 3px; transform: none; box-shadow: none; }
+[data-invite-template="corporate"] .seal { box-shadow: none; border-radius: 6px; }
+[data-invite-template="corporate"] .seal::before { display: none; }
+[data-invite-template="corporate"] .countdown-unit,
+[data-invite-template="corporate"] .otp-box,
+[data-invite-template="corporate"] .stepper,
+[data-invite-template="corporate"] .presence-opt { border-radius: 4px; }
+
+
+/* ═══════════════════════════════════════════════════════════════
+   REVEAL ANIMATION (rsvpRevealStyle) — 3 estilos de abertura
+   ═══════════════════════════════════════════════════════════════
+   `stateReveal` fica entre stateLoading e o formulário (ver
+   rsvp-templates.js:openReveal()/rsvp.html:init). `data-reveal-style`
+   escolhe qual dos 3 blocos decorativos fica visível — só um estilo
+   anima por vez, os outros dois ficam com display:none. O selo do
+   envelope herda --teal/--teal-dark do template ativo, então a
+   animação já nasce na paleta certa sem CSS extra por combinação.
+   ═══════════════════════════════════════════════════════════════ */
+.reveal-visual { display: flex; align-items: center; justify-content: center; height: 130px; margin-bottom: 1rem; }
+.reveal-envelope, .reveal-fold, .reveal-burst { display: none; }
+[data-reveal-style="envelope"] .reveal-envelope { display: block; }
+[data-reveal-style="dobradura"] .reveal-fold { display: block; }
+[data-reveal-style="confete"] .reveal-burst { display: block; }
+
+/* ── estilo 1: envelope + selo (ícone trocado via JS por template) ── */
+.reveal-envelope { position: relative; width: 120px; height: 88px; perspective: 400px; }
+.reveal-envelope-body { position: absolute; inset: 0; background: var(--paper); border: 1px solid var(--line); border-radius: 8px; }
+.reveal-envelope-flap {
+    position: absolute; top: 0; left: 0; right: 0; height: 52%;
+    background: var(--mist); border: 1px solid var(--line); border-bottom: none;
+    border-radius: 8px 8px 0 0; clip-path: polygon(0 0, 100% 0, 50% 100%);
+    transform-origin: top; transform-style: preserve-3d;
+    transition: transform .6s cubic-bezier(.22,1,.36,1), opacity .5s ease .1s;
+}
+.reveal-envelope-seal {
+    position: absolute; top: 50%; left: 50%; width: 42px; height: 42px; border-radius: 50%;
+    background: var(--teal); display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 6px 16px color-mix(in srgb, var(--teal) 45%, transparent);
+    transform: translate(-50%, -50%);
+    transition: transform .4s cubic-bezier(.34,1.56,.64,1) .15s, opacity .3s ease .15s;
+}
+.reveal-envelope-seal svg { width: 18px; height: 18px; stroke: #fff; stroke-width: 2; fill: none; }
+.reveal-visual.opening .reveal-envelope-flap { transform: rotateX(150deg); opacity: 0; }
+.reveal-visual.opening .reveal-envelope-seal { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+
+/* ── estilo 2: dobradura (convite que desdobra) ── */
+.reveal-fold { position: relative; width: 120px; height: 88px; perspective: 500px; }
+.reveal-fold-top, .reveal-fold-bottom {
+    position: absolute; left: 0; right: 0; height: 50%; background: var(--paper); border: 1px solid var(--line);
+}
+.reveal-fold-top {
+    top: 0; border-radius: 8px 8px 0 0; border-bottom: 1px dashed var(--line);
+    transform-origin: bottom; transform-style: preserve-3d;
+    transition: transform .6s cubic-bezier(.22,1,.36,1), opacity .5s ease .1s;
+}
+.reveal-fold-bottom { bottom: 0; border-radius: 0 0 8px 8px; }
+.reveal-visual.opening .reveal-fold-top { transform: rotateX(-165deg); opacity: .2; }
+
+/* ── estilo 3: confete (estouro) ── */
+.reveal-burst { position: relative; width: 120px; height: 120px; display: flex; align-items: center; justify-content: center; }
+.reveal-burst-core {
+    width: 62px; height: 62px; border-radius: 50%; background: var(--teal);
+    box-shadow: 0 6px 16px color-mix(in srgb, var(--teal) 45%, transparent);
+    transition: transform .4s cubic-bezier(.34,1.56,.64,1);
+}
+.reveal-visual.opening .reveal-burst-core { transform: scale(1.15); }
+.confetti-dot {
+    position: absolute; top: 50%; left: 50%; width: 8px; height: 8px; border-radius: 50%;
+    opacity: 0; transform: translate(-50%, -50%) scale(0);
+}
+.reveal-visual.opening .confetti-dot { animation: confettiPop .7s cubic-bezier(.22,1,.36,1) forwards; }
+@keyframes confettiPop {
+    0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+    35% { opacity: 1; }
+    100% { transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(1) rotate(180deg); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .reveal-envelope-flap, .reveal-envelope-seal, .reveal-fold-top,
+    .reveal-burst-core, .confetti-dot { transition: none !important; animation: none !important; }
+}

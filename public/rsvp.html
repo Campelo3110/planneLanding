@@ -15,13 +15,67 @@
 
     <script>
         // ─── CONFIG ───────────────────────────────────────────
-        // Endpoint da Cloud Function `rsvp` (região us-central1).
-        window.__RSVP_ENDPOINT = "https://us-central1-planne-692f7.cloudfunctions.net/rsvp";
+        // Endpoint da Cloud Function `rsvp` (região southamerica-east1 —
+        // mesma região de todas as outras functions deste projeto;
+        // um endpoint apontando pra us-central1 aqui nunca resolve,
+        // fazendo todo convite cair em "convite não encontrado").
+        window.__RSVP_ENDPOINT = "https://southamerica-east1-planne-692f7.cloudfunctions.net/rsvp";
         // ────────────────────────────────────────────────────
 
         const __p = new URLSearchParams(window.location.search);
         window.__rsvpToken = __p.get("token");
     </script>
+
+    <style>
+        /* ── capa do evento (rsvpCoverImageUrl) ── */
+        .cover-photo {
+            width: calc(100% + 2 * var(--card-padding, 32px));
+            margin: calc(-1 * var(--card-padding, 32px)) calc(-1 * var(--card-padding, 32px)) 1.25rem;
+            height: 160px; object-fit: cover; display: block;
+            border-radius: var(--radius, 16px) var(--radius, 16px) 0 0;
+        }
+        .cover-photo[hidden] { display: none; }
+
+        /* ── contagem regressiva ── */
+        .countdown { display: flex; gap: 10px; margin-bottom: 1.1rem; }
+        .countdown[hidden] { display: none; }
+        .countdown-unit {
+            flex: 1; text-align: center; padding: 8px 4px; border-radius: var(--radius-sm);
+            background: var(--mist); border: 1px solid var(--line);
+        }
+        .countdown-num { font: 700 1.15rem "Planne Inter", sans-serif; color: var(--teal-dark); display: block; }
+        .countdown-label { font-size: .62rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+
+        /* ── detalhes do evento: dress code / local / FAQ ── */
+        .event-details { margin-top: .25rem; margin-bottom: 1.25rem; }
+        .event-details[hidden] { display: none; }
+        .event-details summary {
+            cursor: pointer; font: 600 .84rem "Planne Inter", sans-serif; color: var(--teal-dark);
+            list-style: none; display: flex; align-items: center; gap: 6px;
+        }
+        .event-details summary::-webkit-details-marker { display: none; }
+        .event-details summary svg { width: 14px; height: 14px; stroke: currentColor; stroke-width: 2; fill: none; transition: transform .2s; }
+        .event-details[open] summary svg { transform: rotate(90deg); }
+        .event-detail-block { margin-top: .7rem; padding: .8rem .9rem; background: var(--mist); border-radius: var(--radius-sm); }
+        .event-detail-block + .event-detail-block { margin-top: .5rem; }
+        .event-detail-block-title { font: 700 .72rem "Planne Inter", sans-serif; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin-bottom: .3rem; }
+        .event-detail-block-body { font-size: .85rem; color: var(--ink); white-space: pre-wrap; line-height: 1.5; }
+        .event-detail-block[hidden] { display: none; }
+
+        /* ── saudação nominal (modo privado) ── */
+        .private-greeting { font: 700 1rem "Planne Inter", sans-serif; color: var(--teal-dark); margin-bottom: .2rem; }
+        .private-greeting[hidden] { display: none; }
+
+        /* ── botão "adicionar ao calendário" (sucesso) ── */
+        .btn-calendar {
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            width: 100%; height: 46px; margin-top: 1rem; border-radius: var(--radius-sm);
+            border: 1px solid var(--line); background: var(--paper); color: var(--ink);
+            font: 600 .88rem "Planne Inter", sans-serif; cursor: pointer;
+        }
+        .btn-calendar[hidden] { display: none; }
+        .btn-calendar svg { width: 16px; height: 16px; stroke: currentColor; stroke-width: 2; fill: none; }
+    </style>
 
     <link rel="stylesheet" href="/assets/css/utility-pages.css">
     <style>
@@ -66,6 +120,7 @@
         }
         .card:has(#stateLoading.active) .rsvp-tab,
         .card:has(#stateInvalid.active) .rsvp-tab,
+        .card:has(#stateReveal.active) .rsvp-tab,
         .card:has(#stateSuccess.active) .rsvp-tab { opacity: 0; pointer-events: none; }
 
         /* ── state machine ── */
@@ -93,12 +148,16 @@
         #publicEyebrow[hidden] { display: none; }
 
         /* ── fields not already covered by the shared utility form styles ── */
-        input[type="tel"] {
+        input[type="tel"], select {
             width: 100%; height: 50px; border: 1px solid var(--line); border-radius: var(--radius-sm);
             padding: 0 14px; font-family: "Planne Inter", sans-serif; font-size: .95rem; color: var(--ink);
             background: var(--paper); outline: none; transition: border-color .2s, box-shadow .2s;
         }
-        input[type="tel"]:focus { border-color: var(--teal); box-shadow: 0 0 0 3px color-mix(in srgb, var(--teal) 18%, transparent); }
+        select { appearance: none; cursor: pointer;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: right 12px center; background-size: 16px;
+        }
+        input[type="tel"]:focus, select:focus { border-color: var(--teal); box-shadow: 0 0 0 3px color-mix(in srgb, var(--teal) 18%, transparent); }
         input.invalid, .otp-box.invalid { border-color: var(--coral) !important; box-shadow: 0 0 0 3px color-mix(in srgb, var(--coral) 18%, transparent) !important; }
 
         @keyframes shake {
@@ -177,6 +236,8 @@
         }
         @keyframes spin { to { transform: rotate(360deg); } }
     </style>
+
+    <link rel="stylesheet" href="/assets/css/rsvp-templates.css">
 </head>
 
 <body>
@@ -202,7 +263,65 @@
 
 <main class="utility-main">
 <div class="card" aria-live="polite">
+    <img class="cover-photo" id="coverPhoto" alt="" hidden>
     <span class="rsvp-tab" aria-hidden="true">RSVP</span>
+
+    <!-- contagem regressiva (compartilhada entre os estados de formulário) -->
+    <div class="countdown" id="countdown" hidden>
+        <div class="countdown-unit"><span class="countdown-num" id="cdDays">0</span><span class="countdown-label" data-i18n="cdDays"></span></div>
+        <div class="countdown-unit"><span class="countdown-num" id="cdHours">0</span><span class="countdown-label" data-i18n="cdHours"></span></div>
+        <div class="countdown-unit"><span class="countdown-num" id="cdMinutes">0</span><span class="countdown-label" data-i18n="cdMinutes"></span></div>
+    </div>
+
+    <!-- detalhes do evento: dress code / local / FAQ (só aparece se o organizador preencheu) -->
+    <details class="event-details" id="eventDetails" hidden>
+        <summary>
+            <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+            <span data-i18n="eventDetailsToggle"></span>
+        </summary>
+        <div class="event-detail-block" id="dressCodeBlock" hidden>
+            <div class="event-detail-block-title" data-i18n="dressCodeLabel"></div>
+            <div class="event-detail-block-body" id="dressCodeBody"></div>
+        </div>
+        <div class="event-detail-block" id="locationInfoBlock" hidden>
+            <div class="event-detail-block-title" data-i18n="locationInfoLabel"></div>
+            <div class="event-detail-block-body" id="locationInfoBody"></div>
+        </div>
+        <div class="event-detail-block" id="faqBlock" hidden>
+            <div class="event-detail-block-title" data-i18n="faqLabel"></div>
+            <div class="event-detail-block-body" id="faqBody"></div>
+        </div>
+    </details>
+
+    <!-- ABERTURA DO CONVITE (reveal animation — envelope/dobradura/confete) -->
+    <div class="state" id="stateReveal">
+        <div class="reveal-visual" id="revealVisual" aria-hidden="true">
+            <div class="reveal-envelope">
+                <div class="reveal-envelope-body"></div>
+                <div class="reveal-envelope-flap"></div>
+                <div class="reveal-envelope-seal">
+                    <svg viewBox="0 0 24 24"><path d="M12 21s-7-4.35-9.5-8.5C.5 8.5 3 5 6.5 5c2 0 3.5 1.2 4.5 2.7C12 6.2 13.5 5 15.5 5 19 5 21.5 8.5 19.5 12.5 17 16.65 12 21 12 21z"/></svg>
+                </div>
+            </div>
+            <div class="reveal-fold">
+                <div class="reveal-fold-top"></div>
+                <div class="reveal-fold-bottom"></div>
+            </div>
+            <div class="reveal-burst">
+                <span class="confetti-dot" style="--tx: -48px; --ty: -34px; background: #fb7185"></span>
+                <span class="confetti-dot" style="--tx: 44px; --ty: -40px; background: #fbbf24"></span>
+                <span class="confetti-dot" style="--tx: -52px; --ty: 20px; background: #34d399"></span>
+                <span class="confetti-dot" style="--tx: 50px; --ty: 26px; background: #60a5fa"></span>
+                <span class="confetti-dot" style="--tx: 0px; --ty: -56px; background: #a78bfa"></span>
+                <span class="confetti-dot" style="--tx: 0px; --ty: 52px; background: #fb923c"></span>
+                <div class="reveal-burst-core"></div>
+            </div>
+        </div>
+        <p class="state-title" data-i18n="revealTitle"></p>
+        <button class="btn-primary" id="revealBtn" onclick="rsvpTemplates.openReveal()">
+            <span data-i18n="btnOpenInvite"></span>
+        </button>
+    </div>
 
     <!-- LOADING (resolve token) -->
     <div class="state active" id="stateLoading">
@@ -266,7 +385,15 @@
         </div>
         <div class="field">
             <label for="pubMenu" data-i18n="labelMenu"></label>
-            <input type="text" id="pubMenu" data-i18n-placeholder="placeholderMenu">
+            <select id="pubMenu">
+                <option value="1" data-i18n="menuRegular"></option>
+                <option value="2" data-i18n="menuVegetarian"></option>
+                <option value="3" data-i18n="menuVegan"></option>
+                <option value="4" data-i18n="menuKids"></option>
+                <option value="5" data-i18n="menuGlutenFree"></option>
+                <option value="6" data-i18n="menuLactoseFree"></option>
+                <option value="7" data-i18n="menuOther"></option>
+            </select>
         </div>
 
         <button class="btn-primary" id="pubSubmitBtn" onclick="submitPublic()">
@@ -307,6 +434,7 @@
             <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
         </div>
         <h1 class="card-title" data-i18n="privateConfirmTitle"></h1>
+        <p class="private-greeting" id="privateGreeting" hidden></p>
         <p class="card-subtitle" id="privateConfirmSubtitle"></p>
 
         <div class="msg msg-error" id="confirmError" role="alert">
@@ -347,7 +475,15 @@
         </div>
         <div class="field">
             <label for="privMenu" data-i18n="labelMenu"></label>
-            <input type="text" id="privMenu" data-i18n-placeholder="placeholderMenu">
+            <select id="privMenu">
+                <option value="1" data-i18n="menuRegular"></option>
+                <option value="2" data-i18n="menuVegetarian"></option>
+                <option value="3" data-i18n="menuVegan"></option>
+                <option value="4" data-i18n="menuKids"></option>
+                <option value="5" data-i18n="menuGlutenFree"></option>
+                <option value="6" data-i18n="menuLactoseFree"></option>
+                <option value="7" data-i18n="menuOther"></option>
+            </select>
         </div>
 
         <button class="btn-primary" id="confirmBtn" onclick="submitPrivate()">
@@ -363,6 +499,10 @@
         </div>
         <p class="state-title" id="successTitle"></p>
         <p class="state-sub" id="successSub"></p>
+        <button class="btn-calendar" id="btnAddCalendar" hidden onclick="downloadIcs()">
+            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            <span data-i18n="btnAddCalendar"></span>
+        </button>
     </div>
 
 </div>
@@ -372,6 +512,7 @@
     <span>&copy; 2026 Planne</span> · <a href="/privacy.html" data-i18n="privacy"></a> · <a href="/terms.html" data-i18n="terms"></a>
 </footer>
 
+<script src="/assets/js/rsvp-templates.js"></script>
 <script>
 // ═══════════════════════════════════════════════════════
 //  i18n
@@ -381,6 +522,9 @@ const STRINGS = {
         loading: "Loading your invitation…",
         invalidTitle: "Invitation not found",
         invalidSub: "This invitation link is invalid or has been disabled.\nAsk the organizer for a new one.",
+
+        revealTitle: "Your invitation is ready",
+        btnOpenInvite: "Tap to open",
 
         invitedEyebrow: "You're invited",
         publicTitle: "You're invited!",
@@ -397,9 +541,28 @@ const STRINGS = {
         presenceYes: "I'll be there",
         presenceNo: "Can't make it",
         labelCompanions: "Companions",
-        labelMenu: "Meal / dietary notes",
-        placeholderMenu: "e.g. vegetarian, no restrictions…",
+        labelMenu: "Meal preference",
         labelPhoneLast4: "Last 4 digits of your phone",
+        privateGreeting: "Hello, {name}!",
+
+        menuRegular: "Regular",
+        menuVegetarian: "Vegetarian",
+        menuVegan: "Vegan",
+        menuKids: "Kids menu",
+        menuGlutenFree: "Gluten-free",
+        menuLactoseFree: "Lactose-free",
+        menuOther: "Other",
+
+        cdDays: "days",
+        cdHours: "hrs",
+        cdMinutes: "min",
+
+        eventDetailsToggle: "Event details",
+        dressCodeLabel: "Dress code",
+        locationInfoLabel: "Venue & lodging",
+        faqLabel: "Good to know",
+
+        btnAddCalendar: "Add to calendar",
 
         btnSend: "Send RSVP",
         btnSearch: "Search",
@@ -426,6 +589,9 @@ const STRINGS = {
         invalidTitle: "Convite não encontrado",
         invalidSub: "Este link de convite é inválido ou foi desativado.\nPeça um novo link ao organizador.",
 
+        revealTitle: "Seu convite está pronto",
+        btnOpenInvite: "Toque para abrir",
+
         invitedEyebrow: "Você foi convidado",
         publicTitle: "Você foi convidado!",
         publicSubtitle: "Preencha seus dados para confirmar presença.",
@@ -441,9 +607,28 @@ const STRINGS = {
         presenceYes: "Vou comparecer",
         presenceNo: "Não vou poder ir",
         labelCompanions: "Acompanhantes",
-        labelMenu: "Menu / restrição alimentar",
-        placeholderMenu: "ex.: vegetariano, sem restrições…",
+        labelMenu: "Preferência de menu",
         labelPhoneLast4: "Últimos 4 dígitos do seu telefone",
+        privateGreeting: "Olá, {name}!",
+
+        menuRegular: "Regular",
+        menuVegetarian: "Vegetariano",
+        menuVegan: "Vegano",
+        menuKids: "Infantil",
+        menuGlutenFree: "Sem glúten",
+        menuLactoseFree: "Sem lactose",
+        menuOther: "Outro",
+
+        cdDays: "dias",
+        cdHours: "hrs",
+        cdMinutes: "min",
+
+        eventDetailsToggle: "Detalhes do evento",
+        dressCodeLabel: "Dress code",
+        locationInfoLabel: "Local e hospedagem",
+        faqLabel: "Bom saber",
+
+        btnAddCalendar: "Adicionar ao calendário",
 
         btnSend: "Enviar confirmação",
         btnSearch: "Buscar",
@@ -469,6 +654,10 @@ const STRINGS = {
 
 let currentLang = 'en';
 let currentEventTitle = null;
+let currentEventDate = null;
+let currentThankYouMessage = null;
+let countdownTimer = null;
+let confirmedGuestFirstName = '';
 
 function detectLang() {
     const savedValue = localStorage.getItem('planne-language') || localStorage.getItem('planne-lang');
@@ -493,6 +682,126 @@ function renderPublicHeader() {
     subtitle.textContent = s.publicSubtitle;
 }
 
+function renderPrivateGreeting() {
+    const el = document.getElementById('privateGreeting');
+    const s = STRINGS[currentLang];
+    if (!confirmedGuestFirstName) { el.hidden = true; return; }
+    el.textContent = s.privateGreeting.replace('{name}', confirmedGuestFirstName);
+    el.hidden = false;
+}
+
+// ═══════════════════════════════════════════════════════
+//  CONTAGEM REGRESSIVA
+// ═══════════════════════════════════════════════════════
+function renderCountdown() {
+    const el = document.getElementById('countdown');
+    if (!currentEventDate) { el.hidden = true; return; }
+
+    const target = new Date(currentEventDate).getTime();
+    if (Number.isNaN(target)) { el.hidden = true; return; }
+
+    const diff = target - Date.now();
+    if (diff <= 0) { el.hidden = true; return; }
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+
+    document.getElementById('cdDays').textContent = days;
+    document.getElementById('cdHours').textContent = hours;
+    document.getElementById('cdMinutes').textContent = minutes;
+    el.hidden = false;
+}
+
+function startCountdown() {
+    renderCountdown();
+    if (countdownTimer) clearInterval(countdownTimer);
+    countdownTimer = setInterval(renderCountdown, 60000);
+}
+
+// ═══════════════════════════════════════════════════════
+//  ADICIONAR AO CALENDÁRIO (.ics)
+// ═══════════════════════════════════════════════════════
+function downloadIcs() {
+    if (!currentEventDate) return;
+    const start = new Date(currentEventDate);
+    if (Number.isNaN(start.getTime())) return;
+    const end = new Date(start.getTime() + 4 * 60 * 60 * 1000); // 4h de duração default
+
+    const toIcsDate = (d) => d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    const title = currentEventTitle || 'Planne';
+    const description = window.__rsvpLocationInfo || '';
+
+    const ics = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//Planne//RSVP//PT',
+        'BEGIN:VEVENT',
+        `UID:${window.__rsvpToken}@planneapp.com`,
+        `DTSTAMP:${toIcsDate(new Date())}`,
+        `DTSTART:${toIcsDate(start)}`,
+        `DTEND:${toIcsDate(end)}`,
+        `SUMMARY:${title}`,
+        description ? `DESCRIPTION:${description.replace(/\n/g, '\\n')}` : '',
+        'END:VEVENT',
+        'END:VCALENDAR',
+    ].filter(Boolean).join('\r\n');
+
+    const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${title.replace(/[^\w\- ]/g, '').trim() || 'evento'}.ics`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+// ═══════════════════════════════════════════════════════
+//  CAPA + DETALHES DO EVENTO (dress code / local / FAQ)
+// ═══════════════════════════════════════════════════════
+function renderEventExtras(event) {
+    const cover = document.getElementById('coverPhoto');
+    if (event.rsvpCoverImageUrl) {
+        cover.src = event.rsvpCoverImageUrl;
+        cover.hidden = false;
+    } else {
+        cover.hidden = true;
+    }
+
+    window.__rsvpLocationInfo = event.rsvpLocationInfo || '';
+
+    const dressCodeBlock = document.getElementById('dressCodeBlock');
+    const locationInfoBlock = document.getElementById('locationInfoBlock');
+    const faqBlock = document.getElementById('faqBlock');
+    let anyDetail = false;
+
+    if (event.rsvpDressCode) {
+        document.getElementById('dressCodeBody').textContent = event.rsvpDressCode;
+        dressCodeBlock.hidden = false;
+        anyDetail = true;
+    } else {
+        dressCodeBlock.hidden = true;
+    }
+    if (event.rsvpLocationInfo) {
+        document.getElementById('locationInfoBody').textContent = event.rsvpLocationInfo;
+        locationInfoBlock.hidden = false;
+        anyDetail = true;
+    } else {
+        locationInfoBlock.hidden = true;
+    }
+    if (event.rsvpFaq) {
+        document.getElementById('faqBody').textContent = event.rsvpFaq;
+        faqBlock.hidden = false;
+        anyDetail = true;
+    } else {
+        faqBlock.hidden = true;
+    }
+
+    document.getElementById('eventDetails').hidden = !anyDetail;
+}
+
 function applyLang(lang) {
     currentLang = lang;
     const s = STRINGS[lang];
@@ -507,6 +816,8 @@ function applyLang(lang) {
         if (v !== undefined) el.placeholder = v;
     });
     renderPublicHeader();
+    renderPrivateGreeting();
+    renderCountdown();
 
     document.getElementById('btn-pt').classList.toggle('active', lang === 'pt');
     document.getElementById('btn-en').classList.toggle('active', lang === 'en');
@@ -542,7 +853,7 @@ function updateThemeColor() {
 // ═══════════════════════════════════════════════════════
 //  STATE SWITCHER
 // ═══════════════════════════════════════════════════════
-const ALL_STATES = ['stateLoading','stateInvalid','statePublicForm','statePrivateSearch','statePrivateConfirm','stateSuccess'];
+const ALL_STATES = ['stateLoading','stateInvalid','stateReveal','statePublicForm','statePrivateSearch','statePrivateConfirm','stateSuccess'];
 function showState(id) {
     ALL_STATES.forEach(s => document.getElementById(s).classList.remove('active'));
     document.getElementById(id).classList.add('active');
@@ -554,7 +865,14 @@ function showState(id) {
 //
 //    POST { action: 'resolveEvent', publicToken }
 //      -> { rsvpEnabled, rsvpMode: 'publico'|'privado',
-//           rsvpAllowCompanions, rsvpMaxCompanions, eventTitle? }
+//           rsvpAllowCompanions, rsvpMaxCompanions, eventTitle?,
+//           eventDate?,            // ISO string — contagem regressiva + .ics
+//           rsvpDressCode?, rsvpLocationInfo?, rsvpFaq?,   // texto livre
+//           rsvpCoverImageUrl?,    // URL colada pelo organizador
+//           rsvpThankYouMessage?, // sobrescreve a msg padrão de sucesso
+//           rsvpTemplateId?,      // elegante|minimalista|infantil|tropical|
+//                                 // rustico|corporate — default 'elegante'
+//           rsvpRevealStyle? }    // envelope|dobradura|confete — default 'envelope'
 //    POST { action: 'lookup', publicToken, name }
 //      -> { found: boolean }
 //    POST { action: 'verifyAndSubmitPrivate', publicToken, name,
@@ -566,6 +884,12 @@ function showState(id) {
 //
 //  confirmationStatus: 1 = Confirmado, 0 = Recusado
 //  (mesmo mapeamento usado no app — ver dropdown de status do convidado)
+//  menu: 1..7 (int, não string!) — mesmo enum do app nativo
+//  (add_guest_widget.dart): 1=Regular, 2=Vegetariano, 3=Vegano,
+//  4=Infantil, 5=Sem glúten, 6=Sem lactose, 7=Outro. Bug real corrigido
+//  nesta sessão: a versão anterior deste arquivo enviava texto livre
+//  pra um campo que o app trata como inteiro — ver
+//  project_rsvp_invite_feature.md.
 // ═══════════════════════════════════════════════════════
 async function callRsvpApi(payload) {
     const res = await fetch(window.__RSVP_ENDPOINT, {
@@ -707,7 +1031,7 @@ async function submitPublic() {
             name,
             phone,
             confirmationStatus: attending ? 1 : 0,
-            menu: document.getElementById('pubMenu').value.trim(),
+            menu: parseInt(document.getElementById('pubMenu').value, 10),
             companions,
         });
         showSuccess(attending, result.pendingApproval === true);
@@ -748,7 +1072,9 @@ async function lookupGuest() {
             return showSearchError(s.errNotFound);
         }
         confirmedName = name;
+        confirmedGuestFirstName = name.trim().split(/\s+/)[0] || name;
         document.getElementById('privateConfirmSubtitle').textContent = s.privateConfirmSubtitleFound;
+        renderPrivateGreeting();
         showState('statePrivateConfirm');
     } catch (e) {
         btn.disabled = false;
@@ -789,7 +1115,7 @@ async function submitPrivate() {
             name: confirmedName,
             phoneLast4,
             confirmationStatus: attending ? 1 : 0,
-            menu: document.getElementById('privMenu').value.trim(),
+            menu: parseInt(document.getElementById('privMenu').value, 10),
             companions,
         });
         showSuccess(attending, false);
@@ -820,13 +1146,21 @@ function showSuccess(attending, pendingApproval) {
         icon.className = 'seal seal-yes';
         icon.innerHTML = `<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>`;
         document.getElementById('successTitle').textContent = s.successYesTitle;
-        document.getElementById('successSub').textContent = s.successYesSub;
+        // Mensagem de agradecimento personalizada (rsvpThankYouMessage) —
+        // só sobrescreve o texto padrão quando o organizador confirmou
+        // presença E configurou uma mensagem própria.
+        document.getElementById('successSub').textContent =
+            currentThankYouMessage || s.successYesSub;
     } else {
         icon.className = 'seal seal-no';
         icon.innerHTML = `<svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
         document.getElementById('successTitle').textContent = s.successNoTitle;
         document.getElementById('successSub').textContent = s.successNoSub;
     }
+
+    const calendarBtn = document.getElementById('btnAddCalendar');
+    calendarBtn.hidden = !(attending && !pendingApproval && currentEventDate);
+
     showState('stateSuccess');
 }
 
@@ -854,12 +1188,22 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.__rsvpMaxCompanions = typeof event.rsvpMaxCompanions === 'number' && event.rsvpMaxCompanions > 0
             ? event.rsvpMaxCompanions : Infinity;
         currentEventTitle = event.eventTitle || null;
+        currentEventDate = event.eventDate || null;
+        currentThankYouMessage = event.rsvpThankYouMessage || null;
+        rsvpTemplates.applyInviteTemplate(event.rsvpTemplateId);
+        rsvpTemplates.applyRevealStyle(event.rsvpRevealStyle);
         renderPublicHeader();
+        renderEventExtras(event);
+        startCountdown();
 
-        if (event.rsvpMode === 'privado') {
-            showState('statePrivateSearch');
+        const targetState = event.rsvpMode === 'privado' ? 'statePrivateSearch' : 'statePublicForm';
+        const alreadyOpened = window.__rsvpToken &&
+            sessionStorage.getItem(`planne-invite-opened-${window.__rsvpToken}`) === '1';
+        if (alreadyOpened) {
+            showState(targetState);
         } else {
-            showState('statePublicForm');
+            rsvpTemplates.setPendingRevealTarget(targetState);
+            showState('stateReveal');
         }
     } catch (e) {
         showState('stateInvalid');
@@ -868,7 +1212,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 document.addEventListener('keydown', e => {
     if (e.key !== 'Enter') return;
-    if (document.getElementById('statePublicForm').classList.contains('active')) submitPublic();
+    if (document.getElementById('stateReveal').classList.contains('active')) rsvpTemplates.openReveal();
+    else if (document.getElementById('statePublicForm').classList.contains('active')) submitPublic();
     else if (document.getElementById('statePrivateSearch').classList.contains('active')) lookupGuest();
     else if (document.getElementById('statePrivateConfirm').classList.contains('active')) submitPrivate();
 });
