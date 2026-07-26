@@ -51,7 +51,7 @@ body::before {
     background: radial-gradient(ellipse 80% 55% at 50% -8%,
         color-mix(in srgb, var(--teal) 16%, transparent), transparent 60%),
       radial-gradient(ellipse 70% 50% at 100% 100%,
-        color-mix(in srgb, var(--teal-dark) 10%, transparent), transparent 65%);
+        color-mix(in srgb, var(--shadow-tint, var(--teal-dark)) 10%, transparent), transparent 65%);
 }
 body::after {
     opacity: .05; mix-blend-mode: multiply;
@@ -82,9 +82,9 @@ body::after {
     border-radius: var(--radius);
     background: var(--paper);
     box-shadow:
-        0 1px 1px color-mix(in srgb, var(--teal-dark) 6%, transparent),
-        0 12px 28px -10px color-mix(in srgb, var(--teal-dark) 28%, transparent),
-        0 32px 64px -24px color-mix(in srgb, var(--teal-dark) 32%, transparent);
+        0 1px 1px color-mix(in srgb, var(--shadow-tint, var(--teal-dark)) 6%, transparent),
+        0 12px 28px -10px color-mix(in srgb, var(--shadow-tint, var(--teal-dark)) 28%, transparent),
+        0 32px 64px -24px color-mix(in srgb, var(--shadow-tint, var(--teal-dark)) 32%, transparent);
 }
 .utility-sheet::before, .card::before { content: none; }
 
@@ -166,9 +166,10 @@ input[type="text"], input[type="password"] { width: 100%; height: 50px; }
    selo em relevo.
    ─────────────────────────────────────────────────────────────── */
 :root[data-invite-template="elegante"] {
-    --teal: #b08d3e; --teal-dark: #16213e; --mist: #f6efdd;
+    --teal: #b08d3e; --teal-dark: #16213e; --shadow-tint: #16213e; --mist: #f6efdd;
     --paper: #fbf7ee; --radius: 6px; --card-padding: 46px;
-    --display-font: "Italiana", Georgia, serif;
+    --display-font: "Bonheur Royale", "Italiana", cursive;
+    --accent-font: "Italiana", Georgia, serif;
     --body-font: "Jost", "Planne Inter", sans-serif;
     --on-teal: #16213e;
 }
@@ -176,18 +177,48 @@ input[type="text"], input[type="password"] { width: 100%; height: 50px; }
     --teal: #d9bd74; --teal-dark: #e7ecf7; --mist: #241f14; --paper: #14100c;
     --on-teal: #16213e;
 }
+[data-invite-template="elegante"] body::before {
+    background:
+        radial-gradient(ellipse 90% 60% at 50% -10%, color-mix(in srgb, var(--teal) 20%, transparent), transparent 62%),
+        radial-gradient(ellipse 70% 50% at 100% 100%, color-mix(in srgb, var(--shadow-tint) 12%, transparent), transparent 65%);
+}
+[data-invite-template="elegante"] .utility-code {
+    font-family: var(--accent-font); text-transform: uppercase; letter-spacing: .22em; font-size: .72rem;
+}
 [data-invite-template="elegante"] .card-title {
-    text-transform: uppercase; font-weight: 400; letter-spacing: .04em; line-height: 1.15;
+    font-weight: 400; letter-spacing: .01em; line-height: 1.05;
+    font-size: clamp(2.6rem, 11vw, 3.6rem); color: var(--teal);
+    position: relative; z-index: 1;
+}
+[data-invite-template="elegante"] .card-title::after {
+    content: ""; display: block; width: 64px; height: 1px; margin: .9rem 0 0;
+    background: linear-gradient(to right, var(--teal), transparent);
 }
 [data-invite-template="elegante"] .card {
     border: 1px solid color-mix(in srgb, var(--teal) 35%, transparent);
 }
 [data-invite-template="elegante"] .card::after {
     content: ""; position: absolute; inset: 10px; border: 1px solid color-mix(in srgb, var(--teal) 30%, transparent);
-    pointer-events: none; border-radius: 2px;
+    pointer-events: none; border-radius: 2px; z-index: 0;
 }
+/* ramo floral gravado — a peça ilustrada que faltava; ancorado no canto
+   inferior direito, atrás do conteúdo (z-index negativo), na mesma
+   tinta dourada do template. Espelhado no topo-esquerdo pela mesma
+   imagem virada (background-position + segunda camada). */
+[data-invite-template="elegante"] .card::before {
+    content: ""; position: absolute; z-index: -1; pointer-events: none;
+    inset: 0;
+    background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 140 140'%3E%3Cpath d='M12 128 C24 92 20 62 42 42 C58 27 78 22 100 17' stroke='%23b08d3e' stroke-width='1.4' fill='none'/%3E%3Cpath d='M27 96 C20 89 20 79 30 75 C36 83 34 91 27 96Z' fill='%23b08d3e' opacity='.55'/%3E%3Cpath d='M43 67 C33 62 31 52 41 46 C49 52 49 62 43 67Z' fill='%23b08d3e' opacity='.55'/%3E%3Cpath d='M62 34 C54 28 54 18 64 14 C72 20 70 30 62 34Z' fill='%23b08d3e' opacity='.55'/%3E%3Cg transform='translate(100,16)'%3E%3Ccircle r='3' fill='%23b08d3e'/%3E%3Ccircle cx='7' cy='-2' r='4' fill='%23b08d3e' opacity='.7'/%3E%3Ccircle cx='-6' cy='-3' r='4' fill='%23b08d3e' opacity='.7'/%3E%3Ccircle cx='2' cy='-8' r='4' fill='%23b08d3e' opacity='.7'/%3E%3Ccircle cx='-2' cy='6' r='4' fill='%23b08d3e' opacity='.55'/%3E%3C/g%3E%3C/svg%3E"),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 140 140'%3E%3Cpath d='M12 128 C24 92 20 62 42 42 C58 27 78 22 100 17' stroke='%23b08d3e' stroke-width='1.4' fill='none'/%3E%3Cpath d='M27 96 C20 89 20 79 30 75 C36 83 34 91 27 96Z' fill='%23b08d3e' opacity='.55'/%3E%3Cpath d='M43 67 C33 62 31 52 41 46 C49 52 49 62 43 67Z' fill='%23b08d3e' opacity='.55'/%3E%3Cpath d='M62 34 C54 28 54 18 64 14 C72 20 70 30 62 34Z' fill='%23b08d3e' opacity='.55'/%3E%3Cg transform='translate(100,16)'%3E%3Ccircle r='3' fill='%23b08d3e'/%3E%3Ccircle cx='7' cy='-2' r='4' fill='%23b08d3e' opacity='.7'/%3E%3Ccircle cx='-6' cy='-3' r='4' fill='%23b08d3e' opacity='.7'/%3E%3Ccircle cx='2' cy='-8' r='4' fill='%23b08d3e' opacity='.7'/%3E%3Ccircle cx='-2' cy='6' r='4' fill='%23b08d3e' opacity='.55'/%3E%3C/g%3E%3C/svg%3E");
+    background-repeat: no-repeat, no-repeat;
+    background-size: 120px 120px, 120px 120px;
+    background-position: right -14px bottom -14px, left -14px top -14px;
+}
+:root[data-theme="dark"][data-invite-template="elegante"] .card::before { filter: brightness(1.6) saturate(1.1); }
+[data-invite-template="elegante"] .card > * { position: relative; z-index: 1; }
 [data-invite-template="elegante"] .rsvp-tab {
-    font-family: var(--body-font); letter-spacing: .18em; border-radius: 0;
+    font-family: var(--accent-font); letter-spacing: .18em; border-radius: 0;
     transform: rotate(0); top: -1px; left: 50%; translate: -50% -100%;
     box-shadow: 0 8px 18px color-mix(in srgb, var(--teal) 40%, transparent);
 }
@@ -198,7 +229,7 @@ input[type="text"], input[type="password"] { width: 100%; height: 50px; }
    preciso, um filete e um número de catálogo como única ornamentação.
    ─────────────────────────────────────────────────────────────── */
 :root[data-invite-template="minimalista"] {
-    --teal: #2b2f36; --teal-dark: #0a0a0a; --mist: #f2f3f5;
+    --teal: #2b2f36; --teal-dark: #0a0a0a; --shadow-tint: #0a0a0a; --mist: #f2f3f5;
     --paper: #ffffff; --radius: 2px; --card-padding: 34px;
     --display-font: "Familjen Grotesk", "Planne Inter", sans-serif;
     --body-font: "Archivo", "Planne Inter", sans-serif;
@@ -228,7 +259,7 @@ input[type="text"], input[type="password"] { width: 100%; height: 50px; }
    cantos-bolha, borda picotada no rodapé do cartão.
    ─────────────────────────────────────────────────────────────── */
 :root[data-invite-template="infantil"] {
-    --teal: #e23d5b; --teal-dark: #7c1d3e; --mist: #fff6da;
+    --teal: #e23d5b; --teal-dark: #7c1d3e; --shadow-tint: #7c1d3e; --mist: #fff6da;
     --paper: #fffdf6; --radius: 28px; --card-padding: 36px;
     --display-font: "Fredoka", "Planne Inter", sans-serif;
     --body-font: "Quicksand", "Planne Inter", sans-serif;
@@ -267,7 +298,7 @@ input[type="text"], input[type="password"] { width: 100%; height: 50px; }
    + verde-mar, faixa diagonal estilo airmail e carimbo de porte.
    ─────────────────────────────────────────────────────────────── */
 :root[data-invite-template="tropical"] {
-    --teal: #e8623a; --teal-dark: #7a2e17; --mist: #e4f5ee;
+    --teal: #e8623a; --teal-dark: #7a2e17; --shadow-tint: #7a2e17; --mist: #e4f5ee;
     --paper: #fbf3e7; --radius: 4px; --card-padding: 36px;
     --display-font: "Unbounded", "Planne Inter", sans-serif;
     --body-font: "Karla", "Planne Inter", sans-serif;
@@ -299,7 +330,7 @@ input[type="text"], input[type="password"] { width: 100%; height: 50px; }
    grão de kraft mais presente que os outros templates.
    ─────────────────────────────────────────────────────────────── */
 :root[data-invite-template="rustico"] {
-    --teal: #7a4b5e; --teal-dark: #40273c; --mist: #eef0e4;
+    --teal: #7a4b5e; --teal-dark: #40273c; --shadow-tint: #40273c; --mist: #eef0e4;
     --paper: #f7f3e9; --radius: 10px; --card-padding: 42px;
     --display-font: "Vollkorn", Georgia, serif;
     --body-font: "Nunito Sans", "Planne Inter", sans-serif;
@@ -331,7 +362,7 @@ input[type="text"], input[type="password"] { width: 100%; height: 50px; }
    grid fino de blueprint no fundo.
    ─────────────────────────────────────────────────────────────── */
 :root[data-invite-template="corporate"] {
-    --teal: #2e3b52; --teal-dark: #131a26; --mist: #eef1f5;
+    --teal: #2e3b52; --teal-dark: #131a26; --shadow-tint: #131a26; --mist: #eef1f5;
     --paper: #ffffff; --radius: 3px; --card-padding: 32px;
     --display-font: "Martian Mono", ui-monospace, monospace;
     --body-font: "Work Sans", "Planne Inter", sans-serif;

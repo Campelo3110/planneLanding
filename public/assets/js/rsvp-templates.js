@@ -13,7 +13,7 @@
   // repetida entre templates (ver nota da skill de design sobre
   // monocultura tipográfica).
   const TEMPLATE_FONTS = {
-    elegante: ["Italiana", "Jost:wght@400;500;600"],
+    elegante: ["Bonheur+Royale", "Italiana", "Jost:wght@400;500;600"],
     minimalista: ["Familjen+Grotesk:wght@500;600", "Archivo:wght@400;500;600"],
     infantil: ["Fredoka:wght@500;600;700", "Quicksand:wght@500;600;700", "Shantell+Sans:wght@600"],
     tropical: ["Unbounded:wght@500;600;700", "Karla:wght@400;500;600"],
