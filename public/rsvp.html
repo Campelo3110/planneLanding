@@ -319,7 +319,7 @@
         </div>
         <p class="state-title" data-i18n="revealTitle"></p>
         <button class="btn-primary" id="revealBtn" onclick="rsvpTemplates.openReveal()">
-            <span data-i18n="btnOpenInvite"></span>
+            <span data-i18n="btnSkipReveal"></span>
         </button>
     </div>
 
@@ -523,8 +523,8 @@ const STRINGS = {
         invalidTitle: "Invitation not found",
         invalidSub: "This invitation link is invalid or has been disabled.\nAsk the organizer for a new one.",
 
-        revealTitle: "Your invitation is ready",
-        btnOpenInvite: "Tap to open",
+        revealTitle: "Opening your invitation…",
+        btnSkipReveal: "Skip",
 
         invitedEyebrow: "You're invited",
         publicTitle: "You're invited!",
@@ -589,8 +589,8 @@ const STRINGS = {
         invalidTitle: "Convite não encontrado",
         invalidSub: "Este link de convite é inválido ou foi desativado.\nPeça um novo link ao organizador.",
 
-        revealTitle: "Seu convite está pronto",
-        btnOpenInvite: "Toque para abrir",
+        revealTitle: "Abrindo seu convite…",
+        btnSkipReveal: "Pular",
 
         invitedEyebrow: "Você foi convidado",
         publicTitle: "Você foi convidado!",
@@ -1204,6 +1204,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         } else {
             rsvpTemplates.setPendingRevealTarget(targetState);
             showState('stateReveal');
+            rsvpTemplates.autoOpenReveal();
         }
     } catch (e) {
         showState('stateInvalid');

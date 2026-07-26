@@ -4,17 +4,21 @@
 //
 // `showState`/`window.__rsvpToken` são globais definidos no <script>
 // inline de rsvp.html — seguro referenciar aqui porque só são chamados
-// dentro de `openReveal()`, disparado por um clique do usuário bem
-// depois de DOMContentLoaded, quando ambos os scripts já terminaram
-// de rodar (não importa a ordem dos <script> tags nesse caso).
+// dentro de `autoOpenReveal()`/`openReveal()`, disparados depois de
+// DOMContentLoaded, quando ambos os scripts já terminaram de rodar.
 (() => {
+  // Cada família tem um papel de "objeto físico" (papelaria gravada,
+  // placa de galeria, ticket de parquinho, selo de correio aéreo,
+  // etiqueta de sementes, crachá de conferência) — nada de fonte-reflexo
+  // repetida entre templates (ver nota da skill de design sobre
+  // monocultura tipográfica).
   const TEMPLATE_FONTS = {
-    elegante: ['Fraunces:ital,opsz,wght@0,9..144,500;1,9..144,500'],
-    minimalista: ['Space+Grotesk:wght@500;600'],
-    infantil: ['Baloo+2:wght@600;700'],
-    tropical: ['Bricolage+Grotesque:wght@500;600'],
-    rustico: ['Newsreader:ital,wght@0,500;1,500', 'Caveat:wght@600'],
-    corporate: ['IBM+Plex+Mono:wght@500;600'],
+    elegante: ["Italiana", "Jost:wght@400;500;600"],
+    minimalista: ["Familjen+Grotesk:wght@500;600", "Archivo:wght@400;500;600"],
+    infantil: ["Fredoka:wght@500;600;700", "Quicksand:wght@500;600;700", "Shantell+Sans:wght@600"],
+    tropical: ["Unbounded:wght@500;600;700", "Karla:wght@400;500;600"],
+    rustico: ["Vollkorn:ital,wght@0,500;1,500;0,600", "Caveat:wght@600", "Nunito+Sans:wght@400;500;600"],
+    corporate: ["Martian+Mono:wght@400;500;600", "Work+Sans:wght@400;500;600"],
   };
   const loadedFonts = new Set();
 
@@ -62,6 +66,7 @@
   }
 
   let pendingTarget = null;
+  let autoOpenTimer = null;
 
   function setPendingRevealTarget(target) {
     pendingTarget = target;
@@ -69,6 +74,7 @@
 
   function openReveal() {
     if (!pendingTarget) return;
+    if (autoOpenTimer) { clearTimeout(autoOpenTimer); autoOpenTimer = null; }
     const target = pendingTarget;
     pendingTarget = null;
 
@@ -86,10 +92,22 @@
     setTimeout(() => showState(target), 700);
   }
 
+  // O reveal é o primeiro momento do convite, não um portão — abre
+  // sozinho assim que a página carrega. `delayMs` dá um instante pro
+  // olho registrar o envelope/selo fechado antes da abertura (sem essa
+  // pausa a animação parece um glitch, não uma cerimônia). O botão
+  // (`revealBtn`) continua existindo como atalho pra "pular", pra quem
+  // já viu a animação antes ou prefere ir direto ao formulário.
+  function autoOpenReveal(delayMs) {
+    const wait = matchMedia('(prefers-reduced-motion: reduce)').matches ? 150 : (delayMs ?? 900);
+    autoOpenTimer = setTimeout(openReveal, wait);
+  }
+
   window.rsvpTemplates = {
     applyInviteTemplate,
     applyRevealStyle,
     openReveal,
+    autoOpenReveal,
     setPendingRevealTarget,
   };
 })();

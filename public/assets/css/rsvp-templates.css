@@ -1,138 +1,325 @@
 /* ═══════════════════════════════════════════════════════════════
-   rsvp.html — SISTEMA DE TEMPLATES (rsvpTemplateId) + REVEAL ANIMATION
-   (rsvpRevealStyle)
+   rsvp.html — INVITE SHELL + SISTEMA DE TEMPLATES (rsvpTemplateId)
+   + REVEAL ANIMATION (rsvpRevealStyle)
    ═══════════════════════════════════════════════════════════════
-   6 identidades visuais reais, não uma paleta reskinada 6x: cada
-   template tem uma referência concreta (papelaria gravada, placa de
-   galeria suíça, ticket de parquinho, cartão-postal de correio aéreo,
-   etiqueta de sementes prensadas, crachá de conferência), um par
-   tipográfico próprio (ver rsvp-templates.js:TEMPLATE_FONTS) e UM
-   motivo-assinatura — o resto fica quieto/disciplinado por design.
+   Este arquivo só é carregado por rsvp.html — pode sobrescrever
+   classes genéricas de utility-pages.css (.card, .utility-header,
+   .btn-primary, .state-icon...) sem afetar 404/privacidade/termos,
+   que nunca incluem este stylesheet.
+
+   PRINCÍPIO: o convite é um objeto físico renderizado na tela, não
+   uma tela de app. Por isso a seção 1 substitui o chrome genérico
+   de "página utilitária" (header com barra, card com borda lisa,
+   botão de sistema, badges de ícone quadrados) por uma vitrine
+   própria — sombra ambiente, atmosfera de fundo, tipografia de
+   papelaria — e as 6 seções seguintes dão a cada template uma
+   identidade material concreta (papelaria gravada, placa de
+   galeria suíça, ticket de parquinho, selo de correio aéreo,
+   etiqueta de sementes prensadas, crachá de conferência).
 
    --coral (erro/recusa) NUNCA muda entre templates — só --teal/
-   --teal-dark/--mist/--paper (destaque + tom de fundo) e a geometria
-   (--radius/--card-padding/--display-font) variam, pra manter os
-   estados de erro sempre legíveis.
+   --teal-dark/--mist/--paper/--on-teal (destaque + contraste) e a
+   geometria (--radius/--card-padding/--display-font/--body-font)
+   variam, pra manter os estados de erro sempre legíveis.
    ═══════════════════════════════════════════════════════════════ */
 
 :root {
-    --radius: 16px;
-    --card-padding: 32px;
+    --radius: 20px;
+    --card-padding: 40px;
     --display-font: "Planne Inter", system-ui, sans-serif;
+    --body-font: "Planne Inter", system-ui, sans-serif;
+    --on-teal: #fff;
 }
 
-.card-title, .state-title { font-family: var(--display-font); }
+/* ───────────────────────────────────────────────────────────────
+   1) INVITE SHELL — substitui o chrome genérico de página utilitária
+   ─────────────────────────────────────────────────────────────── */
+
+body {
+    background: var(--paper) !important;
+    font-family: var(--body-font);
+    position: relative;
+}
+
+/* atmosfera de fundo: vinheta radial na cor do template + grão de
+   papel sutil (textura, não decoração) — fixed pra não repaginar
+   com o scroll do formulário. */
+body::before, body::after {
+    content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+}
+body::before {
+    background: radial-gradient(ellipse 80% 55% at 50% -8%,
+        color-mix(in srgb, var(--teal) 16%, transparent), transparent 60%),
+      radial-gradient(ellipse 70% 50% at 100% 100%,
+        color-mix(in srgb, var(--teal-dark) 10%, transparent), transparent 65%);
+}
+body::after {
+    opacity: .05; mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+:root[data-theme="dark"] body::after { opacity: .09; mix-blend-mode: overlay; }
+
+.utility-header, body > header {
+    position: relative; z-index: 2; border-bottom: none; min-height: 64px;
+}
+.utility-brand, .logo-link { gap: .5rem; opacity: .85; transition: opacity .2s; }
+.utility-brand:hover { opacity: 1; }
+.utility-brand img, .logo-link img { width: 28px; height: 28px; }
+.utility-brand span, .logo-text {
+    font-family: "Patua One", serif; font-size: 1rem;
+}
+
+.utility-main, body > main { position: relative; z-index: 1; }
+
+/* o card em si: sem a borda lisa + decoy rotacionado do utility-pages —
+   uma folha pousada com sombra ambiente de verdade, cantos e grão
+   próprios de cada template. */
+.utility-sheet, .card {
+    width: min(560px, calc(100vw - 40px));
+    max-width: 560px;
+    padding: var(--card-padding);
+    border: none;
+    border-radius: var(--radius);
+    background: var(--paper);
+    box-shadow:
+        0 1px 1px color-mix(in srgb, var(--teal-dark) 6%, transparent),
+        0 12px 28px -10px color-mix(in srgb, var(--teal-dark) 28%, transparent),
+        0 32px 64px -24px color-mix(in srgb, var(--teal-dark) 32%, transparent);
+}
+.utility-sheet::before, .card::before { content: none; }
+
+.state-icon, .card-icon { display: none; }
+
+.card-title, .state-title {
+    font-family: var(--display-font);
+    font-size: clamp(1.7rem, 6vw, 2.35rem);
+    letter-spacing: -.015em;
+}
+.card-subtitle, .state-sub { font-family: var(--body-font); max-width: 42ch; }
+
+.utility-button, .btn-primary, .btn-secondary {
+    font-family: var(--body-font);
+    border-radius: var(--radius-sm);
+    box-shadow: none;
+}
+.btn-primary {
+    background: var(--teal); color: var(--on-teal);
+    font-weight: 600; letter-spacing: .01em;
+    box-shadow: 0 10px 22px -10px color-mix(in srgb, var(--teal) 65%, transparent);
+    transition: transform .18s cubic-bezier(.22,1,.36,1), box-shadow .2s ease, background .18s ease;
+}
+.btn-primary:hover:not(:disabled) {
+    background: var(--teal); filter: brightness(1.06);
+    transform: translateY(-1px);
+    box-shadow: 0 14px 28px -10px color-mix(in srgb, var(--teal) 70%, transparent);
+}
+.btn-primary:active:not(:disabled) { transform: translateY(0) scale(.985); }
+.btn-primary .spinner { border-top-color: var(--on-teal); }
+.btn-calendar { font-family: var(--body-font); }
+
+.utility-footer, body > footer { position: relative; z-index: 1; opacity: .7; }
+
+label { font-family: var(--body-font); display: block; }
+input, select { font-family: var(--body-font) !important; }
+/* bug pré-existente: input[type="text"] nunca teve width:100% no CSS
+   compartilhado (só type="tel" e select tinham) — o campo de nome
+   renderizava estreito, colado no label. Corrigido aqui (escopado a
+   esta página) em vez de tocar utility-pages.css. */
+input[type="text"], input[type="password"] { width: 100%; height: 50px; }
+
+/* ── countdown: numerais como um relógio de convite, não caixinhas de app ── */
+.countdown { gap: 0; border-top: 1px solid color-mix(in srgb, var(--teal) 25%, var(--line));
+    border-bottom: 1px solid color-mix(in srgb, var(--teal) 25%, var(--line)); padding: .85rem 0; }
+.countdown-unit { background: none; border: none; border-right: 1px solid color-mix(in srgb, var(--teal) 18%, var(--line)); }
+.countdown-unit:last-child { border-right: none; }
+.countdown-num { font-family: var(--display-font); font-size: 1.35rem; color: var(--teal-dark); }
+.countdown-label { font-family: var(--body-font); }
+
+/* ── event-details: sem o fundo --mist chapado, um filete só ── */
+.event-detail-block { background: none; border: 1px solid color-mix(in srgb, var(--teal) 16%, var(--line)); }
+
+.private-greeting, .event-details summary { font-family: var(--display-font); }
+
+/* ═══════════════════════════════════════════════════════════════
+   REVEAL — o primeiro instante do convite, não um portão. Abre
+   sozinho (ver rsvp-templates.js:autoOpenReveal); o botão vira um
+   link discreto de "pular", não um CTA primário.
+   ═══════════════════════════════════════════════════════════════ */
+.reveal-visual { height: 180px; margin-bottom: 1.4rem; }
+#stateReveal .state-title { text-align: center; font-size: 1.05rem; opacity: .8; }
+#revealBtn.btn-primary {
+    all: unset; display: block; margin: .6rem auto 0; width: fit-content; cursor: pointer;
+    font: 600 .78rem var(--body-font); letter-spacing: .07em; text-transform: uppercase;
+    color: var(--muted); padding: .4rem .8rem; border-radius: 999px;
+    transition: color .2s, background .2s;
+}
+#revealBtn.btn-primary:hover { color: var(--teal-dark); background: color-mix(in srgb, var(--teal) 10%, transparent); }
+#stateReveal { text-align: center; }
+
+.reveal-envelope, .reveal-fold { width: 148px; height: 108px; }
+.reveal-burst { width: 148px; height: 148px; }
+.reveal-envelope-seal { width: 50px; height: 50px; }
 
 /* ───────────────────────────────────────────────────────────────
-   1) ELEGANTE — papelaria de gala gravada: tinta-navy + ouro
-   escovado, serifada de alto contraste usada com restrição.
+   1) ELEGANTE — papelaria de gala gravada: veludo-tinta + ouro
+   escovado, display italiano-clássico em caixa alta discreta,
+   selo em relevo.
    ─────────────────────────────────────────────────────────────── */
 :root[data-invite-template="elegante"] {
-    --teal: #a9822f; --teal-dark: #16213e; --mist: #f6efdd;
-    --paper: #fbf7ee; --radius: 14px; --card-padding: 34px;
-    --display-font: "Fraunces", Georgia, serif;
+    --teal: #b08d3e; --teal-dark: #16213e; --mist: #f6efdd;
+    --paper: #fbf7ee; --radius: 6px; --card-padding: 46px;
+    --display-font: "Italiana", Georgia, serif;
+    --body-font: "Jost", "Planne Inter", sans-serif;
+    --on-teal: #16213e;
 }
 :root[data-theme="dark"][data-invite-template="elegante"] {
-    --teal: #d4b667; --teal-dark: #93a5c9; --mist: #241f14; --paper: #17130f;
+    --teal: #d9bd74; --teal-dark: #e7ecf7; --mist: #241f14; --paper: #14100c;
+    --on-teal: #16213e;
 }
-[data-invite-template="elegante"] .card-title { font-style: italic; font-weight: 500; letter-spacing: -.01em; }
+[data-invite-template="elegante"] .card-title {
+    text-transform: uppercase; font-weight: 400; letter-spacing: .04em; line-height: 1.15;
+}
+[data-invite-template="elegante"] .card {
+    border: 1px solid color-mix(in srgb, var(--teal) 35%, transparent);
+}
+[data-invite-template="elegante"] .card::after {
+    content: ""; position: absolute; inset: 10px; border: 1px solid color-mix(in srgb, var(--teal) 30%, transparent);
+    pointer-events: none; border-radius: 2px;
+}
+[data-invite-template="elegante"] .rsvp-tab {
+    font-family: var(--body-font); letter-spacing: .18em; border-radius: 0;
+    transform: rotate(0); top: -1px; left: 50%; translate: -50% -100%;
+    box-shadow: 0 8px 18px color-mix(in srgb, var(--teal) 40%, transparent);
+}
+[data-invite-template="elegante"] .rsvp-tab::after { display: none; }
 
 /* ───────────────────────────────────────────────────────────────
-   2) MINIMALISTA — placa de galeria: grafite neutro, grid preciso,
-   um único filete como única ornamentação.
+   2) MINIMALISTA — placa de galeria suíça: grafite neutro, grid
+   preciso, um filete e um número de catálogo como única ornamentação.
    ─────────────────────────────────────────────────────────────── */
 :root[data-invite-template="minimalista"] {
     --teal: #2b2f36; --teal-dark: #0a0a0a; --mist: #f2f3f5;
-    --paper: #ffffff; --radius: 4px; --card-padding: 28px;
-    --display-font: "Space Grotesk", "Planne Inter", sans-serif;
+    --paper: #ffffff; --radius: 2px; --card-padding: 34px;
+    --display-font: "Familjen Grotesk", "Planne Inter", sans-serif;
+    --body-font: "Archivo", "Planne Inter", sans-serif;
+    --on-teal: #ffffff;
 }
 :root[data-theme="dark"][data-invite-template="minimalista"] {
-    --teal: #94a3b8; --teal-dark: #cbd5e1; --mist: #1e293b; --paper: #0a0a0a;
+    --teal: #d4d8de; --teal-dark: #f4f5f7; --mist: #17181a; --paper: #0a0a0a;
+    --on-teal: #0a0a0a;
 }
+[data-invite-template="minimalista"] body::before,
+[data-invite-template="minimalista"] body::after { display: none; }
+[data-invite-template="minimalista"] .card { box-shadow: none; border: 1px solid var(--line); }
 [data-invite-template="minimalista"] .card-title {
-    text-transform: uppercase; letter-spacing: .06em; font-weight: 500; font-size: clamp(1.4rem, 4vw, 1.9rem);
+    text-transform: uppercase; letter-spacing: .05em; font-weight: 500; font-size: clamp(1.4rem, 4vw, 1.9rem);
 }
 [data-invite-template="minimalista"] .card-title::after {
     content: ""; display: block; width: 36px; height: 2px; background: var(--teal); margin-top: .7rem;
 }
 [data-invite-template="minimalista"] .rsvp-tab { display: none; }
-[data-invite-template="minimalista"] .seal { box-shadow: none; border-radius: 8px; }
+[data-invite-template="minimalista"] .seal { box-shadow: none; border-radius: 0; }
 [data-invite-template="minimalista"] .seal::before { display: none; }
-[data-invite-template="minimalista"] .countdown-unit { border-radius: 4px; }
+[data-invite-template="minimalista"] .countdown-unit { border-color: var(--line); }
+[data-invite-template="minimalista"] .btn-primary { border-radius: 0; }
 
 /* ───────────────────────────────────────────────────────────────
    3) FESTA INFANTIL — ticket de parquinho: vermelho-circo + amanteigado,
-   cantos-bolha, linha de rasgar no rodapé do cartão.
+   cantos-bolha, borda picotada no rodapé do cartão.
    ─────────────────────────────────────────────────────────────── */
 :root[data-invite-template="infantil"] {
     --teal: #e23d5b; --teal-dark: #7c1d3e; --mist: #fff6da;
-    --paper: #fffdf6; --radius: 26px; --card-padding: 32px;
-    --display-font: "Baloo 2", "Planne Inter", sans-serif;
+    --paper: #fffdf6; --radius: 28px; --card-padding: 36px;
+    --display-font: "Fredoka", "Planne Inter", sans-serif;
+    --body-font: "Quicksand", "Planne Inter", sans-serif;
+    --on-teal: #ffffff;
 }
 :root[data-theme="dark"][data-invite-template="infantil"] {
-    --teal: #fb7185; --teal-dark: #ffb3c1; --mist: #3f1725; --paper: #241019;
+    --teal: #fb7185; --teal-dark: #ffe4e8; --mist: #3f1725; --paper: #22101a;
+    --on-teal: #3f1725;
+}
+[data-invite-template="infantil"] body::before {
+    background:
+        radial-gradient(circle at 15% 20%, color-mix(in srgb, var(--teal) 14%, transparent) 0 3px, transparent 4px),
+        radial-gradient(circle at 85% 15%, color-mix(in srgb, var(--teal) 12%, transparent) 0 4px, transparent 5px),
+        radial-gradient(circle at 70% 85%, color-mix(in srgb, var(--teal) 12%, transparent) 0 3px, transparent 4px),
+        radial-gradient(ellipse 80% 55% at 50% -8%, color-mix(in srgb, var(--teal) 14%, transparent), transparent 60%);
+    background-size: 90px 90px, 110px 110px, 100px 100px, 100% 100%;
 }
 [data-invite-template="infantil"] .card-title { font-weight: 600; }
-[data-invite-template="infantil"] .rsvp-tab { border-radius: 14px; transform: rotate(-2deg); }
+[data-invite-template="infantil"] .rsvp-tab {
+    font-family: var(--body-font); font-weight: 700; border-radius: 14px; transform: rotate(-3deg);
+}
 [data-invite-template="infantil"] .presence-opt,
 [data-invite-template="infantil"] .stepper,
 [data-invite-template="infantil"] .otp-box,
-[data-invite-template="infantil"] .countdown-unit { border-radius: 20px; }
+[data-invite-template="infantil"] .countdown-unit,
+[data-invite-template="infantil"] .btn-primary { border-radius: 20px; }
 [data-invite-template="infantil"] .step-dot { border-radius: 8px; height: 6px; }
 [data-invite-template="infantil"] .card::after {
-    content: ""; position: absolute; left: 18px; right: 18px; bottom: 10px; height: 2px;
+    content: ""; position: absolute; left: 22px; right: 22px; bottom: 12px; height: 2px;
     background-image: linear-gradient(to right, var(--line) 50%, transparent 0%);
-    background-size: 10px 2px; background-repeat: repeat-x;
+    background-size: 12px 2px; background-repeat: repeat-x;
 }
 
 /* ───────────────────────────────────────────────────────────────
-   4) TROPICAL — cartão-postal de correio aéreo: coral queimado-de-sol
-   + verde-mar, faixa diagonal estilo airmail no topo do cartão.
+   4) TROPICAL — selo de correio aéreo: coral queimado-de-sol
+   + verde-mar, faixa diagonal estilo airmail e carimbo de porte.
    ─────────────────────────────────────────────────────────────── */
 :root[data-invite-template="tropical"] {
     --teal: #e8623a; --teal-dark: #7a2e17; --mist: #e4f5ee;
-    --paper: #fbf3e7; --radius: 18px; --card-padding: 32px;
-    --display-font: "Bricolage Grotesque", "Planne Inter", sans-serif;
+    --paper: #fbf3e7; --radius: 4px; --card-padding: 36px;
+    --display-font: "Unbounded", "Planne Inter", sans-serif;
+    --body-font: "Karla", "Planne Inter", sans-serif;
+    --on-teal: #fbf3e7;
 }
 :root[data-theme="dark"][data-invite-template="tropical"] {
-    --teal: #2dd4bf; --teal-dark: #5eead4; --mist: #122420; --paper: #16211d;
+    --teal: #2dd4bf; --teal-dark: #d1fdf6; --mist: #122420; --paper: #121b18;
+    --on-teal: #0d211d;
 }
-[data-invite-template="tropical"] .card-title { font-weight: 600; }
+[data-invite-template="tropical"] .card {
+    border: 1px solid color-mix(in srgb, var(--teal-dark) 22%, transparent);
+}
+[data-invite-template="tropical"] .card-title { font-weight: 500; letter-spacing: -.01em; }
 [data-invite-template="tropical"] .rsvp-tab {
-    border-radius: 50%; width: 54px; height: 54px; padding: 0;
-    display: flex; align-items: center; justify-content: center; left: 24px;
+    border-radius: 50%; width: 58px; height: 58px; padding: 0; font-size: .6rem;
+    display: flex; align-items: center; justify-content: center; left: 26px;
+    border: 2px dashed color-mix(in srgb, #fff 55%, transparent);
 }
 [data-invite-template="tropical"] .card::after {
-    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 6px;
+    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 7px;
     background: repeating-linear-gradient(-45deg,
         var(--teal) 0 10px, var(--paper) 10px 20px,
         var(--teal-dark) 20px 30px, var(--paper) 30px 40px);
-    border-radius: var(--radius) var(--radius) 0 0;
 }
 
 /* ───────────────────────────────────────────────────────────────
    5) RÚSTICO — etiqueta de sementes prensadas: ameixa empoeirada +
-   musgo (nunca terracota+serifa — ver nota da skill sobre clichê de
-   IA), serifa literária + um toque cursivo só na tag decorativa,
-   raminho line-art no canto do cartão.
+   musgo, serifa literária calorosa + tag cursiva, raminho line-art,
+   grão de kraft mais presente que os outros templates.
    ─────────────────────────────────────────────────────────────── */
 :root[data-invite-template="rustico"] {
-    --teal: #7a4b5e; --teal-dark: #4a2e3a; --mist: #eef0e4;
-    --paper: #f7f3e9; --radius: 14px; --card-padding: 34px;
-    --display-font: "Newsreader", Georgia, serif;
+    --teal: #7a4b5e; --teal-dark: #40273c; --mist: #eef0e4;
+    --paper: #f7f3e9; --radius: 10px; --card-padding: 42px;
+    --display-font: "Vollkorn", Georgia, serif;
+    --body-font: "Nunito Sans", "Planne Inter", sans-serif;
+    --on-teal: #ffffff;
 }
 :root[data-theme="dark"][data-invite-template="rustico"] {
-    --teal: #c98aa3; --teal-dark: #e8b8c9; --mist: #1b1f16; --paper: #1e1a22;
+    --teal: #c98aa3; --teal-dark: #f3dbe6; --mist: #1b1f16; --paper: #1c1720;
+    --on-teal: #40273c;
 }
+[data-invite-template="rustico"] body::after { opacity: .09; }
+:root[data-theme="dark"][data-invite-template="rustico"] body::after { opacity: .14; }
 [data-invite-template="rustico"] .card-title { font-style: italic; font-weight: 500; }
 [data-invite-template="rustico"] .rsvp-tab {
-    font-family: "Caveat", cursive; font-size: 1.05rem; font-weight: 600;
+    font-family: "Caveat", cursive; font-size: 1.15rem; font-weight: 600;
     letter-spacing: 0; text-transform: none; padding: .4rem 1rem;
 }
 [data-invite-template="rustico"] .card::after {
-    content: ""; position: absolute; top: 16px; right: 16px; width: 34px; height: 34px;
+    content: ""; position: absolute; top: 18px; right: 18px; width: 36px; height: 36px;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237A4B5E' stroke-width='1.4'%3E%3Cpath d='M12 21V9M12 9c-3 0-5-2-5-5 3 0 5 2 5 5zM12 9c3 0 5-2 5-5-3 0-5 2-5 5z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat; background-size: contain; opacity: .55; pointer-events: none;
+    background-repeat: no-repeat; background-size: contain; opacity: .5; pointer-events: none;
 }
 :root[data-theme="dark"] [data-invite-template="rustico"] .card::after {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23C98AA3' stroke-width='1.4'%3E%3Cpath d='M12 21V9M12 9c-3 0-5-2-5-5 3 0 5 2 5 5zM12 9c3 0 5-2 5-5-3 0-5 2-5 5z'/%3E%3C/svg%3E");
@@ -140,85 +327,96 @@
 
 /* ───────────────────────────────────────────────────────────────
    6) CORPORATE — crachá de conferência / boarding pass: indigo-tinta,
-   monoespaçada tracked, linha tracejada de "destacar aqui" sob o título.
+   monoespaçada técnica tracked, linha tracejada de "destacar aqui",
+   grid fino de blueprint no fundo.
    ─────────────────────────────────────────────────────────────── */
 :root[data-invite-template="corporate"] {
     --teal: #2e3b52; --teal-dark: #131a26; --mist: #eef1f5;
-    --paper: #ffffff; --radius: 6px; --card-padding: 30px;
-    --display-font: "IBM Plex Mono", ui-monospace, monospace;
+    --paper: #ffffff; --radius: 3px; --card-padding: 32px;
+    --display-font: "Martian Mono", ui-monospace, monospace;
+    --body-font: "Work Sans", "Planne Inter", sans-serif;
+    --on-teal: #ffffff;
 }
 :root[data-theme="dark"][data-invite-template="corporate"] {
-    --teal: #7fa8d9; --teal-dark: #bcd6f2; --mist: #111c2e; --paper: #0d1117;
+    --teal: #7fa8d9; --teal-dark: #dce8fb; --mist: #111c2e; --paper: #0a0e16;
+    --on-teal: #0a0e16;
 }
+[data-invite-template="corporate"] body::before,
+[data-invite-template="corporate"] body::after { display: none; }
+[data-invite-template="corporate"] body {
+    background-image: radial-gradient(color-mix(in srgb, var(--teal) 18%, transparent) 1px, transparent 1px) !important;
+    background-size: 16px 16px;
+}
+[data-invite-template="corporate"] .card { border: 1px solid var(--line); box-shadow: 0 1px 1px rgba(0,0,0,.04); }
 [data-invite-template="corporate"] .card-title {
-    text-transform: uppercase; letter-spacing: .04em; font-weight: 500; font-size: clamp(1.3rem, 4vw, 1.75rem);
+    text-transform: uppercase; letter-spacing: .03em; font-weight: 500; font-size: clamp(1.25rem, 4vw, 1.65rem);
 }
 [data-invite-template="corporate"] .card-title::after {
     content: ""; display: block; width: 100%; border-top: 1px dashed var(--line); margin-top: .8rem;
 }
-[data-invite-template="corporate"] .rsvp-tab { border-radius: 3px; transform: none; box-shadow: none; }
-[data-invite-template="corporate"] .seal { box-shadow: none; border-radius: 6px; }
+[data-invite-template="corporate"] .rsvp-tab { border-radius: 2px; transform: none; box-shadow: none; letter-spacing: .1em; }
+[data-invite-template="corporate"] .seal { box-shadow: none; border-radius: 2px; }
 [data-invite-template="corporate"] .seal::before { display: none; }
 [data-invite-template="corporate"] .countdown-unit,
 [data-invite-template="corporate"] .otp-box,
 [data-invite-template="corporate"] .stepper,
-[data-invite-template="corporate"] .presence-opt { border-radius: 4px; }
+[data-invite-template="corporate"] .presence-opt,
+[data-invite-template="corporate"] .btn-primary { border-radius: 2px; }
 
 
 /* ═══════════════════════════════════════════════════════════════
    REVEAL ANIMATION (rsvpRevealStyle) — 3 estilos de abertura
    ═══════════════════════════════════════════════════════════════
-   `stateReveal` fica entre stateLoading e o formulário (ver
-   rsvp-templates.js:openReveal()/rsvp.html:init). `data-reveal-style`
-   escolhe qual dos 3 blocos decorativos fica visível — só um estilo
-   anima por vez, os outros dois ficam com display:none. O selo do
-   envelope herda --teal/--teal-dark do template ativo, então a
-   animação já nasce na paleta certa sem CSS extra por combinação.
+   `stateReveal` fica entre stateLoading e o formulário — abre
+   sozinha via rsvp-templates.js:autoOpenReveal() (ver rsvp.html:init).
+   `data-reveal-style` escolhe qual dos 3 blocos decorativos fica
+   visível. O selo do envelope herda --teal/--teal-dark do template
+   ativo, então a animação já nasce na paleta certa.
    ═══════════════════════════════════════════════════════════════ */
-.reveal-visual { display: flex; align-items: center; justify-content: center; height: 130px; margin-bottom: 1rem; }
+.reveal-visual { display: flex; align-items: center; justify-content: center; }
 .reveal-envelope, .reveal-fold, .reveal-burst { display: none; }
 [data-reveal-style="envelope"] .reveal-envelope { display: block; }
 [data-reveal-style="dobradura"] .reveal-fold { display: block; }
-[data-reveal-style="confete"] .reveal-burst { display: block; }
+[data-reveal-style="confete"] .reveal-burst { display: flex; }
 
 /* ── estilo 1: envelope + selo (ícone trocado via JS por template) ── */
-.reveal-envelope { position: relative; width: 120px; height: 88px; perspective: 400px; }
-.reveal-envelope-body { position: absolute; inset: 0; background: var(--paper); border: 1px solid var(--line); border-radius: 8px; }
+.reveal-envelope { position: relative; perspective: 400px; }
+.reveal-envelope-body { position: absolute; inset: 0; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; }
 .reveal-envelope-flap {
     position: absolute; top: 0; left: 0; right: 0; height: 52%;
     background: var(--mist); border: 1px solid var(--line); border-bottom: none;
-    border-radius: 8px 8px 0 0; clip-path: polygon(0 0, 100% 0, 50% 100%);
+    border-radius: 10px 10px 0 0; clip-path: polygon(0 0, 100% 0, 50% 100%);
     transform-origin: top; transform-style: preserve-3d;
     transition: transform .6s cubic-bezier(.22,1,.36,1), opacity .5s ease .1s;
 }
 .reveal-envelope-seal {
-    position: absolute; top: 50%; left: 50%; width: 42px; height: 42px; border-radius: 50%;
+    position: absolute; top: 50%; left: 50%; border-radius: 50%;
     background: var(--teal); display: flex; align-items: center; justify-content: center;
     box-shadow: 0 6px 16px color-mix(in srgb, var(--teal) 45%, transparent);
     transform: translate(-50%, -50%);
     transition: transform .4s cubic-bezier(.34,1.56,.64,1) .15s, opacity .3s ease .15s;
 }
-.reveal-envelope-seal svg { width: 18px; height: 18px; stroke: #fff; stroke-width: 2; fill: none; }
+.reveal-envelope-seal svg { width: 20px; height: 20px; stroke: var(--on-teal); stroke-width: 2; fill: none; }
 .reveal-visual.opening .reveal-envelope-flap { transform: rotateX(150deg); opacity: 0; }
 .reveal-visual.opening .reveal-envelope-seal { transform: translate(-50%, -50%) scale(0); opacity: 0; }
 
 /* ── estilo 2: dobradura (convite que desdobra) ── */
-.reveal-fold { position: relative; width: 120px; height: 88px; perspective: 500px; }
+.reveal-fold { position: relative; perspective: 500px; }
 .reveal-fold-top, .reveal-fold-bottom {
     position: absolute; left: 0; right: 0; height: 50%; background: var(--paper); border: 1px solid var(--line);
 }
 .reveal-fold-top {
-    top: 0; border-radius: 8px 8px 0 0; border-bottom: 1px dashed var(--line);
+    top: 0; border-radius: 10px 10px 0 0; border-bottom: 1px dashed var(--line);
     transform-origin: bottom; transform-style: preserve-3d;
     transition: transform .6s cubic-bezier(.22,1,.36,1), opacity .5s ease .1s;
 }
-.reveal-fold-bottom { bottom: 0; border-radius: 0 0 8px 8px; }
+.reveal-fold-bottom { bottom: 0; border-radius: 0 0 10px 10px; }
 .reveal-visual.opening .reveal-fold-top { transform: rotateX(-165deg); opacity: .2; }
 
 /* ── estilo 3: confete (estouro) ── */
-.reveal-burst { position: relative; width: 120px; height: 120px; display: flex; align-items: center; justify-content: center; }
+.reveal-burst { position: relative; align-items: center; justify-content: center; }
 .reveal-burst-core {
-    width: 62px; height: 62px; border-radius: 50%; background: var(--teal);
+    width: 72px; height: 72px; border-radius: 50%; background: var(--teal);
     box-shadow: 0 6px 16px color-mix(in srgb, var(--teal) 45%, transparent);
     transition: transform .4s cubic-bezier(.34,1.56,.64,1);
 }
@@ -237,4 +435,9 @@
 @media (prefers-reduced-motion: reduce) {
     .reveal-envelope-flap, .reveal-envelope-seal, .reveal-fold-top,
     .reveal-burst-core, .confetti-dot { transition: none !important; animation: none !important; }
+}
+
+@media (max-width: 560px) {
+    .utility-sheet, .card { width: min(100% - 24px, 560px); }
+    [data-invite-template="elegante"] .card::after { inset: 7px; }
 }
