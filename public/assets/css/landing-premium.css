@@ -64,6 +64,16 @@ button { color: inherit; }
 }
 .skip-link:focus { top: 1rem; }
 
+.event-tabs { background: var(--mist); border-bottom: 1px solid var(--line); }
+.event-tabs-inner { width: min(1180px, calc(100% - 40px)); margin: 0 auto; display: flex; align-items: center; gap: .45rem; overflow-x: auto; padding: .6rem 0; scrollbar-width: none; }
+.event-tabs-inner::-webkit-scrollbar { display: none; }
+.event-tab { flex: 0 0 auto; display: inline-flex; align-items: center; gap: .4rem; padding: .42rem .95rem; border-radius: 999px; font-size: .8rem; font-weight: 600; color: var(--muted); white-space: nowrap; }
+a.event-tab:hover { color: var(--teal-dark); }
+.event-tab.is-active { background: var(--ink); color: var(--white); }
+:root[data-theme="dark"] .event-tab.is-active { background: var(--teal); color: #09110f; }
+.event-tab.is-soon { color: color-mix(in srgb, var(--muted) 65%, transparent); cursor: default; }
+.event-tab-soon-badge { font-family: var(--data); font-size: .6rem; text-transform: uppercase; letter-spacing: .05em; padding: .12rem .42rem; border-radius: 999px; border: 1px solid var(--line); }
+
 .site-header {
   position: sticky;
   top: 0;

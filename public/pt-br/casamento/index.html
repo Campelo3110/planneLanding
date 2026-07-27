@@ -23,16 +23,27 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="/assets/css/landing-premium.css">
+  <link rel="stylesheet" href="/assets/css/event-pages.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&display=swap">
   <script src="https://unpkg.com/lucide@latest" defer></script>
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"SoftwareApplication","name":"Planne","operatingSystem":"Android","applicationCategory":"LifestyleApplication","offers":{"@type":"Offer","price":"0","priceCurrency":"BRL"},"description":"Aplicativo para organizar casamentos: convidados, orçamento, tarefas e convite digital com confirmação de presença (RSVP).","url":"https://planneapp.com/pt-br/casamento","downloadUrl":"https://play.google.com/store/apps/details?id=com.planne.planne"}
   </script>
 </head>
-<body>
+<body class="event-theme-wedding">
   <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
+  <div class="event-tabs" aria-label="Tipos de evento">
+    <div class="event-tabs-inner">
+      <span class="event-tab is-active" aria-current="page">Casamento</span>
+      <span class="event-tab is-soon">Chá de bebê <span class="event-tab-soon-badge">em breve</span></span>
+      <span class="event-tab is-soon">Aniversário <span class="event-tab-soon-badge">em breve</span></span>
+      <span class="event-tab is-soon">Debutante (15 anos) <span class="event-tab-soon-badge">em breve</span></span>
+      <span class="event-tab is-soon">Formatura <span class="event-tab-soon-badge">em breve</span></span>
+    </div>
+  </div>
   <header class="site-header">
     <nav class="nav" aria-label="Navegação principal">
-      <a class="brand" href="/pt-br/casamento" aria-label="Planne — casamento">
+      <a class="brand" href="/pt-br" aria-label="Planne — início">
         <img src="/assets/brand/logo-64x64.png" alt="" width="36" height="36">
         <span>Planne</span>
       </a>
@@ -40,7 +51,6 @@
         <a href="#recursos">O que organiza</a>
         <a href="#como-funciona">Como funciona</a>
         <a href="#faq">Dúvidas</a>
-        <a href="/pt-br">Todos os eventos</a>
       </div>
       <div class="nav-actions">
         <a class="language" href="/pt-br/casamento" data-language="pt-BR" aria-current="page">PT</a>
@@ -53,25 +63,21 @@
   </header>
 
   <main id="conteudo">
-    <section class="hero" aria-labelledby="hero-title">
-      <div class="hero-copy">
-        <p class="hero-slogan">Menos estresse. <strong>Mais "sim, eu aceito".</strong></p>
-        <p class="availability">Grátis para Android</p>
-        <h1 id="hero-title">Seu casamento, uma decisão de cada vez.</h1>
-        <p>Organize convidados, orçamento e fornecedores em um só planejamento — e envie o convite com confirmação de presença sem depender de grupo de WhatsApp.</p>
-        <a class="button button-dark" data-cta-location="hero" href="https://play.google.com/store/apps/details?id=com.planne.planne" target="_blank" rel="noopener noreferrer">
-          <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M3 20.5v-17c0-.59.34-1.11.84-1.35L13.69 12l-9.85 9.85A1.5 1.5 0 0 1 3 20.5Zm13.81-5.38L6.05 21.34l8.49-8.49 2.27 2.27Zm3.35-4.31c.34.27.59.69.59 1.19 0 .5-.22.9-.57 1.18l-2.29 1.32-2.5-2.5 2.5-2.5 2.27 1.31ZM6.05 2.66l10.76 6.22-2.27 2.27-8.49-8.49Z"/></svg>
-          Organizar meu casamento grátis
-        </a>
-        <small class="hero-note">Abre a Google Play · Não precisa de cartão</small>
-      </div>
-
-      <figure class="planning-desk">
-        <div class="hero-screen">
-          <img src="/assets/screenshots/pt/planne-home-light.webp" data-theme-image data-light-src="/assets/screenshots/pt/planne-home-light.webp" data-dark-src="/assets/screenshots/pt/planne-home-dark.webp" alt="Tela inicial da Planne com os preparativos do casamento organizados" width="1080" height="2400" fetchpriority="high" decoding="async">
+    <section class="event-cover" aria-labelledby="hero-title">
+      <div class="event-cover-bg" aria-hidden="true"></div>
+      <div class="event-cover-inner">
+        <p class="event-cover-eyebrow">Casamento de Júlia &amp; Marcos</p>
+        <h1 id="hero-title" class="event-cover-title">O dia mais importante,<br>sem o caos por trás.</h1>
+        <p class="event-cover-sub">Organize convidados, orçamento e fornecedores em um só planejamento — e envie o convite com confirmação de presença sem depender de grupo de WhatsApp.</p>
+        <div class="event-cover-actions">
+          <a class="button button-dark" data-cta-location="hero" href="https://play.google.com/store/apps/details?id=com.planne.planne" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M3 20.5v-17c0-.59.34-1.11.84-1.35L13.69 12l-9.85 9.85A1.5 1.5 0 0 1 3 20.5Zm13.81-5.38L6.05 21.34l8.49-8.49 2.27 2.27Zm3.35-4.31c.34.27.59.69.59 1.19 0 .5-.22.9-.57 1.18l-2.29 1.32-2.5-2.5 2.5-2.5 2.27 1.31ZM6.05 2.66l10.76 6.22-2.27 2.27-8.49-8.49Z"/></svg>
+            Organizar meu casamento grátis
+          </a>
+          <span class="event-cover-date">18 · 11 · 2026</span>
+          <small class="event-cover-note">Abre a Google Play · Não precisa de cartão</small>
         </div>
-        <figcaption>Painel do casamento · convidados, orçamento e tarefas num só lugar</figcaption>
-      </figure>
+      </div>
     </section>
 
     <section class="problem-section" id="problema" aria-labelledby="problem-title">
@@ -225,7 +231,7 @@
   </main>
 
   <footer class="site-footer">
-    <div class="footer-inner"><div><a class="brand" href="/pt-br/casamento"><img src="/assets/brand/logo-64x64.png" alt="" width="36" height="36"><span>Planne</span></a><p class="footer-copy">© 2026 Planne. Organize cada decisão do seu casamento.</p></div><nav class="footer-links" aria-label="Links do rodapé"><a href="/privacy.html">Privacidade</a><a href="/terms.html">Termos</a><a href="/pt-br">Todos os eventos</a><a href="/wedding" data-language="en">English</a><a href="https://www.linkedin.com/company/planneapp/" target="_blank" rel="noopener noreferrer" aria-label="Planne no LinkedIn" class="footer-social"><i data-lucide="linkedin"></i></a></nav></div>
+    <div class="footer-inner"><div><a class="brand" href="/pt-br"><img src="/assets/brand/logo-64x64.png" alt="" width="36" height="36"><span>Planne</span></a><p class="footer-copy">© 2026 Planne. Organize cada decisão do seu casamento.</p></div><nav class="footer-links" aria-label="Links do rodapé"><a href="/privacy.html">Privacidade</a><a href="/terms.html">Termos</a><a href="/pt-br">Todos os eventos</a><a href="/wedding" data-language="en">English</a><a href="https://www.linkedin.com/company/planneapp/" target="_blank" rel="noopener noreferrer" aria-label="Planne no LinkedIn" class="footer-social"><i data-lucide="linkedin"></i></a></nav></div>
   </footer>
 
   <script src="/assets/js/site-preferences.js"></script>

@@ -23,26 +23,44 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="/assets/css/landing-premium.css">
+  <link rel="stylesheet" href="/assets/css/event-pages.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&display=swap">
   <script src="https://unpkg.com/lucide@latest" defer></script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Planne","operatingSystem":"Android","applicationCategory":"LifestyleApplication","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"An app for organizing weddings: guests, budget, tasks and a digital invitation with RSVP confirmations.","url":"https://planneapp.com/wedding","downloadUrl":"https://play.google.com/store/apps/details?id=com.planne.planne"}</script>
 </head>
-<body>
+<body class="event-theme-wedding">
   <a class="skip-link" href="#content">Skip to content</a>
+  <div class="event-tabs" aria-label="Event types">
+    <div class="event-tabs-inner">
+      <span class="event-tab is-active" aria-current="page">Wedding</span>
+      <span class="event-tab is-soon">Baby shower <span class="event-tab-soon-badge">soon</span></span>
+      <span class="event-tab is-soon">Birthday <span class="event-tab-soon-badge">soon</span></span>
+      <span class="event-tab is-soon">Quinceañera <span class="event-tab-soon-badge">soon</span></span>
+      <span class="event-tab is-soon">Graduation <span class="event-tab-soon-badge">soon</span></span>
+    </div>
+  </div>
   <header class="site-header"><nav class="nav" aria-label="Main navigation">
-    <a class="brand" href="/wedding" aria-label="Planne — wedding"><img src="/assets/brand/logo-64x64.png" alt="" width="36" height="36"><span>Planne</span></a>
-    <div class="nav-links" id="nav-links"><a href="#features">What it organizes</a><a href="#how-it-works">How it works</a><a href="#faq">Questions</a><a href="/">Every event</a></div>
+    <a class="brand" href="/" aria-label="Planne — home"><img src="/assets/brand/logo-64x64.png" alt="" width="36" height="36"><span>Planne</span></a>
+    <div class="nav-links" id="nav-links"><a href="#features">What it organizes</a><a href="#how-it-works">How it works</a><a href="#faq">Questions</a></div>
     <div class="nav-actions"><a class="language" href="/pt-br/casamento" data-language="pt-BR">PT</a><a class="language" href="/wedding" data-language="en" aria-current="page">EN</a><button class="theme-toggle" type="button" aria-label="Use dark theme"><i data-lucide="moon"></i></button><a class="button button-small" data-cta-location="header" href="https://play.google.com/store/apps/details?id=com.planne.planne" target="_blank" rel="noopener noreferrer">Start free</a><button class="menu-button" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav-links"><i data-lucide="menu"></i></button></div>
   </nav></header>
 
  <main id="content">
-    <section class="hero" aria-labelledby="hero-title">
-      <div class="hero-copy"><p class="hero-slogan">Less stress. <strong>More "I do".</strong></p><p class="availability">Free for Android</p><h1 id="hero-title">Your wedding, one decision at a time.</h1><p>Organize guests, budget and vendors in one clear plan—and send an invitation with RSVP confirmations instead of chasing replies in a group chat.</p><a class="button button-dark" data-cta-location="hero" href="https://play.google.com/store/apps/details?id=com.planne.planne" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M3 20.5v-17c0-.59.34-1.11.84-1.35L13.69 12l-9.85 9.85A1.5 1.5 0 0 1 3 20.5Zm13.81-5.38L6.05 21.34l8.49-8.49 2.27 2.27Zm3.35-4.31c.34.27.59.69.59 1.19 0 .5-.22.9-.57 1.18l-2.29 1.32-2.5-2.5 2.5-2.5 2.27 1.31ZM6.05 2.66l10.76 6.22-2.27 2.27-8.49-8.49Z"/></svg>Organize my wedding free</a><small class="hero-note">Opens Google Play · No credit card required</small></div>
-      <figure class="planning-desk">
-        <div class="hero-screen">
-          <img src="/assets/screenshots/en/planne-home-light.webp" data-theme-image data-light-src="/assets/screenshots/en/planne-home-light.webp" data-dark-src="/assets/screenshots/en/planne-home-dark.webp" alt="Real Planne home screen with a wedding's shortcuts, tasks and budget summary" width="1080" height="2400" fetchpriority="high" decoding="async">
+    <section class="event-cover" aria-labelledby="hero-title">
+      <div class="event-cover-bg" aria-hidden="true"></div>
+      <div class="event-cover-inner">
+        <p class="event-cover-eyebrow">Sarah &amp; James's Wedding</p>
+        <h1 id="hero-title" class="event-cover-title">The most important day,<br>without the chaos behind it.</h1>
+        <p class="event-cover-sub">Organize guests, budget and vendors in one clear plan—and send an invitation with RSVP confirmations instead of chasing replies in a group chat.</p>
+        <div class="event-cover-actions">
+          <a class="button button-dark" data-cta-location="hero" href="https://play.google.com/store/apps/details?id=com.planne.planne" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M3 20.5v-17c0-.59.34-1.11.84-1.35L13.69 12l-9.85 9.85A1.5 1.5 0 0 1 3 20.5Zm13.81-5.38L6.05 21.34l8.49-8.49 2.27 2.27Zm3.35-4.31c.34.27.59.69.59 1.19 0 .5-.22.9-.57 1.18l-2.29 1.32-2.5-2.5 2.5-2.5 2.27 1.31ZM6.05 2.66l10.76 6.22-2.27 2.27-8.49-8.49Z"/></svg>
+            Organize my wedding free
+          </a>
+          <span class="event-cover-date">11 · 18 · 2026</span>
+          <small class="event-cover-note">Opens Google Play · No credit card required</small>
         </div>
-        <figcaption>Wedding dashboard · guests, budget and tasks in one place</figcaption>
-      </figure>
+      </div>
     </section>
 
     <section class="problem-section" id="problem" aria-labelledby="problem-title">
@@ -127,7 +145,7 @@
     <section class="final-cta"><div class="cta-inner"><p class="kicker">Your next decision can be simpler</p><h2>Start with what you already know about your wedding.</h2><p>Create the wedding, record the first details, and send the RSVP invitation as soon as you have a date.</p><a class="button button-dark" data-cta-location="final" href="https://play.google.com/store/apps/details?id=com.planne.planne" target="_blank" rel="noopener noreferrer">Organize my wedding free</a><small class="cta-reassurance">Free for Android · No credit card required</small><div class="cta-line"><span class="cta-dot"></span>Planning in progress</div></div></section>
   </main>
 
-  <footer class="site-footer"><div class="footer-inner"><div><a class="brand" href="/wedding"><img src="/assets/brand/logo-64x64.png" alt="" width="36" height="36"><span>Planne</span></a><p class="footer-copy">© 2026 Planne. Organize every wedding decision.</p></div><nav class="footer-links" aria-label="Footer links"><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a><a href="/">Every event</a><a href="/pt-br/casamento" data-language="pt-BR">Português</a><a href="https://www.linkedin.com/company/planneapp/" target="_blank" rel="noopener noreferrer" aria-label="Planne on LinkedIn" class="footer-social"><i data-lucide="linkedin"></i></a></nav></div></footer>
+  <footer class="site-footer"><div class="footer-inner"><div><a class="brand" href="/"><img src="/assets/brand/logo-64x64.png" alt="" width="36" height="36"><span>Planne</span></a><p class="footer-copy">© 2026 Planne. Organize every wedding decision.</p></div><nav class="footer-links" aria-label="Footer links"><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a><a href="/">Every event</a><a href="/pt-br/casamento" data-language="pt-BR">Português</a><a href="https://www.linkedin.com/company/planneapp/" target="_blank" rel="noopener noreferrer" aria-label="Planne on LinkedIn" class="footer-social"><i data-lucide="linkedin"></i></a></nav></div></footer>
   <script src="/assets/js/site-preferences.js"></script>
 </body>
 </html>
