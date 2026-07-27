@@ -762,6 +762,30 @@ function renderEventExtras(event) {
 }
 
 // ═══════════════════════════════════════════════════════
+//  COR PREDOMINANTE (rsvpAccentColor) — sobrescreve --teal/--teal-dark
+//  em cima de QUALQUER estilo (rsvpTemplateId), via inline style no
+//  documentElement (sempre vence uma regra de stylesheet sem !important,
+//  independente de qual dos 3 estilos está ativo).
+// ═══════════════════════════════════════════════════════
+function darkenHex(hex, amount) {
+    const n = parseInt(hex.slice(1), 16);
+    const r = Math.max(0, Math.round(((n >> 16) & 255) * (1 - amount)));
+    const g = Math.max(0, Math.round(((n >> 8) & 255) * (1 - amount)));
+    const b = Math.max(0, Math.round((n & 255) * (1 - amount)));
+    return '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
+}
+function applyAccentColor(hex) {
+    const root = document.documentElement;
+    if (!hex || !/^#[0-9a-fA-F]{6}$/.test(hex)) {
+        root.style.removeProperty('--teal');
+        root.style.removeProperty('--teal-dark');
+        return;
+    }
+    root.style.setProperty('--teal', hex);
+    root.style.setProperty('--teal-dark', darkenHex(hex, 0.35));
+}
+
+// ═══════════════════════════════════════════════════════
 //  MAPA (rsvpLocationInfo — texto livre usado como endereço)
 // ═══════════════════════════════════════════════════════
 function renderMapSection(event) {
@@ -1181,6 +1205,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         const validStyles = ['foto-editorial', 'ilustrado', 'gravado'];
         document.documentElement.dataset.inviteStyle =
             validStyles.includes(event.rsvpTemplateId) ? event.rsvpTemplateId : 'foto-editorial';
+
+        // Cor predominante escolhida pelo organizador (rsvpAccentColor) —
+        // sobrescreve a cor nativa do estilo acima, em QUALQUER um dos 3
+        // estilos. Ausente/inválida = mantém a cor nativa do estilo.
+        applyAccentColor(event.rsvpAccentColor);
 
         renderCoverHero(event);
         renderEventExtras(event);
