@@ -635,8 +635,14 @@ function renderCoverHero(event) {
     const hero = document.getElementById('coverHero');
     const photo = document.getElementById('coverPhoto');
     if (event.rsvpCoverImageUrl) {
+        // Só marca .has-photo quando a imagem REALMENTE carrega — setar a
+        // classe otimisticamente (antes de saber se a URL carrega)
+        // deixava a capa "vazia" (moldura escura sem foto) quando a URL
+        // falhava (permissão do Storage, 404, etc.), em vez de recolher
+        // graciosamente pro estado sem foto.
+        photo.onload = () => hero.classList.add('has-photo');
+        photo.onerror = () => hero.classList.remove('has-photo');
         photo.src = event.rsvpCoverImageUrl;
-        hero.classList.add('has-photo');
     } else {
         hero.classList.remove('has-photo');
     }
@@ -1191,6 +1197,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         currentEventTitle = event.eventTitle || null;
         currentEventDate = event.eventDate || null;
         currentThankYouMessage = event.rsvpThankYouMessage || null;
+
+        // Aba do navegador com o nome do evento em vez do genérico
+        // "Planne — RSVP" — só depois de resolver o evento (antes disso
+        // não temos o nome ainda; o <title> estático segue como fallback).
+        if (currentEventTitle) {
+            document.title = 'Planne — ' + currentEventTitle;
+        }
 
         // Idioma É o do evento (settings.language do organizador) — fixo
         // pra todo mundo que abre o link, sem toggle manual. Fallback pro
