@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+
+<html lang="pt-BR">
 
 <head>
     <meta charset="UTF-8">
@@ -28,13 +29,7 @@
 
     <style>
         /* ── capa do evento (rsvpCoverImageUrl) ── */
-        .cover-photo {
-            width: calc(100% + 2 * var(--card-padding, 32px));
-            margin: calc(-1 * var(--card-padding, 32px)) calc(-1 * var(--card-padding, 32px)) 1.25rem;
-            height: 160px; object-fit: cover; display: block;
-            border-radius: var(--radius, 16px) var(--radius, 16px) 0 0;
-        }
-        .cover-photo[hidden] { display: none; }
+        .cover-photo { display: none; } /* substituída pelo .hero full-bleed abaixo */
 
         /* ── contagem regressiva ── */
         .countdown { display: flex; gap: 10px; margin-bottom: 1.1rem; }
@@ -46,7 +41,7 @@
         .countdown-num { font: 700 1.15rem "Planne Inter", sans-serif; color: var(--teal-dark); display: block; }
         .countdown-label { font-size: .62rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
 
-        /* ── detalhes do evento: dress code / local / FAQ ── */
+        /* ── detalhes do evento: dress code / FAQ (local agora é a seção de mapa, fora do card) ── */
         .event-details { margin-top: .25rem; margin-bottom: 1.25rem; }
         .event-details[hidden] { display: none; }
         .event-details summary {
@@ -81,7 +76,7 @@
     <style>
         body { overflow-x: hidden; }
 
-        main.utility-main { padding-top: clamp(2rem, 6vw, 4rem); padding-bottom: clamp(2rem, 6vw, 4rem); }
+        main.utility-main { padding-top: 0; padding-bottom: clamp(2rem, 6vw, 4rem); }
 
         .card { position: relative; }
 
@@ -101,34 +96,12 @@
         .msg-error { border: 1px solid color-mix(in srgb, var(--coral) 35%, var(--line)); background: var(--danger-soft); color: var(--coral); }
         .msg-error svg { stroke: var(--coral); }
 
-        /* ── signature: a torn ticket-stub tag, pinned to the reply card.
-           Hidden on states that aren't an actual invitation form. ── */
-        .rsvp-tab {
-            position: absolute; top: -14px; left: 30px; z-index: 2;
-            background: var(--teal); color: #fff;
-            font: 700 .7rem/1 "Planne Inter", sans-serif;
-            letter-spacing: .09em; text-transform: uppercase;
-            padding: .5rem .85rem; border-radius: 3px;
-            transform: rotate(-3deg);
-            box-shadow: 0 6px 16px color-mix(in srgb, var(--teal) 45%, transparent);
-            transition: opacity .25s ease;
-        }
-        .rsvp-tab::after {
-            content: ""; position: absolute; left: 11px; bottom: -5px;
-            width: 10px; height: 10px; background: inherit;
-            transform: rotate(45deg); border-radius: 0 0 2px 0;
-        }
-        .card:has(#stateLoading.active) .rsvp-tab,
-        .card:has(#stateInvalid.active) .rsvp-tab,
-        .card:has(#stateReveal.active) .rsvp-tab,
-        .card:has(#stateSuccess.active) .rsvp-tab { opacity: 0; pointer-events: none; }
-
         /* ── state machine ── */
         .state { display: none; }
         .state.active { display: block; animation: cardIn .4s cubic-bezier(.22,1,.36,1) both; }
         @keyframes cardIn {
-            from { opacity: 0; transform: translateY(18px) scale(.98) rotate(-.5deg); }
-            to   { opacity: 1; transform: translateY(0) scale(1) rotate(0); }
+            from { opacity: 0; transform: translateY(18px) scale(.98); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
         }
         @media (prefers-reduced-motion: no-preference) {
             .card { animation: cardIn .55s cubic-bezier(.22,1,.36,1) both; }
@@ -142,10 +115,6 @@
         .step-dot { width: 22px; height: 4px; border-radius: 2px; background: var(--line); }
         .step-dot.active { background: var(--teal); }
         .step-dot.done { background: var(--teal-dark); }
-
-        /* ── eyebrow reuses .utility-code look, but toggled by JS ── */
-        #publicEyebrow { display: block; }
-        #publicEyebrow[hidden] { display: none; }
 
         /* ── fields not already covered by the shared utility form styles ── */
         input[type="tel"], select {
@@ -237,90 +206,76 @@
         @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 
+    <!-- fontes dos 3 estilos de convite (rsvpTemplateId) — "Planne Inter"
+         (default) continua vindo do app, essas são só as adicionais de
+         cada estilo. Carregadas sempre (só 3 combinações, leve o
+         suficiente) em vez de injeção dinâmica por JS. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,500;1,400&family=Jost:wght@400;500&family=Bonheur+Royale&family=Quicksand:wght@500;600;700&family=Italiana&display=swap">
+
     <link rel="stylesheet" href="/assets/css/rsvp-templates.css">
 </head>
 
 <body>
 
-<header class="utility-header">
-    <a href="/" class="utility-brand" aria-label="Planne">
-        <img src="/assets/brand/logo-64x64.png" alt="" width="36" height="36">
-        <span>Planne</span>
-    </a>
-    <div class="header-actions">
-        <div class="lang-switcher" role="group" aria-label="Language / Idioma">
-            <button id="btn-pt" onclick="setLang('pt')">PT</button>
-            <span class="lang-sep" aria-hidden="true">|</span>
-            <button id="btn-en" onclick="setLang('en')">EN</button>
-        </div>
-        <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle theme">
-            <svg id="theme-icon" viewBox="0 0 24 24" aria-hidden="true" stroke="currentColor" stroke-width="1.8" fill="none">
-                <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41"/>
-            </svg>
-        </button>
-    </div>
+<header class="invite-header">
+    <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle theme">
+        <svg id="theme-icon" viewBox="0 0 24 24" aria-hidden="true" stroke="currentColor" stroke-width="1.8" fill="none">
+            <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41"/>
+        </svg>
+    </button>
 </header>
+
+<!-- CAPA — foto full-bleed (rsvpCoverImageUrl) com título/data do evento por cima.
+     data-invite-style (foto-editorial|ilustrado|gravado) decide a identidade
+     visual (fonte/cor/decoração) em cima desta MESMA estrutura — nenhum
+     estilo muda a ordem ou a existência das seções. -->
+<div class="hero" id="coverHero">
+    <img class="hero-photo" id="coverPhoto" alt="">
+    <!-- decoração "ilustrado": manchas de aquarela (só visíveis nesse estilo) -->
+    <div class="hero-blossoms" aria-hidden="true"></div>
+    <!-- decoração "gravado": moldura dourada + selo de cera (só visíveis nesse estilo) -->
+    <div class="hero-frame" aria-hidden="true">
+        <div class="hero-corner tl"><svg viewBox="0 0 26 26"><path d="M2 24 C2 10 10 2 24 2"/><path d="M2 18 C2 9 9 2 18 2" opacity=".5"/></svg></div>
+        <div class="hero-corner tr"><svg viewBox="0 0 26 26"><path d="M2 24 C2 10 10 2 24 2"/><path d="M2 18 C2 9 9 2 18 2" opacity=".5"/></svg></div>
+        <div class="hero-corner bl"><svg viewBox="0 0 26 26"><path d="M2 24 C2 10 10 2 24 2"/><path d="M2 18 C2 9 9 2 18 2" opacity=".5"/></svg></div>
+        <div class="hero-corner br"><svg viewBox="0 0 26 26"><path d="M2 24 C2 10 10 2 24 2"/><path d="M2 18 C2 9 9 2 18 2" opacity=".5"/></svg></div>
+    </div>
+    <div class="hero-seal" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.35-9.5-8.5C.5 8.5 3 5 6.5 5c2 0 3.5 1.2 4.5 2.7C12 6.2 13.5 5 15.5 5 19 5 21.5 8.5 19.5 12.5 17 16.65 12 21 12 21z"/></svg></div>
+    <div class="hero-content">
+        <p class="hero-eyebrow" id="heroEyebrow" data-i18n="invitedEyebrow"></p>
+        <h1 class="hero-title" id="heroEventTitle"></h1>
+        <p class="hero-date" id="heroEventDate" hidden></p>
+    </div>
+</div>
 
 <main class="utility-main">
 <div class="card" aria-live="polite">
-    <img class="cover-photo" id="coverPhoto" alt="" hidden>
-    <span class="rsvp-tab" aria-hidden="true">RSVP</span>
 
-    <!-- contagem regressiva (compartilhada entre os estados de formulário) -->
-    <div class="countdown" id="countdown" hidden>
-        <div class="countdown-unit"><span class="countdown-num" id="cdDays">0</span><span class="countdown-label" data-i18n="cdDays"></span></div>
-        <div class="countdown-unit"><span class="countdown-num" id="cdHours">0</span><span class="countdown-label" data-i18n="cdHours"></span></div>
-        <div class="countdown-unit"><span class="countdown-num" id="cdMinutes">0</span><span class="countdown-label" data-i18n="cdMinutes"></span></div>
-    </div>
+    <!-- contagem regressiva + dress code/FAQ (só aparecem se o organizador preencheu) -->
+    <div class="card-blocks" id="cardBlocks">
+        <div class="countdown" id="countdown" hidden>
+            <div class="countdown-unit"><span class="countdown-num" id="cdDays">0</span><span class="countdown-label" data-i18n="cdDays"></span></div>
+            <div class="countdown-unit"><span class="countdown-num" id="cdHours">0</span><span class="countdown-label" data-i18n="cdHours"></span></div>
+            <div class="countdown-unit"><span class="countdown-num" id="cdMinutes">0</span><span class="countdown-label" data-i18n="cdMinutes"></span></div>
+        </div>
 
-    <!-- detalhes do evento: dress code / local / FAQ (só aparece se o organizador preencheu) -->
-    <details class="event-details" id="eventDetails" hidden>
-        <summary>
-            <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-            <span data-i18n="eventDetailsToggle"></span>
-        </summary>
-        <div class="event-detail-block" id="dressCodeBlock" hidden>
-            <div class="event-detail-block-title" data-i18n="dressCodeLabel"></div>
-            <div class="event-detail-block-body" id="dressCodeBody"></div>
-        </div>
-        <div class="event-detail-block" id="locationInfoBlock" hidden>
-            <div class="event-detail-block-title" data-i18n="locationInfoLabel"></div>
-            <div class="event-detail-block-body" id="locationInfoBody"></div>
-        </div>
-        <div class="event-detail-block" id="faqBlock" hidden>
-            <div class="event-detail-block-title" data-i18n="faqLabel"></div>
-            <div class="event-detail-block-body" id="faqBody"></div>
-        </div>
-    </details>
-
-    <!-- ABERTURA DO CONVITE (reveal animation — envelope/dobradura/confete) -->
-    <div class="state" id="stateReveal">
-        <div class="reveal-visual" id="revealVisual" aria-hidden="true">
-            <div class="reveal-envelope">
-                <div class="reveal-envelope-body"></div>
-                <div class="reveal-envelope-flap"></div>
-                <div class="reveal-envelope-seal">
-                    <svg viewBox="0 0 24 24"><path d="M12 21s-7-4.35-9.5-8.5C.5 8.5 3 5 6.5 5c2 0 3.5 1.2 4.5 2.7C12 6.2 13.5 5 15.5 5 19 5 21.5 8.5 19.5 12.5 17 16.65 12 21 12 21z"/></svg>
+        <details class="event-details" id="eventDetails" hidden>
+            <summary>
+                <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+                <span data-i18n="eventDetailsToggle"></span>
+            </summary>
+            <div class="event-detail-blocks" id="eventDetailBlocks">
+                <div class="event-detail-block" id="dressCodeBlock" hidden>
+                    <div class="event-detail-block-title" data-i18n="dressCodeLabel"></div>
+                    <div class="event-detail-block-body" id="dressCodeBody"></div>
+                </div>
+                <div class="event-detail-block" id="faqBlock" hidden>
+                    <div class="event-detail-block-title" data-i18n="faqLabel"></div>
+                    <div class="event-detail-block-body" id="faqBody"></div>
                 </div>
             </div>
-            <div class="reveal-fold">
-                <div class="reveal-fold-top"></div>
-                <div class="reveal-fold-bottom"></div>
-            </div>
-            <div class="reveal-burst">
-                <span class="confetti-dot" style="--tx: -48px; --ty: -34px; background: #fb7185"></span>
-                <span class="confetti-dot" style="--tx: 44px; --ty: -40px; background: #fbbf24"></span>
-                <span class="confetti-dot" style="--tx: -52px; --ty: 20px; background: #34d399"></span>
-                <span class="confetti-dot" style="--tx: 50px; --ty: 26px; background: #60a5fa"></span>
-                <span class="confetti-dot" style="--tx: 0px; --ty: -56px; background: #a78bfa"></span>
-                <span class="confetti-dot" style="--tx: 0px; --ty: 52px; background: #fb923c"></span>
-                <div class="reveal-burst-core"></div>
-            </div>
-        </div>
-        <p class="state-title" data-i18n="revealTitle"></p>
-        <button class="btn-primary" id="revealBtn" onclick="rsvpTemplates.openReveal()">
-            <span data-i18n="btnSkipReveal"></span>
-        </button>
+        </details>
     </div>
 
     <!-- LOADING (resolve token) -->
@@ -345,8 +300,6 @@
         <div class="card-icon">
             <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         </div>
-        <p class="utility-code" id="publicEyebrow" hidden></p>
-        <h1 class="card-title" id="publicEventTitle"></h1>
         <p class="card-subtitle" id="publicSubtitleText"></p>
 
         <div class="msg msg-error" id="publicError" role="alert">
@@ -506,16 +459,36 @@
     </div>
 
 </div>
+
+<!-- MAPA (rsvpLocationInfo) -->
+<div class="map-section" id="mapSection" hidden>
+    <div class="section-heading">
+        <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <span data-i18n="locationInfoLabel"></span>
+    </div>
+    <div class="map-address-text" id="mapAddressText"></div>
+    <div class="map-embed">
+        <iframe id="mapFrame" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Mapa do local"></iframe>
+    </div>
+</div>
+
+<!-- MENSAGEM DO ORGANIZADOR (rsvpOrganizerMessage) -->
+<div class="organizer-message" id="organizerMessage" hidden>
+    <div class="organizer-message-body" id="organizerMessageBody"></div>
+</div>
+
 </main>
 
-<footer class="utility-footer">
-    <span>&copy; 2026 Planne</span> · <a href="/privacy.html" data-i18n="privacy"></a> · <a href="/terms.html" data-i18n="terms"></a>
+<footer class="invite-footer">
+    <span>Planne</span> · <a href="/privacy.html" data-i18n="privacy"></a>
 </footer>
 
-<script src="/assets/js/rsvp-templates.js"></script>
 <script>
 // ═══════════════════════════════════════════════════════
-//  i18n
+//  i18n — trancado no idioma do evento (organizador), sem troca
+//  manual pelo convidado. `detectLang()` só serve de fallback
+//  transitório antes do resolveEvent responder (ou se o backend
+//  ainda não tiver o campo `language`).
 // ═══════════════════════════════════════════════════════
 const STRINGS = {
     en: {
@@ -523,11 +496,7 @@ const STRINGS = {
         invalidTitle: "Invitation not found",
         invalidSub: "This invitation link is invalid or has been disabled.\nAsk the organizer for a new one.",
 
-        revealTitle: "Opening your invitation…",
-        btnSkipReveal: "Skip",
-
         invitedEyebrow: "You're invited",
-        publicTitle: "You're invited!",
         publicSubtitle: "Fill in your details to confirm your presence.",
         privateSearchTitle: "Find your invitation",
         privateSearchSubtitle: "Enter your name the way it was invited to find your RSVP.",
@@ -559,7 +528,7 @@ const STRINGS = {
 
         eventDetailsToggle: "Event details",
         dressCodeLabel: "Dress code",
-        locationInfoLabel: "Venue & lodging",
+        locationInfoLabel: "Location",
         faqLabel: "Good to know",
 
         btnAddCalendar: "Add to calendar",
@@ -582,18 +551,13 @@ const STRINGS = {
         successPendingSub: "The organizer will review your RSVP shortly.",
 
         privacy: "Privacy policy",
-        terms: "Terms of use",
     },
     pt: {
         loading: "Carregando seu convite…",
         invalidTitle: "Convite não encontrado",
         invalidSub: "Este link de convite é inválido ou foi desativado.\nPeça um novo link ao organizador.",
 
-        revealTitle: "Abrindo seu convite…",
-        btnSkipReveal: "Pular",
-
         invitedEyebrow: "Você foi convidado",
-        publicTitle: "Você foi convidado!",
         publicSubtitle: "Preencha seus dados para confirmar presença.",
         privateSearchTitle: "Encontre seu convite",
         privateSearchSubtitle: "Digite seu nome como foi convidado pra encontrarmos sua confirmação.",
@@ -625,7 +589,7 @@ const STRINGS = {
 
         eventDetailsToggle: "Detalhes do evento",
         dressCodeLabel: "Dress code",
-        locationInfoLabel: "Local e hospedagem",
+        locationInfoLabel: "Local",
         faqLabel: "Bom saber",
 
         btnAddCalendar: "Adicionar ao calendário",
@@ -648,38 +612,51 @@ const STRINGS = {
         successPendingSub: "O organizador vai revisar sua confirmação em breve.",
 
         privacy: "Política de privacidade",
-        terms: "Termos de uso",
     }
 };
 
-let currentLang = 'en';
+let currentLang = 'pt';
 let currentEventTitle = null;
 let currentEventDate = null;
 let currentThankYouMessage = null;
 let countdownTimer = null;
 let confirmedGuestFirstName = '';
 
+// Fallback só usado antes do resolveEvent responder (texto de loading)
+// ou se o backend ainda não retornar `language` — nunca fica visível
+// como opção pro convidado escolher (ver decisão: idioma é do evento,
+// herdado do settings.language do organizador, não do convidado).
 function detectLang() {
-    const savedValue = localStorage.getItem('planne-language') || localStorage.getItem('planne-lang');
-    const saved = savedValue?.startsWith('pt') ? 'pt' : savedValue;
-    if (saved === 'pt' || saved === 'en') return saved;
     return (navigator.language || '').startsWith('pt') ? 'pt' : 'en';
 }
 
-function renderPublicHeader() {
+function renderCoverHero(event) {
     const s = STRINGS[currentLang];
-    const eyebrow = document.getElementById('publicEyebrow');
-    const title = document.getElementById('publicEventTitle');
-    const subtitle = document.getElementById('publicSubtitleText');
-    if (currentEventTitle) {
-        eyebrow.textContent = s.invitedEyebrow;
-        eyebrow.hidden = false;
-        title.textContent = currentEventTitle;
+    const hero = document.getElementById('coverHero');
+    const photo = document.getElementById('coverPhoto');
+    if (event.rsvpCoverImageUrl) {
+        photo.src = event.rsvpCoverImageUrl;
+        hero.classList.add('has-photo');
     } else {
-        eyebrow.hidden = true;
-        title.textContent = s.publicTitle;
+        hero.classList.remove('has-photo');
     }
-    subtitle.textContent = s.publicSubtitle;
+    document.getElementById('heroEyebrow').textContent = s.invitedEyebrow;
+    document.getElementById('heroEventTitle').textContent = currentEventTitle || 'Planne';
+
+    const dateEl = document.getElementById('heroEventDate');
+    if (currentEventDate) {
+        const d = new Date(currentEventDate);
+        if (!Number.isNaN(d.getTime())) {
+            dateEl.textContent = d.toLocaleDateString(currentLang === 'pt' ? 'pt-BR' : 'en-US', {
+                day: 'numeric', month: 'long', year: 'numeric',
+            });
+            dateEl.hidden = false;
+        } else {
+            dateEl.hidden = true;
+        }
+    } else {
+        dateEl.hidden = true;
+    }
 }
 
 function renderPrivateGreeting() {
@@ -759,21 +736,10 @@ function downloadIcs() {
 }
 
 // ═══════════════════════════════════════════════════════
-//  CAPA + DETALHES DO EVENTO (dress code / local / FAQ)
+//  DRESS CODE / FAQ (extras opcionais — só aparecem se preenchidos)
 // ═══════════════════════════════════════════════════════
 function renderEventExtras(event) {
-    const cover = document.getElementById('coverPhoto');
-    if (event.rsvpCoverImageUrl) {
-        cover.src = event.rsvpCoverImageUrl;
-        cover.hidden = false;
-    } else {
-        cover.hidden = true;
-    }
-
-    window.__rsvpLocationInfo = event.rsvpLocationInfo || '';
-
     const dressCodeBlock = document.getElementById('dressCodeBlock');
-    const locationInfoBlock = document.getElementById('locationInfoBlock');
     const faqBlock = document.getElementById('faqBlock');
     let anyDetail = false;
 
@@ -784,13 +750,6 @@ function renderEventExtras(event) {
     } else {
         dressCodeBlock.hidden = true;
     }
-    if (event.rsvpLocationInfo) {
-        document.getElementById('locationInfoBody').textContent = event.rsvpLocationInfo;
-        locationInfoBlock.hidden = false;
-        anyDetail = true;
-    } else {
-        locationInfoBlock.hidden = true;
-    }
     if (event.rsvpFaq) {
         document.getElementById('faqBody').textContent = event.rsvpFaq;
         faqBlock.hidden = false;
@@ -800,6 +759,35 @@ function renderEventExtras(event) {
     }
 
     document.getElementById('eventDetails').hidden = !anyDetail;
+}
+
+// ═══════════════════════════════════════════════════════
+//  MAPA (rsvpLocationInfo — texto livre usado como endereço)
+// ═══════════════════════════════════════════════════════
+function renderMapSection(event) {
+    window.__rsvpLocationInfo = event.rsvpLocationInfo || '';
+    const section = document.getElementById('mapSection');
+    if (!event.rsvpLocationInfo) {
+        section.hidden = true;
+        return;
+    }
+    document.getElementById('mapAddressText').textContent = event.rsvpLocationInfo;
+    document.getElementById('mapFrame').src =
+        'https://www.google.com/maps?q=' + encodeURIComponent(event.rsvpLocationInfo) + '&output=embed';
+    section.hidden = false;
+}
+
+// ═══════════════════════════════════════════════════════
+//  MENSAGEM DO ORGANIZADOR (rsvpOrganizerMessage)
+// ═══════════════════════════════════════════════════════
+function renderOrganizerMessage(event) {
+    const section = document.getElementById('organizerMessage');
+    if (!event.rsvpOrganizerMessage) {
+        section.hidden = true;
+        return;
+    }
+    document.getElementById('organizerMessageBody').textContent = event.rsvpOrganizerMessage;
+    section.hidden = false;
 }
 
 function applyLang(lang) {
@@ -815,18 +803,9 @@ function applyLang(lang) {
         const v = s[el.dataset.i18nPlaceholder];
         if (v !== undefined) el.placeholder = v;
     });
-    renderPublicHeader();
+    document.getElementById('publicSubtitleText').textContent = s.publicSubtitle;
     renderPrivateGreeting();
     renderCountdown();
-
-    document.getElementById('btn-pt').classList.toggle('active', lang === 'pt');
-    document.getElementById('btn-en').classList.toggle('active', lang === 'en');
-}
-
-function setLang(lang) {
-    localStorage.setItem('planne-lang', lang);
-    localStorage.setItem('planne-language', lang === 'pt' ? 'pt-BR' : 'en');
-    applyLang(lang);
 }
 
 // ═══════════════════════════════════════════════════════
@@ -853,7 +832,7 @@ function updateThemeColor() {
 // ═══════════════════════════════════════════════════════
 //  STATE SWITCHER
 // ═══════════════════════════════════════════════════════
-const ALL_STATES = ['stateLoading','stateInvalid','stateReveal','statePublicForm','statePrivateSearch','statePrivateConfirm','stateSuccess'];
+const ALL_STATES = ['stateLoading','stateInvalid','statePublicForm','statePrivateSearch','statePrivateConfirm','stateSuccess'];
 function showState(id) {
     ALL_STATES.forEach(s => document.getElementById(s).classList.remove('active'));
     document.getElementById(id).classList.add('active');
@@ -863,16 +842,17 @@ function showState(id) {
 //  API — contrato esperado da Cloud Function `rsvp`
 //  (implementação/deploy fora deste repo). Ver comentário no topo.
 //
-//    POST { action: 'resolveEvent', publicToken }
+//    POST { action: 'resolveEvent' }
 //      -> { rsvpEnabled, rsvpMode: 'publico'|'privado',
 //           rsvpAllowCompanions, rsvpMaxCompanions, eventTitle?,
-//           eventDate?,            // ISO string — contagem regressiva + .ics
-//           rsvpDressCode?, rsvpLocationInfo?, rsvpFaq?,   // texto livre
-//           rsvpCoverImageUrl?,    // URL colada pelo organizador
-//           rsvpThankYouMessage?, // sobrescreve a msg padrão de sucesso
-//           rsvpTemplateId?,      // elegante|minimalista|infantil|tropical|
-//                                 // rustico|corporate — default 'elegante'
-//           rsvpRevealStyle? }    // envelope|dobradura|confete — default 'envelope'
+//           eventDate?,             // ISO string — contagem regressiva + .ics
+//           language?,              // 'pt'|'en' — settings.language do organizador,
+//                                   // idioma FIXO do convite (não escolhido pelo convidado)
+//           rsvpDressCode?, rsvpFaq?,         // texto livre, extras opcionais
+//           rsvpLocationInfo?,      // texto livre — usado como endereço do mapa
+//           rsvpOrganizerMessage?,  // mensagem livre do organizador
+//           rsvpCoverImageUrl?,     // URL da foto de capa (full-bleed)
+//           rsvpThankYouMessage? }  // sobrescreve a msg padrão de sucesso
 //    POST { action: 'lookup', publicToken, name }
 //      -> { found: boolean }
 //    POST { action: 'verifyAndSubmitPrivate', publicToken, name,
@@ -886,10 +866,7 @@ function showState(id) {
 //  (mesmo mapeamento usado no app — ver dropdown de status do convidado)
 //  menu: 1..7 (int, não string!) — mesmo enum do app nativo
 //  (add_guest_widget.dart): 1=Regular, 2=Vegetariano, 3=Vegano,
-//  4=Infantil, 5=Sem glúten, 6=Sem lactose, 7=Outro. Bug real corrigido
-//  nesta sessão: a versão anterior deste arquivo enviava texto livre
-//  pra um campo que o app trata como inteiro — ver
-//  project_rsvp_invite_feature.md.
+//  4=Infantil, 5=Sem glúten, 6=Sem lactose, 7=Outro.
 // ═══════════════════════════════════════════════════════
 async function callRsvpApi(payload) {
     const res = await fetch(window.__RSVP_ENDPOINT, {
@@ -1190,22 +1167,29 @@ document.addEventListener('DOMContentLoaded', async () => {
         currentEventTitle = event.eventTitle || null;
         currentEventDate = event.eventDate || null;
         currentThankYouMessage = event.rsvpThankYouMessage || null;
-        rsvpTemplates.applyInviteTemplate(event.rsvpTemplateId);
-        rsvpTemplates.applyRevealStyle(event.rsvpRevealStyle);
-        renderPublicHeader();
+
+        // Idioma É o do evento (settings.language do organizador) — fixo
+        // pra todo mundo que abre o link, sem toggle manual. Fallback pro
+        // idioma do navegador só se o backend ainda não mandar `language`
+        // (compatibilidade enquanto o deploy da Cloud Function não sobe).
+        applyLang(event.language === 'pt' || event.language === 'en' ? event.language : detectLang());
+
+        // Estilo visual (rsvpTemplateId) — só reskin (fonte/cor/decoração)
+        // em cima desta MESMA estrutura de página; nenhum estilo muda a
+        // ordem das seções. 'foto-editorial' é o default (também cobre
+        // valores do sistema antigo de 6 templates, que não existem mais).
+        const validStyles = ['foto-editorial', 'ilustrado', 'gravado'];
+        document.documentElement.dataset.inviteStyle =
+            validStyles.includes(event.rsvpTemplateId) ? event.rsvpTemplateId : 'foto-editorial';
+
+        renderCoverHero(event);
         renderEventExtras(event);
+        renderMapSection(event);
+        renderOrganizerMessage(event);
         startCountdown();
 
         const targetState = event.rsvpMode === 'privado' ? 'statePrivateSearch' : 'statePublicForm';
-        const alreadyOpened = window.__rsvpToken &&
-            sessionStorage.getItem(`planne-invite-opened-${window.__rsvpToken}`) === '1';
-        if (alreadyOpened) {
-            showState(targetState);
-        } else {
-            rsvpTemplates.setPendingRevealTarget(targetState);
-            showState('stateReveal');
-            rsvpTemplates.autoOpenReveal();
-        }
+        showState(targetState);
     } catch (e) {
         showState('stateInvalid');
     }
@@ -1213,8 +1197,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 document.addEventListener('keydown', e => {
     if (e.key !== 'Enter') return;
-    if (document.getElementById('stateReveal').classList.contains('active')) rsvpTemplates.openReveal();
-    else if (document.getElementById('statePublicForm').classList.contains('active')) submitPublic();
+    if (document.getElementById('statePublicForm').classList.contains('active')) submitPublic();
     else if (document.getElementById('statePrivateSearch').classList.contains('active')) lookupGuest();
     else if (document.getElementById('statePrivateConfirm').classList.contains('active')) submitPrivate();
 });

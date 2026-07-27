@@ -17,6 +17,20 @@
   </url>
 
   <url>
+    <loc>https://planneapp.com/wedding</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://planneapp.com/wedding" />
+    <xhtml:link rel="alternate" hreflang="pt-br" href="https://planneapp.com/pt-br/casamento" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://planneapp.com/wedding" />
+  </url>
+
+  <url>
+    <loc>https://planneapp.com/pt-br/casamento</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://planneapp.com/wedding" />
+    <xhtml:link rel="alternate" hreflang="pt-br" href="https://planneapp.com/pt-br/casamento" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://planneapp.com/wedding" />
+  </url>
+
+  <url>
     <loc>https://planneapp.com/privacy</loc>
   </url>
 
