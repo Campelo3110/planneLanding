@@ -4,10 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Planne — Organize convidados, orçamento e tarefas do seu evento</title>
-  <meta name="description" content="Organize convidados, orçamento, tarefas e fornecedores do seu evento em um único aplicativo para Android.">
+  <meta name="description" content="Planne é o app que reúne convidados, orçamento, tarefas e fornecedores em um só plano claro. Casamentos, aniversários, formaturas e mais. Grátis para Android.">
   <meta name="robots" content="index, follow">
-  <meta name="theme-color" content="#f8fafc">
-  <script>try{const t=localStorage.getItem('planne-theme');document.documentElement.dataset.theme=t||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+  <meta name="theme-color" content="#fafaf7">
   <link rel="canonical" href="https://planneapp.com/pt-br">
   <link rel="alternate" hreflang="en" href="https://planneapp.com/">
   <link rel="alternate" hreflang="pt-BR" href="https://planneapp.com/pt-br">
@@ -16,13 +15,15 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://planneapp.com/pt-br">
   <meta property="og:locale" content="pt_BR">
-  <meta property="og:title" content="Planne — Tudo do seu evento no lugar certo">
-  <meta property="og:description" content="Convidados, orçamento, tarefas e fornecedores em um planejamento claro.">
+  <meta property="og:title" content="Planne — Organize seu evento sem estresse">
+  <meta property="og:description" content="Convidados, orçamento, tarefas e fornecedores em um só lugar. Grátis para Android.">
   <meta property="og:image" content="https://planneapp.com/assets/brand/graphic_feature.png">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="/assets/css/landing-premium.css">
+  <link rel="stylesheet" href="/assets/css/home-v2.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&display=swap">
   <script src="https://unpkg.com/lucide@latest" defer></script>
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"SoftwareApplication","name":"Planne","operatingSystem":"Android","applicationCategory":"LifestyleApplication","offers":{"@type":"Offer","price":"0","priceCurrency":"BRL"},"description":"Aplicativo para organizar convidados, orçamento, tarefas e fornecedores de eventos.","url":"https://planneapp.com/pt-br","downloadUrl":"https://play.google.com/store/apps/details?id=com.planne.planne"}
@@ -39,197 +40,288 @@
       <span class="event-tab is-soon">Formatura <span class="event-tab-soon-badge">em breve</span></span>
     </div>
   </div>
-  <header class="site-header">
-    <nav class="nav" aria-label="Navegação principal">
-      <a class="brand" href="/pt-br" aria-label="Planne — início">
-        <img src="/assets/brand/logo-64x64.png" alt="" width="36" height="36">
-        <span>Planne</span>
-      </a>
-      <div class="nav-links" id="nav-links">
-        <a href="#recursos">O que organiza</a>
-        <a href="#como-funciona">Como funciona</a>
-        <a href="#faq">Dúvidas</a>
-      </div>
-      <div class="nav-actions">
-        <a class="language" href="/pt-br" data-language="pt-BR" aria-current="page">PT</a>
-        <a class="language" href="/" data-language="en">EN</a>
-        <button class="theme-toggle" type="button" aria-label="Usar tema escuro"><i data-lucide="moon"></i></button>
-        <a class="button button-small" data-cta-location="header" href="https://play.google.com/store/apps/details?id=com.planne.planne" target="_blank" rel="noopener noreferrer">Começar grátis</a>
-        <button class="menu-button" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="nav-links"><i data-lucide="menu"></i></button>
-      </div>
-    </nav>
-  </header>
 
-  <main id="conteudo">
-    <section class="hero" aria-labelledby="hero-title">
-      <div class="hero-copy">
-        <p class="hero-slogan">Menos estresse. <strong>Mais celebrações.</strong></p>
-        <p class="availability">Gratuito para Android</p>
-        <h1 id="hero-title">Seu evento, no lugar certo.</h1>
-        <p>Organize convidados, orçamento, tarefas e fornecedores em um só planejamento — e saiba sempre qual é a próxima decisão.</p>
-        <a class="button button-dark" data-cta-location="hero" href="https://play.google.com/store/apps/details?id=com.planne.planne" target="_blank" rel="noopener noreferrer">
-          <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M3 20.5v-17c0-.59.34-1.11.84-1.35L13.69 12l-9.85 9.85A1.5 1.5 0 0 1 3 20.5Zm13.81-5.38L6.05 21.34l8.49-8.49 2.27 2.27Zm3.35-4.31c.34.27.59.69.59 1.19 0 .5-.22.9-.57 1.18l-2.29 1.32-2.5-2.5 2.5-2.5 2.27 1.31ZM6.05 2.66l10.76 6.22-2.27 2.27-8.49-8.49Z"/></svg>
-          Organizar meu evento grátis
+  <div class="v2">
+    <header class="v2-header">
+      <div class="v2-header-inner">
+        <a class="v2-brand" href="/pt-br" aria-label="Planne — início">
+          <span class="v2-brand-mark"><img src="/assets/brand/logo-64x64.png" alt="" width="36" height="36"></span>
+          <span>Planne</span>
         </a>
-        <small class="hero-note">Abre a Google Play · Não precisa de cartão</small>
-        <ul class="hero-checklist">
-          <li><i data-lucide="check"></i>Grátis para começar</li>
-          <li><i data-lucide="check"></i>Funciona offline</li>
-          <li><i data-lucide="check"></i>Um plano só</li>
-        </ul>
-      </div>
-
-      <figure class="planning-desk">
-        <div class="hero-screen">
-          <img src="/assets/screenshots/pt/planne-home-light.webp" data-theme-image data-light-src="/assets/screenshots/pt/planne-home-light.webp" data-dark-src="/assets/screenshots/pt/planne-home-dark.webp" alt="Tela inicial real da Planne com atalhos, tarefas e resumo do orçamento" width="1080" height="2400" fetchpriority="high" decoding="async">
-        </div>
-        <figcaption>Tela inicial da Planne · o tema acompanha seu dispositivo</figcaption>
-      </figure>
-    </section>
-
-    <section class="event-showcase" aria-labelledby="event-showcase-title">
-      <div class="event-showcase-inner">
-        <header class="event-showcase-heading">
-          <p class="kicker">Para cada celebração</p>
-          <h2 id="event-showcase-title">Feito para o seu tipo de evento</h2>
-        </header>
-        <div class="event-showcase-grid">
-          <a class="event-showcase-card" href="/pt-br/casamento">
-            <svg class="event-showcase-motif" viewBox="0 0 72 72" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="27" cy="42" r="13"/><circle cx="45" cy="42" r="13"/><path d="M36 24c0-8 4-14 4-14s4 6 4 14"/><path d="M36 24c-3-5-3-10-1-13" stroke-linecap="round"/><path d="M36 24c3-5 3-10 1-13" stroke-linecap="round"/></svg>
-            <h3>Casamento</h3>
-            <p>Convite com RSVP, lista de convidados e orçamento por fornecedor — organizados do jeito de um casamento de verdade.</p>
-            <span class="event-showcase-link">Ver a página de Casamento <i data-lucide="arrow-right"></i></span>
+        <nav class="v2-nav-links">
+          <a href="#recursos">Recursos</a>
+          <a href="#como-funciona">Como funciona</a>
+          <a href="#faq">Perguntas</a>
+        </nav>
+        <div class="v2-header-actions">
+          <span class="v2-nav-lang">
+            <a href="/pt-br" data-language="pt-BR" aria-current="page">PT</a>
+            <a href="/" data-language="en">EN</a>
+          </span>
+          <a class="v2-play-button is-small" data-cta-location="header" href="https://play.google.com/store/apps/details?id=com.planne.planne" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 20.5v-17c0-.59.34-1.11.84-1.35L13.69 12l-9.85 9.85A1.5 1.5 0 0 1 3 20.5Zm13.81-5.38L6.05 21.34l8.49-8.49 2.27 2.27Zm3.35-4.31c.34.27.59.69.59 1.19 0 .5-.22.9-.57 1.18l-2.29 1.32-2.5-2.5 2.5-2.5 2.27 1.31ZM6.05 2.66l10.76 6.22-2.27 2.27-8.49-8.49Z"/></svg>
+            <span class="v2-play-button-text"><strong>Organizar grátis</strong></span>
           </a>
-          <div class="event-showcase-soon-list">
-            <div class="event-showcase-soon">Chá de bebê <span class="event-showcase-soon-badge">Em breve</span></div>
-            <div class="event-showcase-soon">Aniversário <span class="event-showcase-soon-badge">Em breve</span></div>
-            <div class="event-showcase-soon">Debutante (15 anos) <span class="event-showcase-soon-badge">Em breve</span></div>
-            <div class="event-showcase-soon">Formatura <span class="event-showcase-soon-badge">Em breve</span></div>
+        </div>
+        <button type="button" class="v2-menu-button menu-button" aria-label="Abrir menu" aria-expanded="false" aria-controls="nav-links"><i data-lucide="menu"></i></button>
+      </div>
+      <div class="v2-mobile-panel nav-links" id="nav-links">
+        <nav>
+          <a href="#recursos">Recursos</a>
+          <a href="#como-funciona">Como funciona</a>
+          <a href="#faq">Perguntas</a>
+          <a href="/" data-language="en">English</a>
+        </nav>
+        <a class="v2-play-button v2-play-button-mobile" data-cta-location="header-mobile" href="https://play.google.com/store/apps/details?id=com.planne.planne" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 20.5v-17c0-.59.34-1.11.84-1.35L13.69 12l-9.85 9.85A1.5 1.5 0 0 1 3 20.5Zm13.81-5.38L6.05 21.34l8.49-8.49 2.27 2.27Zm3.35-4.31c.34.27.59.69.59 1.19 0 .5-.22.9-.57 1.18l-2.29 1.32-2.5-2.5 2.5-2.5 2.27 1.31ZM6.05 2.66l10.76 6.22-2.27 2.27-8.49-8.49Z"/></svg>
+          <span class="v2-play-button-text"><strong>Organizar grátis</strong></span>
+        </a>
+      </div>
+    </header>
+
+    <main id="conteudo">
+      <section class="v2-hero" aria-labelledby="hero-title">
+        <div class="v2-hero-blob a" aria-hidden="true"></div>
+        <div class="v2-hero-blob b" aria-hidden="true"></div>
+        <div class="v2-wrap v2-hero-grid">
+          <div class="v2-hero-copy">
+            <span class="v2-hero-badge">Menos estresse. Mais celebração.</span>
+            <h1 id="hero-title">Tudo do seu evento. No lugar certo.</h1>
+            <p class="v2-hero-sub">Organize convidados, orçamento, tarefas e fornecedores em um só plano claro — e sempre saiba qual é a próxima decisão a tomar.</p>
+            <div class="v2-hero-cta">
+              <a class="v2-play-button" data-cta-location="hero" href="https://play.google.com/store/apps/details?id=com.planne.planne" target="_blank" rel="noopener noreferrer">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 20.5v-17c0-.59.34-1.11.84-1.35L13.69 12l-9.85 9.85A1.5 1.5 0 0 1 3 20.5Zm13.81-5.38L6.05 21.34l8.49-8.49 2.27 2.27Zm3.35-4.31c.34.27.59.69.59 1.19 0 .5-.22.9-.57 1.18l-2.29 1.32-2.5-2.5 2.5-2.5 2.27 1.31ZM6.05 2.66l10.76 6.22-2.27 2.27-8.49-8.49Z"/></svg>
+                <span class="v2-play-button-text"><small>Disponível no</small><strong>Organizar meu evento</strong></span>
+              </a>
+              <small>Grátis para Android · Sem cartão de crédito</small>
+            </div>
+            <ul class="hero-checklist">
+              <li><i data-lucide="check"></i>Grátis para começar</li>
+              <li><i data-lucide="check"></i>Funciona offline</li>
+              <li><i data-lucide="check"></i>Um plano só</li>
+            </ul>
+          </div>
+          <div class="v2-hero-art">
+            <div class="v2-phone">
+              <div class="v2-phone-screen">
+                <img src="/assets/screenshots/pt/planne-home-light.webp" alt="Tela inicial real da Planne com atalhos, tarefas e resumo do orçamento" width="1080" height="2400" fetchpriority="high" decoding="async">
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <section class="problem-section" id="problema" aria-labelledby="problem-title">
-      <div class="problem-inner">
-        <header class="problem-intro">
-          <p class="problem-context"><i data-lucide="circle-alert" aria-hidden="true"></i>Antes do planejamento ficar claro</p>
-          <h2 id="problem-title">Planejar um evento não deveria ser <em>tão difícil.</em></h2>
-          <p>Você quer viver um momento especial, mas acaba tentando conciliar decisões, prazos e informações espalhadas.</p>
-        </header>
-        <div class="problem-list">
-          <article class="problem-item">
-            <i data-lucide="brain" aria-hidden="true"></i>
-            <div><h3>Coisas demais na cabeça</h3><p>Fornecedores, convidados, orçamento e decoração disputam atenção — e sempre parece faltar algum detalhe.</p></div>
-          </article>
-          <article class="problem-item">
-            <i data-lucide="clock-3" aria-hidden="true"></i>
-            <div><h3>Tempo que nunca sobra</h3><p>Entre trabalho, família e rotina, planejar cada decisão no momento certo se torna mais uma preocupação.</p></div>
-          </article>
-          <article class="problem-item">
-            <i data-lucide="files" aria-hidden="true"></i>
-            <div><h3>Informações espalhadas</h3><p>Planilhas, anotações e mensagens separadas dificultam enxergar o que já foi decidido e o que ainda falta.</p></div>
-          </article>
-          <p class="problem-bridge">O evento pode continuar complexo. A organização não precisa ser.</p>
+      <section class="v2-events" aria-labelledby="events-title">
+        <div class="v2-wrap">
+          <header class="v2-heading">
+            <p class="v2-kicker">Para cada celebração</p>
+            <h2 id="events-title">Feito para o seu tipo de evento</h2>
+          </header>
+          <div class="v2-events-grid">
+            <a class="v2-event-card" href="/pt-br/casamento" aria-label="Ver a página de Casamento">
+              <span class="v2-event-card-motif" aria-hidden="true">
+                <svg viewBox="0 0 72 72" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="27" cy="42" r="13"/><circle cx="45" cy="42" r="13"/><path d="M36 24c0-8 4-14 4-14s4 6 4 14"/><path d="M36 24c-3-5-3-10-1-13" stroke-linecap="round"/><path d="M36 24c3-5 3-10 1-13" stroke-linecap="round"/></svg>
+              </span>
+              <h3>Casamento</h3>
+            </a>
+          </div>
+          <div class="v2-events-soon">
+            <span>Chá de bebê <b>Em breve</b></span>
+            <span>Aniversário <b>Em breve</b></span>
+            <span>Debutante (15 anos) <b>Em breve</b></span>
+            <span>Formatura <b>Em breve</b></span>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <section class="section" id="recursos">
-      <div class="section-inner">
-        <header class="section-heading">
-          <p class="kicker">Um planejamento, não quatro planilhas</p>
-          <h2>Veja o que importa antes que vire urgência.</h2>
-          <p>A Planne conecta as decisões do evento. Uma pessoa entra na lista; uma despesa atualiza o orçamento; uma data vira uma tarefa.</p>
-        </header>
+      <section class="v2-problems" aria-labelledby="problems-title">
+        <div class="v2-wrap">
+          <header class="v2-heading">
+            <p class="v2-kicker">Soa familiar?</p>
+            <h2 id="problems-title">Organizar um evento não precisa ser um caos</h2>
+          </header>
+          <div class="v2-problems-grid">
+            <article class="v2-problem-card">
+              <span class="v2-icon-chip"><i data-lucide="brain"></i></span>
+              <h3>Coisas demais para lembrar</h3>
+              <p>Fornecedores, convidados, orçamento e decoração competem pela sua atenção — e sempre surge mais um detalhe.</p>
+            </article>
+            <article class="v2-problem-card">
+              <span class="v2-icon-chip"><i data-lucide="clock-3"></i></span>
+              <h3>Tempo nunca é suficiente</h3>
+              <p>Entre trabalho, família e a rotina, tomar cada decisão no momento certo vira mais uma preocupação.</p>
+            </article>
+            <article class="v2-problem-card">
+              <span class="v2-icon-chip"><i data-lucide="files"></i></span>
+              <h3>Informação espalhada</h3>
+              <p>Planilhas, anotações e mensagens separadas tornam difícil ver o que já foi decidido e o que falta.</p>
+            </article>
+          </div>
+          <p class="v2-problems-line">O evento pode continuar complexo. Organizá-lo, não.</p>
+        </div>
+      </section>
 
-        <div class="chapters">
-          <article class="chapter">
-            <div class="chapter-copy">
-              <p class="chapter-meta">Convidados · Grupos · Mesas</p>
-              <h3>Mantenha todos os convidados em uma lista clara.</h3>
-              <p>Organize nomes, acompanhantes e grupos em um único lugar, com os totais sempre visíveis.</p>
-              <ul class="feature-list"><li><i data-lucide="check"></i>Contagem atualizada</li><li><i data-lucide="check"></i>Dados de cada convidado</li><li><i data-lucide="check"></i>Organização por grupos</li></ul>
+      <section class="v2-features" id="recursos" aria-labelledby="features-title">
+        <div class="v2-wrap">
+          <header class="v2-heading">
+            <p class="v2-kicker">Tudo em um plano</p>
+            <h2 id="features-title">Convidados, custos e tarefas juntos</h2>
+          </header>
+          <div class="v2-features-list">
+            <article class="v2-feature-row">
+              <div class="v2-feature-copy">
+                <p class="v2-feature-eyebrow">Convidados · Grupos · Mesas</p>
+                <h3>Cada convidado em uma lista clara.</h3>
+                <p>Organize nomes, acompanhantes e grupos em um só lugar, com totais sempre à vista.</p>
+                <ul class="v2-feature-points">
+                  <li><span class="v2-check"><i data-lucide="check"></i></span>Contagem de convidados ao vivo</li>
+                  <li><span class="v2-check"><i data-lucide="check"></i></span>Detalhes de cada convidado</li>
+                  <li><span class="v2-check"><i data-lucide="check"></i></span>Organização por grupo</li>
+                </ul>
+              </div>
+              <div class="v2-hero-art">
+                <div class="v2-phone">
+                  <div class="v2-phone-screen">
+                    <img src="/assets/screenshots/pt/planne-guests-light.webp" alt="Tela da Planne com a lista de convidados do evento" width="1080" height="2400" loading="lazy" decoding="async">
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article class="v2-feature-row is-reversed">
+              <div class="v2-feature-copy">
+                <p class="v2-feature-eyebrow">Orçamento · Pagamentos · Fornecedores</p>
+                <h3>Decida com o orçamento aberto.</h3>
+                <p>Veja o que foi planejado, contratado e pago antes de assumir o próximo compromisso.</p>
+                <ul class="v2-feature-points">
+                  <li><span class="v2-check"><i data-lucide="check"></i></span>Custos planejados e reais</li>
+                  <li><span class="v2-check"><i data-lucide="check"></i></span>Pagamentos pendentes</li>
+                  <li><span class="v2-check"><i data-lucide="check"></i></span>Custos por fornecedor</li>
+                </ul>
+              </div>
+              <div class="v2-hero-art">
+                <div class="v2-phone">
+                  <div class="v2-phone-screen">
+                    <img src="/assets/screenshots/pt/planne-budget-light.webp" alt="Tela da Planne com o orçamento e as despesas do evento" width="1080" height="2400" loading="lazy" decoding="async">
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article class="v2-feature-row">
+              <div class="v2-feature-copy">
+                <p class="v2-feature-eyebrow">Tarefas · Prazos · Próxima decisão</p>
+                <h3>Abra o app e saiba onde continuar.</h3>
+                <p>As próximas ações são ordenadas por prazo, então o planejamento avança mesmo nos dias corridos.</p>
+                <ul class="v2-feature-points">
+                  <li><span class="v2-check"><i data-lucide="check"></i></span>Prazos claros</li>
+                  <li><span class="v2-check"><i data-lucide="check"></i></span>Lembretes importantes</li>
+                  <li><span class="v2-check"><i data-lucide="check"></i></span>Progresso do evento</li>
+                </ul>
+              </div>
+              <div class="v2-hero-art">
+                <div class="v2-phone">
+                  <div class="v2-phone-screen">
+                    <img src="/assets/screenshots/pt/planne-tasks-light.webp" alt="Tela da Planne com as tarefas e os prazos do evento" width="1080" height="2400" loading="lazy" decoding="async">
+                  </div>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="v2-how" id="como-funciona" aria-labelledby="how-title">
+        <div class="v2-wrap">
+          <header class="v2-heading">
+            <p class="v2-kicker">Do primeiro plano ao grande dia</p>
+            <h2 id="how-title">Seu evento avança uma decisão de cada vez</h2>
+            <p>Você não precisa configurar tudo de uma vez. Comece pelo essencial e complete o plano no seu ritmo.</p>
+          </header>
+          <div class="v2-steps">
+            <article class="v2-step"><span class="v2-step-number">01</span><h3>Crie o evento</h3><p>Escolha o tipo, defina a data e registre seu orçamento inicial.</p></article>
+            <article class="v2-step"><span class="v2-step-number">02</span><h3>Adicione o que já sabe</h3><p>Inclua convidados, tarefas, ideias e fornecedores conforme as decisões acontecem.</p></article>
+            <article class="v2-step"><span class="v2-step-number">03</span><h3>Acompanhe o que falta</h3><p>Revise prazos, pendências e custos antes de dar o próximo passo.</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="v2-benefits" aria-labelledby="benefits-title">
+        <div class="v2-wrap">
+          <header class="v2-heading">
+            <p class="v2-kicker">Clareza também nos detalhes</p>
+            <h2 id="benefits-title">O seu plano continua seu</h2>
+          </header>
+          <div class="v2-benefits-grid">
+            <div class="v2-benefit-card"><span class="v2-icon-chip"><i data-lucide="wifi-off"></i></span><h3>Funciona offline</h3><p>Acesse as informações já salvas mesmo quando a conexão cai.</p></div>
+            <div class="v2-benefit-card"><span class="v2-icon-chip"><i data-lucide="refresh-cw"></i></span><h3>Sincronização automática</h3><p>As alterações voltam a sincronizar assim que houver conexão disponível.</p></div>
+            <div class="v2-benefit-card"><span class="v2-icon-chip"><i data-lucide="shield-check"></i></span><h3>Privacidade explicada</h3><p>Saiba exatamente como os seus dados são tratados na política de privacidade.</p></div>
+            <div class="v2-benefit-card"><span class="v2-icon-chip"><i data-lucide="gift"></i></span><h3>Grátis para começar</h3><p>Sem assinatura ou cartão para organizar o seu primeiro evento.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="v2-faq" id="faq" aria-labelledby="faq-title">
+        <div class="v2-wrap is-narrow">
+          <header class="v2-heading">
+            <p class="v2-kicker">Antes de baixar</p>
+            <h2 id="faq-title">Respostas diretas</h2>
+          </header>
+          <div class="v2-faq-list">
+            <div class="v2-faq-item"><button class="v2-faq-question faq-question" type="button" aria-expanded="false">O Planne é gratuito?<i data-lucide="plus"></i></button><p class="v2-faq-answer">Sim. O Planne está disponível para download gratuito na Google Play.</p></div>
+            <div class="v2-faq-item"><button class="v2-faq-question faq-question" type="button" aria-expanded="false">Posso organizar eventos além de casamentos?<i data-lucide="plus"></i></button><p class="v2-faq-answer">Com certeza. Você pode organizar aniversários, festas, chás de bebê, formaturas e outras celebrações.</p></div>
+            <div class="v2-faq-item"><button class="v2-faq-question faq-question" type="button" aria-expanded="false">O app está disponível para iPhone?<i data-lucide="plus"></i></button><p class="v2-faq-answer">No momento, o Planne está disponível para dispositivos Android.</p></div>
+            <div class="v2-faq-item"><button class="v2-faq-question faq-question" type="button" aria-expanded="false">Consigo usar offline?<i data-lucide="plus"></i></button><p class="v2-faq-answer">Sim. Você acessa as informações já salvas mesmo sem conexão. A sincronização é retomada automaticamente quando a internet volta.</p></div>
+            <div class="v2-faq-item"><button class="v2-faq-question faq-question" type="button" aria-expanded="false">Preciso configurar tudo de uma vez?<i data-lucide="plus"></i></button><p class="v2-faq-answer">Não. Comece pelo essencial — tipo do evento, data e orçamento inicial — e vá adicionando convidados, tarefas e fornecedores no seu ritmo.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="v2-final-cta">
+        <div class="v2-wrap">
+          <div class="v2-final-cta-panel">
+            <p class="v2-kicker">Sua próxima decisão pode ser mais simples</p>
+            <h2>Comece com o que você já sabe</h2>
+            <p>Crie seu evento, registre os primeiros detalhes e deixe o Planne mostrar o que vem a seguir.</p>
+            <div class="v2-final-cta-actions">
+              <a class="v2-play-button is-accent" data-cta-location="final" href="https://play.google.com/store/apps/details?id=com.planne.planne" target="_blank" rel="noopener noreferrer">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 20.5v-17c0-.59.34-1.11.84-1.35L13.69 12l-9.85 9.85A1.5 1.5 0 0 1 3 20.5Zm13.81-5.38L6.05 21.34l8.49-8.49 2.27 2.27Zm3.35-4.31c.34.27.59.69.59 1.19 0 .5-.22.9-.57 1.18l-2.29 1.32-2.5-2.5 2.5-2.5 2.27 1.31ZM6.05 2.66l10.76 6.22-2.27 2.27-8.49-8.49Z"/></svg>
+                <span class="v2-play-button-text"><strong>Organizar meu evento</strong></span>
+              </a>
+              <small>Grátis para Android · Sem cartão de crédito</small>
             </div>
-            <figure class="app-screenshot">
-              <img src="/assets/screenshots/pt/planne-guests-light.webp" data-theme-image data-light-src="/assets/screenshots/pt/planne-guests-light.webp" data-dark-src="/assets/screenshots/pt/planne-guests-dark.webp" alt="Tela da Planne com a lista de convidados do evento" width="1080" height="2400" loading="lazy" decoding="async">
-            </figure>
-          </article>
+          </div>
+        </div>
+      </section>
+    </main>
 
-          <article class="chapter">
-            <div class="chapter-copy">
-              <p class="chapter-meta">Orçamento · Pagamentos · Fornecedores</p>
-              <h3>Decida com o orçamento aberto.</h3>
-              <p>Veja o que foi previsto, contratado e pago antes de assumir o próximo compromisso.</p>
-              <ul class="feature-list"><li><i data-lucide="check"></i>Valores previstos e realizados</li><li><i data-lucide="check"></i>Pagamentos pendentes</li><li><i data-lucide="check"></i>Custos por fornecedor</li></ul>
-            </div>
-            <figure class="app-screenshot">
-              <img src="/assets/screenshots/pt/planne-budget-light.webp" data-theme-image data-light-src="/assets/screenshots/pt/planne-budget-light.webp" data-dark-src="/assets/screenshots/pt/planne-budget-dark.webp" alt="Tela da Planne com o orçamento e as despesas do evento" width="1080" height="2400" loading="lazy" decoding="async">
-            </figure>
-          </article>
-
-          <article class="chapter">
-            <div class="chapter-copy">
-              <p class="chapter-meta">Tarefas · Prazos · Próxima decisão</p>
-              <h3>Abra o app e saiba por onde continuar.</h3>
-              <p>As próximas ações ficam ordenadas por prazo para o planejamento avançar mesmo nos dias corridos.</p>
-              <ul class="feature-list"><li><i data-lucide="check"></i>Prazos claros</li><li><i data-lucide="check"></i>Lembretes importantes</li><li><i data-lucide="check"></i>Progresso do evento</li></ul>
-            </div>
-            <figure class="app-screenshot">
-              <img src="/assets/screenshots/pt/planne-tasks-light.webp" data-theme-image data-light-src="/assets/screenshots/pt/planne-tasks-light.webp" data-dark-src="/assets/screenshots/pt/planne-tasks-dark.webp" alt="Tela da Planne com as tarefas e os prazos do evento" width="1080" height="2400" loading="lazy" decoding="async">
-            </figure>
-          </article>
+    <footer class="v2-footer">
+      <div class="v2-wrap">
+        <div class="v2-footer-top">
+          <div class="v2-footer-brand">
+            <a class="v2-brand" href="/pt-br">
+              <span class="v2-brand-mark"><img src="/assets/brand/logo-64x64.png" alt="" width="32" height="32"></span>
+              <span>Planne</span>
+            </a>
+            <p class="v2-footer-tagline">Organize convidados, orçamento e tarefas do seu evento em um só plano claro.</p>
+          </div>
+          <nav class="v2-footer-nav" aria-label="Links do rodapé">
+            <a href="#recursos">Recursos</a>
+            <a href="#como-funciona">Como funciona</a>
+            <a href="#faq">Perguntas</a>
+            <a href="https://play.google.com/store/apps/details?id=com.planne.planne" target="_blank" rel="noopener noreferrer">Baixar na Google Play</a>
+            <a href="/privacy.html">Privacidade</a>
+            <a href="/terms.html">Termos</a>
+            <a href="/" data-language="en">English</a>
+          </nav>
+        </div>
+        <div class="v2-footer-bottom">
+          <p>© 2026 Planne. Todos os direitos reservados.</p>
+          <p>Feito para quem celebra com tranquilidade.</p>
         </div>
       </div>
-    </section>
-
-    <section class="section process" id="como-funciona">
-      <div class="section-inner process-inner">
-        <div class="process-intro"><p class="kicker">Do primeiro plano ao grande dia</p><h2>O evento avança uma decisão por vez.</h2><p>Você não precisa configurar tudo de uma vez. Comece pelo essencial e complete o planejamento no seu ritmo.</p></div>
-        <div class="steps">
-          <article class="step"><span class="step-number">01</span><div><h3>Crie o evento</h3><p>Escolha o tipo, informe a data e registre o orçamento inicial.</p></div></article>
-          <article class="step"><span class="step-number">02</span><div><h3>Adicione o que já sabe</h3><p>Inclua convidados, tarefas, ideias e fornecedores conforme as decisões acontecem.</p></div></article>
-          <article class="step"><span class="step-number">03</span><div><h3>Acompanhe o que falta</h3><p>Consulte prazos, pendências e valores antes de decidir o próximo passo.</p></div></article>
-        </div>
-      </div>
-    </section>
-
-    <section class="benefits-band">
-      <div class="section-inner">
-        <header class="section-heading" style="margin-left:auto;margin-right:auto;text-align:center;">
-          <p class="kicker">Clareza também nos detalhes</p>
-          <h2>Seu planejamento continua sendo seu.</h2>
-          <p>Informações práticas devem explicar o funcionamento do produto, não virar selos vagos de confiança.</p>
-        </header>
-        <div class="benefits-grid">
-          <div class="benefit-item"><i data-lucide="wifi-off"></i><strong>Consulte informações offline</strong><span>Acesse o que já foi salvo mesmo quando a conexão falhar.</span></div>
-          <div class="benefit-item"><i data-lucide="refresh-cw"></i><strong>Sincronização automática</strong><span>As alterações voltam a sincronizar quando a conexão estiver disponível.</span></div>
-          <div class="benefit-item"><i data-lucide="shield-check"></i><strong>Privacidade explicada</strong><span>Consulte como os dados são tratados na política de privacidade.</span></div>
-          <div class="benefit-item"><i data-lucide="gift"></i><strong>Grátis para começar</strong><span>Sem assinatura ou cartão para organizar seu primeiro evento.</span></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="faq">
-      <div class="section-inner faq-grid">
-        <div><p class="kicker">Dúvidas antes de baixar</p><h2>Respostas diretas.</h2></div>
-        <div class="faq-list">
-          <div class="faq-item"><button class="faq-question" type="button" aria-expanded="false">A Planne é gratuita?<i data-lucide="plus"></i></button><p class="faq-answer">Sim. A Planne está disponível gratuitamente para baixar na Google Play.</p></div>
-          <div class="faq-item"><button class="faq-question" type="button" aria-expanded="false">Posso organizar outros eventos além de casamentos?<i data-lucide="plus"></i></button><p class="faq-answer">Sim. Você pode organizar aniversários, festas, eventos corporativos e outras celebrações.</p></div>
-          <div class="faq-item"><button class="faq-question" type="button" aria-expanded="false">O aplicativo está disponível para iPhone?<i data-lucide="plus"></i></button><p class="faq-answer">No momento, a Planne está disponível para dispositivos Android.</p></div>
-          <div class="faq-item"><button class="faq-question" type="button" aria-expanded="false">Consigo usar sem internet?<i data-lucide="plus"></i></button><p class="faq-answer">Você pode consultar informações já salvas offline. A sincronização é retomada quando houver conexão.</p></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="final-cta">
-      <div class="cta-inner"><p class="kicker">A próxima decisão pode ser mais simples</p><h2>Comece pelo que você já sabe.</h2><p>Crie seu evento, registre os primeiros detalhes e deixe a Planne mostrar o que vem depois.</p><a class="button button-dark" data-cta-location="final" href="https://play.google.com/store/apps/details?id=com.planne.planne" target="_blank" rel="noopener noreferrer">Organizar meu evento grátis</a><small class="cta-reassurance">Grátis para Android · Não precisa de cartão</small><div class="cta-line"><span class="cta-dot"></span>Planejamento em andamento</div></div>
-    </section>
-  </main>
-
-  <footer class="site-footer">
-    <div class="footer-inner"><div><a class="brand" href="/pt-br"><img src="/assets/brand/logo-64x64.png" alt="" width="36" height="36"><span>Planne</span></a><p class="footer-copy">© 2026 Planne. Organize cada decisão do seu evento.</p></div><nav class="footer-links" aria-label="Links do rodapé"><a href="/privacy.html">Privacidade</a><a href="/terms.html">Termos</a><a href="/" data-language="en">English</a><a href="https://www.linkedin.com/company/planneapp/" target="_blank" rel="noopener noreferrer" aria-label="Planne no LinkedIn" class="footer-social"><i data-lucide="linkedin"></i></a></nav></div>
-  </footer>
+    </footer>
+  </div>
 
   <script src="/assets/js/site-preferences.js"></script>
 </body>
