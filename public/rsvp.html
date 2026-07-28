@@ -226,22 +226,30 @@
     </button>
 </header>
 
-<!-- CAPA — foto full-bleed (rsvpCoverImageUrl) com título/data do evento por cima.
+<!-- CAPA — retrato emoldurado (rsvpCoverImageUrl), não mais full-bleed
+     com texto por cima (ilegível dependendo da foto). Título/data ficam
+     ABAIXO da moldura, em texto sólido normal da página.
      data-invite-style (foto-editorial|ilustrado|gravado) decide a identidade
-     visual (fonte/cor/decoração) em cima desta MESMA estrutura — nenhum
-     estilo muda a ordem ou a existência das seções. -->
+     visual (fonte/cor/decoração/formato da moldura) em cima desta MESMA
+     estrutura — nenhum estilo muda a ordem ou a existência das seções. -->
 <div class="hero" id="coverHero">
-    <img class="hero-photo" id="coverPhoto" alt="">
-    <!-- decoração "ilustrado": manchas de aquarela (só visíveis nesse estilo) -->
-    <div class="hero-blossoms" aria-hidden="true"></div>
-    <!-- decoração "gravado": moldura dourada + selo de cera (só visíveis nesse estilo) -->
-    <div class="hero-frame" aria-hidden="true">
-        <div class="hero-corner tl"><svg viewBox="0 0 26 26"><path d="M2 24 C2 10 10 2 24 2"/><path d="M2 18 C2 9 9 2 18 2" opacity=".5"/></svg></div>
-        <div class="hero-corner tr"><svg viewBox="0 0 26 26"><path d="M2 24 C2 10 10 2 24 2"/><path d="M2 18 C2 9 9 2 18 2" opacity=".5"/></svg></div>
-        <div class="hero-corner bl"><svg viewBox="0 0 26 26"><path d="M2 24 C2 10 10 2 24 2"/><path d="M2 18 C2 9 9 2 18 2" opacity=".5"/></svg></div>
-        <div class="hero-corner br"><svg viewBox="0 0 26 26"><path d="M2 24 C2 10 10 2 24 2"/><path d="M2 18 C2 9 9 2 18 2" opacity=".5"/></svg></div>
+    <div class="hero-photo-frame">
+        <!-- decoração "ilustrado": manchas de aquarela atrás do retrato (só visíveis nesse estilo, com foto) -->
+        <div class="hero-blossoms" aria-hidden="true"></div>
+        <div class="hero-photo-clip">
+            <img class="hero-photo" id="coverPhoto" alt="">
+        </div>
+        <!-- decoração "gravado": moldura dourada gravada no retrato (só visível nesse estilo, com foto) -->
+        <div class="hero-frame" aria-hidden="true">
+            <div class="hero-corner tl"><svg viewBox="0 0 26 26"><path d="M2 24 C2 10 10 2 24 2"/><path d="M2 18 C2 9 9 2 18 2" opacity=".5"/></svg></div>
+            <div class="hero-corner tr"><svg viewBox="0 0 26 26"><path d="M2 24 C2 10 10 2 24 2"/><path d="M2 18 C2 9 9 2 18 2" opacity=".5"/></svg></div>
+            <div class="hero-corner bl"><svg viewBox="0 0 26 26"><path d="M2 24 C2 10 10 2 24 2"/><path d="M2 18 C2 9 9 2 18 2" opacity=".5"/></svg></div>
+            <div class="hero-corner br"><svg viewBox="0 0 26 26"><path d="M2 24 C2 10 10 2 24 2"/><path d="M2 18 C2 9 9 2 18 2" opacity=".5"/></svg></div>
+        </div>
+        <!-- selo de cera "gravado" — carimbado na borda do retrato quando há foto,
+             solto e centralizado (via CSS) quando não há. -->
+        <div class="hero-seal" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.35-9.5-8.5C.5 8.5 3 5 6.5 5c2 0 3.5 1.2 4.5 2.7C12 6.2 13.5 5 15.5 5 19 5 21.5 8.5 19.5 12.5 17 16.65 12 21 12 21z"/></svg></div>
     </div>
-    <div class="hero-seal" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.35-9.5-8.5C.5 8.5 3 5 6.5 5c2 0 3.5 1.2 4.5 2.7C12 6.2 13.5 5 15.5 5 19 5 21.5 8.5 19.5 12.5 17 16.65 12 21 12 21z"/></svg></div>
     <div class="hero-content">
         <p class="hero-eyebrow" id="heroEyebrow" data-i18n="invitedEyebrow"></p>
         <h1 class="hero-title" id="heroEventTitle"></h1>
@@ -875,7 +883,7 @@ function showState(id) {
 //    POST { action: 'resolveEvent' }
 //      -> { rsvpEnabled, rsvpMode: 'publico'|'privado',
 //           rsvpAllowCompanions, rsvpMaxCompanions, eventTitle?,
-//           eventDate?,             // ISO string — contagem regressiva + .ics
+//           j       // ISO string — contagem regressiva + .ics
 //           language?,              // 'pt'|'en' — settings.language do organizador,
 //                                   // idioma FIXO do convite (não escolhido pelo convidado)
 //           rsvpDressCode?, rsvpFaq?,         // texto livre, extras opcionais
