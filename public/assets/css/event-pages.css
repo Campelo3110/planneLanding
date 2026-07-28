@@ -8,15 +8,52 @@
   --event-accent: #b8895a;
   --event-accent-soft: #fdf6ee;
   --event-ink: #0c211d;
+  /* Perceptible warm washes for section backgrounds — --event-accent-soft alone
+     is too close to --paper to read as color once diluted by the base
+     .problem-section gradient, which is what made the page feel flat/white. */
+  --event-wash: color-mix(in srgb, var(--event-accent) 15%, var(--event-accent-soft));
+  --event-wash-strong: color-mix(in srgb, var(--event-accent) 28%, var(--event-accent-soft));
 }
 :root[data-theme="dark"] .event-theme-wedding {
   --event-accent: #e0b287;
   --event-accent-soft: #241c14;
+  --event-wash: color-mix(in srgb, var(--event-accent) 13%, var(--event-accent-soft));
+  --event-wash-strong: color-mix(in srgb, var(--event-accent) 24%, var(--event-accent-soft));
 }
 
 .event-theme-wedding .problem-section {
   --problem: var(--event-accent);
-  --problem-soft: var(--event-accent-soft);
+  --problem-soft: var(--event-wash);
+  background: linear-gradient(125deg, var(--event-wash-strong), var(--event-wash) 55%, var(--event-accent-soft) 100%);
+}
+
+/* ── Warm color washes on the sections that used to sit on flat --paper —
+   these carry ~60% of the "more life" pass: real color, not diluted-to-white
+   gradients. ─────────────────────────────────────────────────────────── */
+.event-theme-wedding #features {
+  background: linear-gradient(180deg, var(--event-accent-soft), color-mix(in srgb, var(--event-wash) 55%, var(--paper)) 55%, var(--paper) 100%);
+}
+
+/* ── Retint the base template's teal accents to the event's gold —
+   .kicker, .problem-bridge, .cta-line/.cta-dot and .step-number all inherit
+   --teal by default, which leaked the generic site brand color into an
+   otherwise fully gold-themed page. ────────────────────────────────────── */
+.event-theme-wedding .kicker,
+.event-theme-wedding .step-number {
+  color: var(--event-accent);
+}
+.event-theme-wedding .problem-bridge {
+  color: color-mix(in srgb, var(--event-accent) 78%, var(--ink));
+}
+.event-theme-wedding .cta-line::before,
+.event-theme-wedding .cta-line::after {
+  background: color-mix(in srgb, var(--event-accent) 45%, var(--line));
+}
+.event-theme-wedding .cta-dot {
+  background: var(--event-accent);
+}
+.event-theme-wedding .final-cta {
+  background: linear-gradient(160deg, var(--event-wash-strong), var(--event-accent-soft));
 }
 
 .event-cover {
@@ -88,6 +125,11 @@
 :root[data-theme="dark"] .event-cover-actions .button-dark { background: var(--event-accent); color: #241505; }
 .event-cover-actions .button-dark:hover,
 :root[data-theme="dark"] .event-cover-actions .button-dark:hover { background: color-mix(in srgb, var(--event-accent) 85%, #fff); }
+/* In dark site theme .button-dark otherwise falls back to the base --teal
+   CTA color (bright mint), which clashed hard against the gold/brown final
+   CTA wash. Every dark-mode button on the wedding page reads gold instead. */
+:root[data-theme="dark"] .event-theme-wedding .button-dark { background: var(--event-accent); color: #241505; }
+:root[data-theme="dark"] .event-theme-wedding .button-dark:hover { background: color-mix(in srgb, var(--event-accent) 85%, #fff); }
 .event-cover-date {
   font-family: var(--data);
   font-size: .78rem;
@@ -107,6 +149,7 @@
 /* ── Editorial note strip — replaces the icon+card confidence-strip
    with a single quiet line, like a note under an invitation. ────── */
 .event-note-strip {
+  position: relative;
   width: min(900px, calc(100% - 40px));
   margin: 3rem auto;
   padding: 1.6rem 0;
@@ -119,6 +162,38 @@
   color: var(--muted);
 }
 .event-note-strip strong { color: var(--ink); font-weight: 600; font-style: normal; }
+/* Break the straight hairline with a small centered flourish, like the
+   printer's mark on a wedding stationery card — an ornamental beat instead
+   of a plain rule. */
+.event-note-strip::before, .event-note-strip::after {
+  content: "❧";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0 .7rem;
+  background: var(--paper);
+  color: var(--event-accent);
+  font-size: 1.05rem;
+  font-style: normal;
+  line-height: 1;
+}
+.event-note-strip::before { top: -.62em; }
+.event-note-strip::after { bottom: -.62em; }
+
+/* Same flourish, marking the threshold into the closing CTA. */
+.event-theme-wedding .final-cta { position: relative; }
+.event-theme-wedding .final-cta::before {
+  content: "❧";
+  position: absolute;
+  top: -.62em;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0 .7rem;
+  background: var(--paper);
+  color: var(--event-accent);
+  font-size: 1.05rem;
+  line-height: 1;
+}
 
 /* ── Story chapters — the numeral label + list replace the app-style
    data-panel mockups with something that reads as a keepsake list,
@@ -153,6 +228,12 @@
   color: var(--event-accent);
 }
 .story-status.is-waiting { color: var(--muted); }
+.story-motif {
+  width: 60px;
+  height: 60px;
+  margin: 0 0 1.2rem;
+  color: var(--event-accent);
+}
 .story-highlight {
   padding: .5rem 0 1.6rem;
   border-bottom: 1px solid var(--line);

@@ -53,7 +53,7 @@
     const links = document.querySelector('.nav-links');
     menu?.addEventListener('click', () => { const open = links.classList.toggle('open'); menu.setAttribute('aria-expanded', String(open)); });
     document.querySelectorAll('.faq-question').forEach((button) => button.addEventListener('click', () => button.setAttribute('aria-expanded', String(button.getAttribute('aria-expanded') !== 'true'))));
-    const revealItems = document.querySelectorAll('.problem-intro, .problem-item, .problem-bridge, .section-heading, .chapter, .process-intro, .step, .privacy-copy, .privacy-item, .faq-grid, .final-cta');
+    const revealItems = document.querySelectorAll('.problem-intro, .problem-item, .problem-bridge, .section-heading, .chapter, .process-intro, .step, .privacy-copy, .privacy-item, .benefit-item, .event-showcase-card, .event-showcase-soon, .faq-grid, .final-cta');
     revealItems.forEach((item) => item.classList.add('motion-reveal'));
     if ('IntersectionObserver' in window && root.classList.contains('has-motion')) {
       const revealObserver = new IntersectionObserver((entries, observer) => {
