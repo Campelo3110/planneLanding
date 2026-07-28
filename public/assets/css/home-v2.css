@@ -88,9 +88,9 @@
 .v2-hero-sub { max-width: 28rem; margin: 1.25rem auto 0; font-size: 1rem; line-height: 1.65; color: var(--v2-muted-foreground); text-wrap: pretty; }
 .v2-hero-cta { margin-top: 2rem; display: flex; flex-direction: column; align-items: center; gap: .75rem; }
 .v2-hero-cta small { font-size: .75rem; color: var(--v2-muted-foreground); }
-.v2-hero .hero-checklist { list-style: none; display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem 1.5rem; margin: 2rem 0 0; padding: 0; }
-.v2-hero .hero-checklist li { display: flex; align-items: center; gap: .4rem; font-size: .875rem; color: var(--v2-foreground); }
-.v2-hero .hero-checklist svg { width: 1rem; height: 1rem; color: var(--v2-primary); }
+.v2-hero .v2-hero-checklist { list-style: none; display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem 1.5rem; margin: 2rem 0 0; padding: 0; }
+.v2-hero .v2-hero-checklist li { display: flex; align-items: center; gap: .4rem; font-size: .875rem; color: var(--v2-foreground); }
+.v2-hero .v2-hero-checklist svg { width: 1rem; height: 1rem; color: var(--v2-primary); }
 .v2-hero-art { position: relative; display: flex; justify-content: center; }
 
 .v2-phone { position: relative; margin: 0 auto; width: 280px; flex-shrink: 0; border-radius: 2.75rem; border: 1px solid color-mix(in oklch, var(--v2-foreground) 10%, transparent); background: color-mix(in oklch, var(--v2-foreground) 90%, transparent); padding: .65rem; box-shadow: 0 30px 60px -20px color-mix(in oklch, var(--v2-primary) 25%, transparent); }
@@ -101,7 +101,7 @@
 @media (min-width: 768px) {
   .v2-hero-grid { grid-template-columns: 1fr 1fr; gap: 3rem 4rem; padding: 5rem 1.25rem 6rem; }
   .v2-hero-copy { text-align: left; }
-  .v2-hero-badge, .v2-hero-cta, .v2-hero .hero-checklist { justify-content: flex-start; }
+  .v2-hero-badge, .v2-hero-cta, .v2-hero .v2-hero-checklist { justify-content: flex-start; }
   .v2-hero-sub { margin-left: 0; margin-right: 0; }
   .v2-hero-cta { flex-direction: row; }
 }
