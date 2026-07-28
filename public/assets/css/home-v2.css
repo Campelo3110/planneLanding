@@ -90,14 +90,18 @@
 }
 
 /* ── Google Play CTA button ─────────────────────────────────────────── */
-.v2-play-button { display: inline-flex; align-items: center; gap: .75rem; border-radius: 999px; background: var(--v2-primary); color: var(--v2-primary-foreground); padding: .9rem 1.5rem; box-shadow: 0 10px 24px -8px color-mix(in oklch, var(--v2-primary) 45%, transparent); transition: filter .15s ease, box-shadow .15s ease; }
+/* `.v2 a { color: inherit }` (0,1,1) otherwise beats this single-class
+   rule (0,1,0) and the button text silently falls back to the page's
+   dark text color — illegible on the dark green background in light
+   mode. Scoping under `.v2` bumps this to (0,2,0) so it always wins. */
+.v2 .v2-play-button { display: inline-flex; align-items: center; gap: .75rem; border-radius: 999px; background: var(--v2-primary); color: var(--v2-primary-foreground); padding: .9rem 1.5rem; box-shadow: 0 10px 24px -8px color-mix(in oklch, var(--v2-primary) 45%, transparent); transition: filter .15s ease, box-shadow .15s ease; }
 .v2-play-button:hover { filter: brightness(1.1); box-shadow: 0 14px 30px -8px color-mix(in oklch, var(--v2-primary) 55%, transparent); }
 .v2-play-button.is-small { padding: .55rem .95rem; }
 .v2-play-button svg { width: 1.5rem; height: 1.5rem; flex: 0 0 auto; }
 .v2-play-button-text { display: flex; flex-direction: column; align-items: flex-start; line-height: 1.2; }
 .v2-play-button-text small { font-size: .625rem; font-weight: 400; opacity: .8; }
 .v2-play-button-text strong { font-size: .875rem; font-weight: 600; }
-.v2-play-button.is-accent { background: var(--v2-accent); color: var(--v2-accent-foreground); }
+.v2 .v2-play-button.is-accent { background: var(--v2-accent); color: var(--v2-accent-foreground); }
 
 /* ── Hero ───────────────────────────────────────────────────────────── */
 .v2-hero { position: relative; overflow: hidden; }
@@ -116,10 +120,16 @@
 .v2-hero .v2-hero-checklist svg { width: 1rem; height: 1rem; color: var(--v2-primary); }
 .v2-hero-art { position: relative; display: flex; justify-content: center; }
 
-.v2-phone { position: relative; margin: 0 auto; width: 280px; flex-shrink: 0; border-radius: 2rem; border: 1px solid color-mix(in oklch, var(--v2-phone-frame) 70%, white 20%); background: var(--v2-phone-frame); padding: .5rem; box-shadow: 0 30px 60px -20px color-mix(in oklch, var(--v2-primary) 25%, transparent); }
+/* Width matches the real screenshots' own aspect ratio (1080×2400)
+   exactly via aspect-ratio below, instead of a fixed height — a
+   mismatched ratio was cropping the bottom of the screen, which is
+   exactly where these screens have a FAB, clipping it against the
+   frame. 340px (vs. the reference's 280px, sized for its own simple
+   fake screens) keeps real screenshot text legible. */
+.v2-phone { position: relative; margin: 0 auto; width: min(340px, 100%); flex-shrink: 0; border-radius: 2rem; border: 1px solid color-mix(in oklch, var(--v2-phone-frame) 70%, white 20%); background: var(--v2-phone-frame); padding: .5rem; box-shadow: 0 30px 60px -20px color-mix(in oklch, var(--v2-primary) 25%, transparent); }
 .v2-phone::before { content: ""; position: absolute; left: 50%; top: .95rem; z-index: 10; width: 8px; height: 8px; transform: translateX(-50%); border-radius: 999px; background: color-mix(in oklch, var(--v2-phone-frame) 55%, white 25%); }
-.v2-phone-screen { position: relative; overflow: hidden; border-radius: 1.55rem; background: var(--v2-background); height: 560px; }
-.v2-phone-screen img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
+.v2-phone-screen { position: relative; overflow: hidden; border-radius: 1.55rem; background: var(--v2-background); aspect-ratio: 1080 / 2400; }
+.v2-phone-screen img { width: 100%; height: 100%; object-fit: cover; }
 
 @media (min-width: 768px) {
   .v2-hero-grid { grid-template-columns: 1fr 1fr; gap: 3rem 4rem; padding: 5rem 1.25rem 6rem; }
