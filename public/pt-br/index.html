@@ -7,6 +7,7 @@
   <meta name="description" content="Planne é o app que reúne convidados, orçamento, tarefas e fornecedores em um só plano claro. Casamentos, aniversários, formaturas e mais. Grátis para Android.">
   <meta name="robots" content="index, follow">
   <meta name="theme-color" content="#fafaf7">
+  <script>try{const t=localStorage.getItem('planne-theme');document.documentElement.dataset.theme=t||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
   <link rel="canonical" href="https://planneapp.com/pt-br">
   <link rel="alternate" hreflang="en" href="https://planneapp.com/">
   <link rel="alternate" hreflang="pt-BR" href="https://planneapp.com/pt-br">
@@ -58,6 +59,7 @@
             <a href="/pt-br" data-language="pt-BR" aria-current="page">PT</a>
             <a href="/" data-language="en">EN</a>
           </span>
+          <button class="theme-toggle" type="button" aria-label="Usar tema escuro"><i data-lucide="moon"></i></button>
           <a class="v2-play-button is-small" data-cta-location="header" href="https://play.google.com/store/apps/details?id=com.planne.planne" target="_blank" rel="noopener noreferrer">
             <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 20.5v-17c0-.59.34-1.11.84-1.35L13.69 12l-9.85 9.85A1.5 1.5 0 0 1 3 20.5Zm13.81-5.38L6.05 21.34l8.49-8.49 2.27 2.27Zm3.35-4.31c.34.27.59.69.59 1.19 0 .5-.22.9-.57 1.18l-2.29 1.32-2.5-2.5 2.5-2.5 2.27 1.31ZM6.05 2.66l10.76 6.22-2.27 2.27-8.49-8.49Z"/></svg>
             <span class="v2-play-button-text"><strong>Organizar grátis</strong></span>
@@ -119,15 +121,20 @@
           </header>
           <div class="v2-events-grid">
             <a class="v2-event-card" href="/pt-br/casamento" aria-label="Ver a página de Casamento">
-              <span class="v2-event-card-motif" aria-hidden="true">
-                <svg viewBox="0 0 72 72" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="27" cy="42" r="13"/><circle cx="45" cy="42" r="13"/><path d="M36 24c0-8 4-14 4-14s4 6 4 14"/><path d="M36 24c-3-5-3-10-1-13" stroke-linecap="round"/><path d="M36 24c3-5 3-10 1-13" stroke-linecap="round"/></svg>
-              </span>
-              <h3>Casamento</h3>
+              <img src="/assets/images/event-wedding.webp" alt="" loading="lazy">
+              <h3>Casamentos</h3>
             </a>
+            <div class="v2-event-card">
+              <img src="/assets/images/event-birthday.webp" alt="" loading="lazy">
+              <h3>Aniversários</h3>
+            </div>
+            <div class="v2-event-card">
+              <img src="/assets/images/event-corporate.webp" alt="" loading="lazy">
+              <h3>Corporativos</h3>
+            </div>
           </div>
           <div class="v2-events-soon">
             <span>Chá de bebê <b>Em breve</b></span>
-            <span>Aniversário <b>Em breve</b></span>
             <span>Debutante (15 anos) <b>Em breve</b></span>
             <span>Formatura <b>Em breve</b></span>
           </div>

@@ -5,8 +5,10 @@
    loads on the two home pages, so the wedding editorial pages are
    unaffected. Only the logo, screenshots and links were swapped for real
    Planne assets — everything else (spacing, radius, palette, type scale)
-   mirrors the reference 1:1. Light-only, matching the reference (no dark
-   variant was designed). */
+   mirrors the reference 1:1. The reference itself was light-only; dark
+   mode below is our own addition (same warm hue signature, inverted
+   lightness) so these two pages keep the same light/dark toggle behavior
+   as the rest of the site. */
 
 :root {
   color-scheme: light;
@@ -23,6 +25,7 @@
   --v2-accent: oklch(0.78 0.11 75);
   --v2-accent-foreground: oklch(0.28 0.04 60);
   --v2-border: oklch(0.9 0.012 80);
+  --v2-phone-frame: oklch(0.18 0.01 60);
   --v2-radius-sm: .45rem;
   --v2-radius-md: .6rem;
   --v2-radius-lg: .75rem;
@@ -31,6 +34,23 @@
   --v2-radius-3xl: 1.65rem;
   --v2-font-sans: 'Geist', ui-sans-serif, system-ui, sans-serif;
   --v2-font-serif: 'Fraunces', ui-serif, Georgia, serif;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --v2-background: oklch(0.17 0.014 60);
+  --v2-foreground: oklch(0.94 0.012 85);
+  --v2-card: oklch(0.22 0.016 60);
+  --v2-card-foreground: oklch(0.94 0.012 85);
+  --v2-primary: oklch(0.44 0.07 160);
+  --v2-primary-foreground: oklch(0.97 0.01 90);
+  --v2-secondary: oklch(0.27 0.016 70);
+  --v2-secondary-foreground: oklch(0.9 0.012 85);
+  --v2-muted: oklch(0.24 0.014 70);
+  --v2-muted-foreground: oklch(0.66 0.02 75);
+  --v2-accent: oklch(0.74 0.11 75);
+  --v2-accent-foreground: oklch(0.2 0.03 60);
+  --v2-border: oklch(0.34 0.018 70);
 }
 
 .v2 { background: var(--v2-background); color: var(--v2-foreground); font-family: var(--v2-font-sans); -webkit-font-smoothing: antialiased; }
@@ -44,15 +64,18 @@
 .v2-header { position: sticky; top: 0; z-index: 50; border-bottom: 1px solid color-mix(in oklch, var(--v2-border) 60%, transparent); background: color-mix(in oklch, var(--v2-background) 80%, transparent); backdrop-filter: blur(8px); }
 .v2-header-inner { display: flex; align-items: center; justify-content: space-between; padding: .875rem 1.25rem; }
 .v2-brand { display: flex; align-items: center; gap: .5rem; }
-.v2-brand-mark { display: flex; height: 2.25rem; width: 2.25rem; align-items: center; justify-content: center; border-radius: var(--v2-radius-xl); background: var(--v2-primary); overflow: hidden; }
+.v2-brand-mark { display: flex; height: 2.25rem; width: 2.25rem; align-items: center; justify-content: center; border-radius: 0; overflow: hidden; }
 .v2-brand-mark img { width: 100%; height: 100%; object-fit: cover; }
-.v2-brand span { font-family: var(--v2-font-serif); font-size: 1.25rem; font-weight: 600; letter-spacing: -.01em; color: var(--v2-foreground); }
+.v2-brand span { font-family: "Patua One", var(--v2-font-serif); font-weight: 400; font-size: 1.25rem; letter-spacing: -.01em; color: var(--v2-foreground); }
 .v2-nav-links { display: none; align-items: center; gap: 2rem; }
 .v2-nav-links a { font-size: .875rem; color: var(--v2-muted-foreground); transition: color .15s ease; }
 .v2-nav-links a:hover { color: var(--v2-foreground); }
 .v2-nav-lang { display: flex; align-items: center; gap: .6rem; font-size: .8rem; color: var(--v2-muted-foreground); }
 .v2-nav-lang a[aria-current="page"] { color: var(--v2-foreground); font-weight: 600; }
 .v2-header-actions { display: none; align-items: center; gap: 1.1rem; }
+.v2-header-actions .theme-toggle { display: flex; align-items: center; justify-content: center; width: 2.25rem; height: 2.25rem; padding: 0; border: 1px solid var(--v2-border); border-radius: var(--v2-radius-lg); background: transparent; color: var(--v2-foreground); cursor: pointer; }
+.v2-header-actions .theme-toggle:hover { background: var(--v2-secondary); }
+.v2-header-actions .theme-toggle svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .v2-menu-button { display: flex; height: 2.5rem; width: 2.5rem; align-items: center; justify-content: center; border-radius: var(--v2-radius-lg); color: var(--v2-foreground); }
 .v2-mobile-panel { display: none; border-top: 1px solid color-mix(in oklch, var(--v2-border) 60%, transparent); background: var(--v2-background); padding: 1rem 1.25rem; }
 .v2-mobile-panel.open { display: block; }
@@ -93,9 +116,9 @@
 .v2-hero .v2-hero-checklist svg { width: 1rem; height: 1rem; color: var(--v2-primary); }
 .v2-hero-art { position: relative; display: flex; justify-content: center; }
 
-.v2-phone { position: relative; margin: 0 auto; width: 280px; flex-shrink: 0; border-radius: 2.75rem; border: 1px solid color-mix(in oklch, var(--v2-foreground) 10%, transparent); background: color-mix(in oklch, var(--v2-foreground) 90%, transparent); padding: .65rem; box-shadow: 0 30px 60px -20px color-mix(in oklch, var(--v2-primary) 25%, transparent); }
-.v2-phone::before { content: ""; position: absolute; left: 50%; top: .65rem; z-index: 10; height: 1.5rem; width: 7rem; transform: translateX(-50%); border-radius: 0 0 1rem 1rem; background: color-mix(in oklch, var(--v2-foreground) 90%, transparent); }
-.v2-phone-screen { position: relative; overflow: hidden; border-radius: 2.1rem; background: var(--v2-background); height: 560px; }
+.v2-phone { position: relative; margin: 0 auto; width: 280px; flex-shrink: 0; border-radius: 2rem; border: 1px solid color-mix(in oklch, var(--v2-phone-frame) 70%, white 20%); background: var(--v2-phone-frame); padding: .5rem; box-shadow: 0 30px 60px -20px color-mix(in oklch, var(--v2-primary) 25%, transparent); }
+.v2-phone::before { content: ""; position: absolute; left: 50%; top: .95rem; z-index: 10; width: 8px; height: 8px; transform: translateX(-50%); border-radius: 999px; background: color-mix(in oklch, var(--v2-phone-frame) 55%, white 25%); }
+.v2-phone-screen { position: relative; overflow: hidden; border-radius: 1.55rem; background: var(--v2-background); height: 560px; }
 .v2-phone-screen img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
 
 @media (min-width: 768px) {
@@ -115,11 +138,10 @@
 /* ── Event types ────────────────────────────────────────────────────── */
 .v2-events { border-top: 1px solid color-mix(in oklch, var(--v2-border) 60%, transparent); border-bottom: 1px solid color-mix(in oklch, var(--v2-border) 60%, transparent); background: color-mix(in oklch, var(--v2-secondary) 30%, transparent); padding: 4rem 0; }
 .v2-events-grid { display: grid; gap: 1.5rem; grid-template-columns: 1fr; }
-.v2-event-card { position: relative; display: block; overflow: hidden; border-radius: var(--v2-radius-2xl); border: 1px solid color-mix(in oklch, var(--v2-border) 60%, transparent); aspect-ratio: 5 / 6; background: linear-gradient(135deg, oklch(0.86 0.05 70), oklch(0.93 0.03 80)); }
-.v2-event-card-motif { position: absolute; inset: 0; display: grid; place-items: center; color: oklch(0.55 0.08 55); transition: transform .5s ease; }
-.v2-event-card-motif svg { width: 40%; height: 40%; }
-.v2-event-card:hover .v2-event-card-motif { transform: scale(1.05); }
-.v2-event-card::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, color-mix(in oklch, var(--v2-foreground) 70%, transparent), color-mix(in oklch, var(--v2-foreground) 10%, transparent) 60%, transparent); }
+.v2-event-card { position: relative; display: block; overflow: hidden; border-radius: var(--v2-radius-2xl); border: 1px solid color-mix(in oklch, var(--v2-border) 60%, transparent); aspect-ratio: 5 / 6; }
+.v2-event-card img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
+.v2-event-card:hover img { transform: scale(1.05); }
+.v2-event-card::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, color-mix(in oklch, black 70%, transparent), color-mix(in oklch, black 10%, transparent) 60%, transparent); }
 .v2-event-card h3 { position: absolute; left: 1rem; bottom: 1rem; z-index: 1; margin: 0; font-family: var(--v2-font-serif); font-weight: 600; font-size: 1.25rem; color: var(--v2-background); }
 .v2-events-soon { margin-top: 1.5rem; display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem; }
 .v2-events-soon span { display: inline-flex; align-items: center; gap: .4rem; border-radius: 999px; border: 1px solid var(--v2-border); background: var(--v2-card); padding: .35rem 1rem; font-size: .85rem; color: var(--v2-muted-foreground); }

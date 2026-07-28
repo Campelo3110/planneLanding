@@ -23,6 +23,7 @@
   else if (themeMedia.addListener) themeMedia.addListener(followSystemTheme);
 
   document.addEventListener('DOMContentLoaded', () => {
+    window.lucide?.createIcons();
     const isPortuguese = root.lang.toLowerCase().startsWith('pt');
     const toggle = document.querySelector('.theme-toggle');
     applyTheme(root.dataset.theme);
