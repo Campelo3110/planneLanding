@@ -26,6 +26,15 @@
   --problem-soft: var(--event-wash);
   background: linear-gradient(125deg, var(--event-wash-strong), var(--event-wash) 55%, var(--event-accent-soft) 100%);
 }
+/* landing-premium.css's :root[data-theme="dark"] .problem-section is three
+   selectors deep (:root[..] + .problem-section) and beats this two-selector
+   rule on specificity alone regardless of load order, silently reverting
+   the emphasis word to the generic red in dark mode. Re-declare at matching
+   specificity, same fix already applied to .button-dark below. */
+:root[data-theme="dark"] .event-theme-wedding .problem-section {
+  --problem: var(--event-accent);
+  --problem-soft: var(--event-wash);
+}
 
 /* ── Warm color washes on the sections that used to sit on flat --paper —
    these carry ~60% of the "more life" pass: real color, not diluted-to-white
@@ -281,4 +290,90 @@
   font-style: italic;
   color: var(--muted);
   font-size: 1.02rem;
+}
+
+/* ══ Chá de bebê / Baby shower ═══════════════════════════════════════
+   Baby blue + cream, deliberately light throughout — a daytime, gentle
+   event, not a dramatic dark stage like the wedding cover. --event-ink
+   here is a fixed pale blue (not a dark color) and is left untouched by
+   the dark-mode override below, exactly like --event-ink is left
+   untouched for wedding — it just happens to be light instead of dark,
+   so the base .event-cover rule (background: var(--event-ink)) needs
+   no override at all. */
+.event-theme-babyshower {
+  --event-accent: #6fa4cc;
+  --event-accent-soft: #eef4f8;
+  --event-ink: #eef5fa;
+  --event-wash: color-mix(in srgb, var(--event-accent) 15%, var(--event-accent-soft));
+  --event-wash-strong: color-mix(in srgb, var(--event-accent) 28%, var(--event-accent-soft));
+}
+:root[data-theme="dark"] .event-theme-babyshower {
+  --event-accent: #8ec3e8;
+  --event-accent-soft: #161f26;
+  --event-wash: color-mix(in srgb, var(--event-accent) 13%, var(--event-accent-soft));
+  --event-wash-strong: color-mix(in srgb, var(--event-accent) 24%, var(--event-accent-soft));
+}
+
+.event-theme-babyshower .problem-section {
+  --problem: var(--event-accent);
+  --problem-soft: var(--event-wash);
+  background: linear-gradient(125deg, var(--event-wash-strong), var(--event-wash) 55%, var(--event-accent-soft) 100%);
+}
+:root[data-theme="dark"] .event-theme-babyshower .problem-section {
+  --problem: var(--event-accent);
+  --problem-soft: var(--event-wash);
+}
+.event-theme-babyshower #features {
+  background: linear-gradient(180deg, var(--event-accent-soft), color-mix(in srgb, var(--event-wash) 55%, var(--paper)) 55%, var(--paper) 100%);
+}
+.event-theme-babyshower .kicker,
+.event-theme-babyshower .step-number {
+  color: var(--event-accent);
+}
+.event-theme-babyshower .problem-bridge {
+  color: color-mix(in srgb, var(--event-accent) 78%, var(--ink));
+}
+.event-theme-babyshower .cta-line::before,
+.event-theme-babyshower .cta-line::after {
+  background: color-mix(in srgb, var(--event-accent) 45%, var(--line));
+}
+.event-theme-babyshower .cta-dot {
+  background: var(--event-accent);
+}
+.event-theme-babyshower .final-cta {
+  background: linear-gradient(160deg, var(--event-wash-strong), var(--event-accent-soft));
+}
+.event-theme-babyshower .event-cover-actions .button-dark { color: #122536; }
+:root[data-theme="dark"] .event-theme-babyshower .button-dark { background: var(--event-accent); color: #122536; }
+:root[data-theme="dark"] .event-theme-babyshower .button-dark:hover { background: color-mix(in srgb, var(--event-accent) 85%, #fff); }
+
+/* The cover's radial glow and all its text default to light-on-dark
+   (built for wedding's dark ink); babyshower's ink is light, so both
+   need inverting here rather than relying on the generic rules above. */
+.event-theme-babyshower .event-cover-bg {
+  background: radial-gradient(ellipse 120% 80% at 20% 0%, color-mix(in srgb, var(--event-accent) 35%, var(--event-ink)), var(--event-ink) 60%);
+}
+.event-theme-babyshower .event-cover-bg::before {
+  background:
+    radial-gradient(circle at 28% 22%, color-mix(in srgb, var(--event-accent) 38%, transparent), transparent 55%),
+    radial-gradient(circle at 78% 78%, color-mix(in srgb, var(--event-accent) 24%, transparent), transparent 50%);
+  opacity: .5;
+}
+.event-theme-babyshower .event-cover-bg::after {
+  opacity: .28;
+}
+.event-theme-babyshower .event-cover-eyebrow {
+  color: color-mix(in srgb, var(--event-accent) 72%, #17293a);
+}
+.event-theme-babyshower .event-cover-title {
+  color: #17293a;
+}
+.event-theme-babyshower .event-cover-sub {
+  color: color-mix(in srgb, #17293a 78%, transparent);
+}
+.event-theme-babyshower .event-cover-date {
+  color: color-mix(in srgb, #17293a 65%, transparent);
+}
+.event-theme-babyshower .event-cover-note {
+  color: color-mix(in srgb, #17293a 55%, transparent);
 }
