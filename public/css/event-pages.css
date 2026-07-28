@@ -1,0 +1,379 @@
+/* Event-type landing pages (casamento/wedding today, more event types
+   later) — a "cover" hero styled like an invitation instead of the
+   generic app-marketing hero on the home pages. Layered on top of
+   landing-premium.css and scoped by a body theme class, so the home
+   pages are never affected. */
+
+.event-theme-wedding {
+  --event-accent: #b8895a;
+  --event-accent-soft: #fdf6ee;
+  --event-ink: #0c211d;
+  /* Perceptible warm washes for section backgrounds — --event-accent-soft alone
+     is too close to --paper to read as color once diluted by the base
+     .problem-section gradient, which is what made the page feel flat/white. */
+  --event-wash: color-mix(in srgb, var(--event-accent) 15%, var(--event-accent-soft));
+  --event-wash-strong: color-mix(in srgb, var(--event-accent) 28%, var(--event-accent-soft));
+}
+:root[data-theme="dark"] .event-theme-wedding {
+  --event-accent: #e0b287;
+  --event-accent-soft: #241c14;
+  --event-wash: color-mix(in srgb, var(--event-accent) 13%, var(--event-accent-soft));
+  --event-wash-strong: color-mix(in srgb, var(--event-accent) 24%, var(--event-accent-soft));
+}
+
+.event-theme-wedding .problem-section {
+  --problem: var(--event-accent);
+  --problem-soft: var(--event-wash);
+  background: linear-gradient(125deg, var(--event-wash-strong), var(--event-wash) 55%, var(--event-accent-soft) 100%);
+}
+/* landing-premium.css's :root[data-theme="dark"] .problem-section is three
+   selectors deep (:root[..] + .problem-section) and beats this two-selector
+   rule on specificity alone regardless of load order, silently reverting
+   the emphasis word to the generic red in dark mode. Re-declare at matching
+   specificity, same fix already applied to .button-dark below. */
+:root[data-theme="dark"] .event-theme-wedding .problem-section {
+  --problem: var(--event-accent);
+  --problem-soft: var(--event-wash);
+}
+
+/* ── Warm color washes on the sections that used to sit on flat --paper —
+   these carry ~60% of the "more life" pass: real color, not diluted-to-white
+   gradients. ─────────────────────────────────────────────────────────── */
+.event-theme-wedding #features {
+  background: linear-gradient(180deg, var(--event-accent-soft), color-mix(in srgb, var(--event-wash) 55%, var(--paper)) 55%, var(--paper) 100%);
+}
+
+/* ── Retint the base template's teal accents to the event's gold —
+   .kicker, .problem-bridge, .cta-line/.cta-dot and .step-number all inherit
+   --teal by default, which leaked the generic site brand color into an
+   otherwise fully gold-themed page. ────────────────────────────────────── */
+.event-theme-wedding .kicker,
+.event-theme-wedding .step-number {
+  color: var(--event-accent);
+}
+.event-theme-wedding .problem-bridge {
+  color: color-mix(in srgb, var(--event-accent) 78%, var(--ink));
+}
+.event-theme-wedding .cta-line::before,
+.event-theme-wedding .cta-line::after {
+  background: color-mix(in srgb, var(--event-accent) 45%, var(--line));
+}
+.event-theme-wedding .cta-dot {
+  background: var(--event-accent);
+}
+.event-theme-wedding .final-cta {
+  background: linear-gradient(160deg, var(--event-wash-strong), var(--event-accent-soft));
+}
+
+.event-cover {
+  position: relative;
+  overflow: hidden;
+  min-height: calc(100vh - 118px);
+  display: grid;
+  place-items: center;
+  padding: 6.5rem 20px 5rem;
+  text-align: center;
+  color: #fbf3e9;
+  background: var(--event-ink);
+}
+.event-cover-bg, .event-cover-bg::before, .event-cover-bg::after {
+  position: absolute;
+  inset: 0;
+}
+.event-cover-bg {
+  background: radial-gradient(ellipse 120% 80% at 20% 0%, color-mix(in srgb, var(--event-accent) 45%, #123b34), var(--event-ink) 60%);
+}
+.event-cover-bg::before {
+  content: "";
+  background:
+    radial-gradient(circle at 28% 22%, color-mix(in srgb, var(--event-accent) 45%, transparent), transparent 55%),
+    radial-gradient(circle at 78% 78%, color-mix(in srgb, var(--event-accent) 28%, transparent), transparent 50%);
+  filter: blur(6px);
+  opacity: .85;
+}
+.has-motion .event-cover-bg::before { animation: event-cover-drift 18s ease-in-out infinite alternate; }
+@keyframes event-cover-drift {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to { transform: translate3d(3%, -4%, 0) scale(1.09); }
+}
+.event-cover-bg::after {
+  content: "";
+  opacity: .5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+}
+.event-cover-inner { position: relative; z-index: 1; width: min(720px, 100%); }
+.event-cover-eyebrow {
+  margin: 0 0 1.5rem;
+  font-family: "Cormorant Garamond", var(--display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.2rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--event-accent) 70%, #fbf3e9);
+}
+.event-cover-title {
+  margin: 0 0 1.5rem;
+  font-family: "Cormorant Garamond", var(--display);
+  font-weight: 600;
+  font-size: clamp(2.9rem, 6.4vw, 4.8rem);
+  line-height: 1.06;
+  letter-spacing: -.01em;
+  color: #fff;
+}
+.event-cover-sub {
+  max-width: 520px;
+  margin: 0 auto 2.3rem;
+  color: color-mix(in srgb, #fff 78%, transparent);
+  font-size: 1.08rem;
+  line-height: 1.65;
+}
+.event-cover-actions { display: flex; flex-direction: column; align-items: center; gap: 1.1rem; }
+.event-cover-actions .button-dark,
+:root[data-theme="dark"] .event-cover-actions .button-dark { background: var(--event-accent); color: #241505; }
+.event-cover-actions .button-dark:hover,
+:root[data-theme="dark"] .event-cover-actions .button-dark:hover { background: color-mix(in srgb, var(--event-accent) 85%, #fff); }
+/* In dark site theme .button-dark otherwise falls back to the base --teal
+   CTA color (bright mint), which clashed hard against the gold/brown final
+   CTA wash. Every dark-mode button on the wedding page reads gold instead. */
+:root[data-theme="dark"] .event-theme-wedding .button-dark { background: var(--event-accent); color: #241505; }
+:root[data-theme="dark"] .event-theme-wedding .button-dark:hover { background: color-mix(in srgb, var(--event-accent) 85%, #fff); }
+.event-cover-date {
+  font-family: var(--data);
+  font-size: .78rem;
+  letter-spacing: .22em;
+  color: color-mix(in srgb, #fff 65%, transparent);
+}
+.event-cover-note {
+  display: block;
+  color: color-mix(in srgb, #fff 55%, transparent);
+  font-size: .78rem;
+}
+
+@media (max-width: 820px) {
+  .event-cover { min-height: auto; padding: 5rem 20px 3.5rem; }
+}
+
+/* ── Editorial note strip — replaces the icon+card confidence-strip
+   with a single quiet line, like a note under an invitation. ────── */
+.event-note-strip {
+  position: relative;
+  width: min(900px, calc(100% - 40px));
+  margin: 3rem auto;
+  padding: 1.6rem 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  text-align: center;
+  font-family: "Cormorant Garamond", var(--display);
+  font-style: italic;
+  font-size: 1.2rem;
+  color: var(--muted);
+}
+.event-note-strip strong { color: var(--ink); font-weight: 600; font-style: normal; }
+/* Break the straight hairline with a small centered flourish, like the
+   printer's mark on a wedding stationery card — an ornamental beat instead
+   of a plain rule. */
+.event-note-strip::before, .event-note-strip::after {
+  content: "❧";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0 .7rem;
+  background: var(--paper);
+  color: var(--event-accent);
+  font-size: 1.05rem;
+  font-style: normal;
+  line-height: 1;
+}
+.event-note-strip::before { top: -.62em; }
+.event-note-strip::after { bottom: -.62em; }
+
+/* Same flourish, marking the threshold into the closing CTA. */
+.event-theme-wedding .final-cta { position: relative; }
+.event-theme-wedding .final-cta::before {
+  content: "❧";
+  position: absolute;
+  top: -.62em;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0 .7rem;
+  background: var(--paper);
+  color: var(--event-accent);
+  font-size: 1.05rem;
+  line-height: 1;
+}
+
+/* ── Story chapters — the numeral label + list replace the app-style
+   data-panel mockups with something that reads as a keepsake list,
+   not a dashboard. ─────────────────────────────────────────────── */
+.event-theme-wedding .chapter-meta { display: none; }
+.story-number {
+  margin: 0 0 .6rem;
+  font-family: "Cormorant Garamond", var(--display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.5rem;
+  color: var(--event-accent);
+}
+.story-list {
+  border-top: 1px solid var(--line);
+}
+.story-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1.1rem 0;
+  border-bottom: 1px solid var(--line);
+}
+.story-row-name { font-size: 1.02rem; }
+.story-row-name em { display: block; margin-top: .15rem; color: var(--muted); font-size: .84rem; font-style: normal; }
+.story-status {
+  flex: 0 0 auto;
+  font-family: "Cormorant Garamond", var(--display);
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--event-accent);
+}
+.story-status.is-waiting { color: var(--muted); }
+
+/* ── Editorial photo — the one real-photography moment on the page,
+   opening the case-study section like a magazine spread. Kept to a
+   single, restrained appearance; the rest of the page stays typography
+   + the line-art motif. ──────────────────────────────────────────── */
+.event-photo {
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto 4rem;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  aspect-ratio: 3 / 2;
+}
+.event-photo img { width: 100%; height: 100%; object-fit: cover; }
+.event-photo figcaption {
+  position: relative;
+  margin-top: -3.2rem;
+  padding: .9rem 1.4rem;
+  width: fit-content;
+  font-family: "Cormorant Garamond", var(--display);
+  font-style: italic;
+  font-size: 1.05rem;
+  color: #fff;
+  background: linear-gradient(to top, rgb(0 0 0 / .55), transparent);
+}
+@media (max-width: 820px) {
+  .event-photo { aspect-ratio: 4 / 3; margin-bottom: 3rem; }
+}
+.story-motif {
+  width: 60px;
+  height: 60px;
+  margin: 0 0 1.2rem;
+  color: var(--event-accent);
+}
+.story-highlight {
+  padding: .5rem 0 1.6rem;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 1.1rem;
+}
+.story-highlight strong {
+  display: block;
+  font-family: "Cormorant Garamond", var(--display);
+  font-weight: 600;
+  font-size: clamp(2.6rem, 4vw, 3.4rem);
+  color: var(--ink);
+  line-height: 1;
+}
+.story-highlight span { color: var(--muted); font-size: .92rem; }
+.story-aside {
+  margin: 1.1rem 0 0;
+  font-family: "Cormorant Garamond", var(--display);
+  font-style: italic;
+  color: var(--muted);
+  font-size: 1.02rem;
+}
+
+/* ══ Chá de bebê / Baby shower ═══════════════════════════════════════
+   Baby blue + cream, deliberately light throughout — a daytime, gentle
+   event, not a dramatic dark stage like the wedding cover. --event-ink
+   here is a fixed pale blue (not a dark color) and is left untouched by
+   the dark-mode override below, exactly like --event-ink is left
+   untouched for wedding — it just happens to be light instead of dark,
+   so the base .event-cover rule (background: var(--event-ink)) needs
+   no override at all. */
+.event-theme-babyshower {
+  --event-accent: #6fa4cc;
+  --event-accent-soft: #eef4f8;
+  --event-ink: #eef5fa;
+  --event-wash: color-mix(in srgb, var(--event-accent) 15%, var(--event-accent-soft));
+  --event-wash-strong: color-mix(in srgb, var(--event-accent) 28%, var(--event-accent-soft));
+}
+:root[data-theme="dark"] .event-theme-babyshower {
+  --event-accent: #8ec3e8;
+  --event-accent-soft: #161f26;
+  --event-wash: color-mix(in srgb, var(--event-accent) 13%, var(--event-accent-soft));
+  --event-wash-strong: color-mix(in srgb, var(--event-accent) 24%, var(--event-accent-soft));
+}
+
+.event-theme-babyshower .problem-section {
+  --problem: var(--event-accent);
+  --problem-soft: var(--event-wash);
+  background: linear-gradient(125deg, var(--event-wash-strong), var(--event-wash) 55%, var(--event-accent-soft) 100%);
+}
+:root[data-theme="dark"] .event-theme-babyshower .problem-section {
+  --problem: var(--event-accent);
+  --problem-soft: var(--event-wash);
+}
+.event-theme-babyshower #features {
+  background: linear-gradient(180deg, var(--event-accent-soft), color-mix(in srgb, var(--event-wash) 55%, var(--paper)) 55%, var(--paper) 100%);
+}
+.event-theme-babyshower .kicker,
+.event-theme-babyshower .step-number {
+  color: var(--event-accent);
+}
+.event-theme-babyshower .problem-bridge {
+  color: color-mix(in srgb, var(--event-accent) 78%, var(--ink));
+}
+.event-theme-babyshower .cta-line::before,
+.event-theme-babyshower .cta-line::after {
+  background: color-mix(in srgb, var(--event-accent) 45%, var(--line));
+}
+.event-theme-babyshower .cta-dot {
+  background: var(--event-accent);
+}
+.event-theme-babyshower .final-cta {
+  background: linear-gradient(160deg, var(--event-wash-strong), var(--event-accent-soft));
+}
+.event-theme-babyshower .event-cover-actions .button-dark { color: #122536; }
+:root[data-theme="dark"] .event-theme-babyshower .button-dark { background: var(--event-accent); color: #122536; }
+:root[data-theme="dark"] .event-theme-babyshower .button-dark:hover { background: color-mix(in srgb, var(--event-accent) 85%, #fff); }
+
+/* The cover's radial glow and all its text default to light-on-dark
+   (built for wedding's dark ink); babyshower's ink is light, so both
+   need inverting here rather than relying on the generic rules above. */
+.event-theme-babyshower .event-cover-bg {
+  background: radial-gradient(ellipse 120% 80% at 20% 0%, color-mix(in srgb, var(--event-accent) 35%, var(--event-ink)), var(--event-ink) 60%);
+}
+.event-theme-babyshower .event-cover-bg::before {
+  background:
+    radial-gradient(circle at 28% 22%, color-mix(in srgb, var(--event-accent) 38%, transparent), transparent 55%),
+    radial-gradient(circle at 78% 78%, color-mix(in srgb, var(--event-accent) 24%, transparent), transparent 50%);
+  opacity: .5;
+}
+.event-theme-babyshower .event-cover-bg::after {
+  opacity: .28;
+}
+.event-theme-babyshower .event-cover-eyebrow {
+  color: color-mix(in srgb, var(--event-accent) 72%, #17293a);
+}
+.event-theme-babyshower .event-cover-title {
+  color: #17293a;
+}
+.event-theme-babyshower .event-cover-sub {
+  color: color-mix(in srgb, #17293a 78%, transparent);
+}
+.event-theme-babyshower .event-cover-date {
+  color: color-mix(in srgb, #17293a 65%, transparent);
+}
+.event-theme-babyshower .event-cover-note {
+  color: color-mix(in srgb, #17293a 55%, transparent);
+}
