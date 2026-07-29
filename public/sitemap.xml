@@ -45,6 +45,48 @@
   </url>
 
   <url>
+    <loc>https://planneapp.com/birthday</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://planneapp.com/birthday" />
+    <xhtml:link rel="alternate" hreflang="pt-br" href="https://planneapp.com/pt-br/aniversario" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://planneapp.com/birthday" />
+  </url>
+
+  <url>
+    <loc>https://planneapp.com/pt-br/aniversario</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://planneapp.com/birthday" />
+    <xhtml:link rel="alternate" hreflang="pt-br" href="https://planneapp.com/pt-br/aniversario" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://planneapp.com/birthday" />
+  </url>
+
+  <url>
+    <loc>https://planneapp.com/quinceanera</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://planneapp.com/quinceanera" />
+    <xhtml:link rel="alternate" hreflang="pt-br" href="https://planneapp.com/pt-br/debutante" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://planneapp.com/quinceanera" />
+  </url>
+
+  <url>
+    <loc>https://planneapp.com/pt-br/debutante</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://planneapp.com/quinceanera" />
+    <xhtml:link rel="alternate" hreflang="pt-br" href="https://planneapp.com/pt-br/debutante" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://planneapp.com/quinceanera" />
+  </url>
+
+  <url>
+    <loc>https://planneapp.com/graduation</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://planneapp.com/graduation" />
+    <xhtml:link rel="alternate" hreflang="pt-br" href="https://planneapp.com/pt-br/formatura" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://planneapp.com/graduation" />
+  </url>
+
+  <url>
+    <loc>https://planneapp.com/pt-br/formatura</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://planneapp.com/graduation" />
+    <xhtml:link rel="alternate" hreflang="pt-br" href="https://planneapp.com/pt-br/formatura" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://planneapp.com/graduation" />
+  </url>
+
+  <url>
     <loc>https://planneapp.com/privacy</loc>
   </url>
 

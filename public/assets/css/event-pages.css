@@ -39,7 +39,8 @@
 /* ── Warm color washes on the sections that used to sit on flat --paper —
    these carry ~60% of the "more life" pass: real color, not diluted-to-white
    gradients. ─────────────────────────────────────────────────────────── */
-.event-theme-wedding #features {
+.event-theme-wedding #features,
+.event-theme-wedding #recursos {
   background: linear-gradient(180deg, var(--event-accent-soft), color-mix(in srgb, var(--event-wash) 55%, var(--paper)) 55%, var(--paper) 100%);
 }
 
@@ -323,7 +324,8 @@
   --problem: var(--event-accent);
   --problem-soft: var(--event-wash);
 }
-.event-theme-babyshower #features {
+.event-theme-babyshower #features,
+.event-theme-babyshower #recursos {
   background: linear-gradient(180deg, var(--event-accent-soft), color-mix(in srgb, var(--event-wash) 55%, var(--paper)) 55%, var(--paper) 100%);
 }
 .event-theme-babyshower .kicker,
@@ -376,4 +378,198 @@
 }
 .event-theme-babyshower .event-cover-note {
   color: color-mix(in srgb, #17293a 55%, transparent);
+}
+
+/* ══ Aniversário / Birthday ═══════════════════════════════════════════
+   Terracotta + cream, dark cover — matches the real balloon-arch photo
+   used lower on the page (event-birthday.webp), so the invitation-style
+   hero and the editorial photo read as one warm evening-party palette. */
+.event-theme-birthday {
+  --event-accent: #c1663f;
+  --event-accent-soft: #fbf0e8;
+  --event-ink: #241a12;
+  --event-wash: color-mix(in srgb, var(--event-accent) 15%, var(--event-accent-soft));
+  --event-wash-strong: color-mix(in srgb, var(--event-accent) 28%, var(--event-accent-soft));
+}
+:root[data-theme="dark"] .event-theme-birthday {
+  --event-accent: #e2946c;
+  --event-accent-soft: #271c14;
+  --event-wash: color-mix(in srgb, var(--event-accent) 13%, var(--event-accent-soft));
+  --event-wash-strong: color-mix(in srgb, var(--event-accent) 24%, var(--event-accent-soft));
+}
+
+.event-theme-birthday .problem-section {
+  --problem: var(--event-accent);
+  --problem-soft: var(--event-wash);
+  background: linear-gradient(125deg, var(--event-wash-strong), var(--event-wash) 55%, var(--event-accent-soft) 100%);
+}
+:root[data-theme="dark"] .event-theme-birthday .problem-section {
+  --problem: var(--event-accent);
+  --problem-soft: var(--event-wash);
+}
+.event-theme-birthday #features,
+.event-theme-birthday #recursos {
+  background: linear-gradient(180deg, var(--event-accent-soft), color-mix(in srgb, var(--event-wash) 55%, var(--paper)) 55%, var(--paper) 100%);
+}
+.event-theme-birthday .kicker,
+.event-theme-birthday .step-number {
+  color: var(--event-accent);
+}
+.event-theme-birthday .problem-bridge {
+  color: color-mix(in srgb, var(--event-accent) 78%, var(--ink));
+}
+.event-theme-birthday .cta-line::before,
+.event-theme-birthday .cta-line::after {
+  background: color-mix(in srgb, var(--event-accent) 45%, var(--line));
+}
+.event-theme-birthday .cta-dot {
+  background: var(--event-accent);
+}
+.event-theme-birthday .final-cta {
+  background: linear-gradient(160deg, var(--event-wash-strong), var(--event-accent-soft));
+}
+.event-theme-birthday .event-cover-actions .button-dark,
+:root[data-theme="dark"] .event-theme-birthday .event-cover-actions .button-dark { background: var(--event-accent); color: #2a1408; }
+.event-theme-birthday .event-cover-actions .button-dark:hover,
+:root[data-theme="dark"] .event-theme-birthday .event-cover-actions .button-dark:hover { background: color-mix(in srgb, var(--event-accent) 85%, #fff); }
+:root[data-theme="dark"] .event-theme-birthday .button-dark { background: var(--event-accent); color: #2a1408; }
+:root[data-theme="dark"] .event-theme-birthday .button-dark:hover { background: color-mix(in srgb, var(--event-accent) 85%, #fff); }
+
+/* ══ Debutante / Quinceañera ══════════════════════════════════════════
+   Rose + dark plum, dark cover — a ballroom-at-night register, distinct
+   from wedding's green-gold and birthday's terracotta. */
+.event-theme-debutante {
+  --event-accent: #cc8ea3;
+  --event-accent-soft: #fbf0f4;
+  --event-ink: #23111f;
+  --event-wash: color-mix(in srgb, var(--event-accent) 15%, var(--event-accent-soft));
+  --event-wash-strong: color-mix(in srgb, var(--event-accent) 28%, var(--event-accent-soft));
+}
+:root[data-theme="dark"] .event-theme-debutante {
+  --event-accent: #e3aec0;
+  --event-accent-soft: #241a22;
+  --event-wash: color-mix(in srgb, var(--event-accent) 13%, var(--event-accent-soft));
+  --event-wash-strong: color-mix(in srgb, var(--event-accent) 24%, var(--event-accent-soft));
+}
+
+.event-theme-debutante .problem-section {
+  --problem: var(--event-accent);
+  --problem-soft: var(--event-wash);
+  background: linear-gradient(125deg, var(--event-wash-strong), var(--event-wash) 55%, var(--event-accent-soft) 100%);
+}
+:root[data-theme="dark"] .event-theme-debutante .problem-section {
+  --problem: var(--event-accent);
+  --problem-soft: var(--event-wash);
+}
+.event-theme-debutante #features,
+.event-theme-debutante #recursos {
+  background: linear-gradient(180deg, var(--event-accent-soft), color-mix(in srgb, var(--event-wash) 55%, var(--paper)) 55%, var(--paper) 100%);
+}
+.event-theme-debutante .kicker,
+.event-theme-debutante .step-number {
+  color: var(--event-accent);
+}
+.event-theme-debutante .problem-bridge {
+  color: color-mix(in srgb, var(--event-accent) 78%, var(--ink));
+}
+.event-theme-debutante .cta-line::before,
+.event-theme-debutante .cta-line::after {
+  background: color-mix(in srgb, var(--event-accent) 45%, var(--line));
+}
+.event-theme-debutante .cta-dot {
+  background: var(--event-accent);
+}
+.event-theme-debutante .final-cta {
+  background: linear-gradient(160deg, var(--event-wash-strong), var(--event-accent-soft));
+}
+.event-theme-debutante .event-cover-actions .button-dark,
+:root[data-theme="dark"] .event-theme-debutante .event-cover-actions .button-dark { background: var(--event-accent); color: #2a1220; }
+.event-theme-debutante .event-cover-actions .button-dark:hover,
+:root[data-theme="dark"] .event-theme-debutante .event-cover-actions .button-dark:hover { background: color-mix(in srgb, var(--event-accent) 85%, #fff); }
+:root[data-theme="dark"] .event-theme-debutante .button-dark { background: var(--event-accent); color: #2a1220; }
+:root[data-theme="dark"] .event-theme-debutante .button-dark:hover { background: color-mix(in srgb, var(--event-accent) 85%, #fff); }
+
+/* ══ Formatura / Graduation ═══════════════════════════════════════════
+   Navy + gold, light cover — an achievement/daytime register like
+   baby shower's mechanics (--event-ink is a light "paper" tone the base
+   .event-cover rule sits on directly, not a dark stage). Accent is a
+   genuinely dark navy though, so unlike the other light-cover theme
+   (baby shower) the CTA button needs light text, not dark. */
+.event-theme-formatura {
+  --event-accent: #2f5e8c;
+  --event-accent-soft: #eef2f7;
+  --event-ink: #eef2f7;
+  --event-wash: color-mix(in srgb, var(--event-accent) 15%, var(--event-accent-soft));
+  --event-wash-strong: color-mix(in srgb, var(--event-accent) 28%, var(--event-accent-soft));
+}
+:root[data-theme="dark"] .event-theme-formatura {
+  --event-accent: #7fb0e0;
+  --event-accent-soft: #141d27;
+  --event-wash: color-mix(in srgb, var(--event-accent) 13%, var(--event-accent-soft));
+  --event-wash-strong: color-mix(in srgb, var(--event-accent) 24%, var(--event-accent-soft));
+}
+
+.event-theme-formatura .problem-section {
+  --problem: var(--event-accent);
+  --problem-soft: var(--event-wash);
+  background: linear-gradient(125deg, var(--event-wash-strong), var(--event-wash) 55%, var(--event-accent-soft) 100%);
+}
+:root[data-theme="dark"] .event-theme-formatura .problem-section {
+  --problem: var(--event-accent);
+  --problem-soft: var(--event-wash);
+}
+.event-theme-formatura #features,
+.event-theme-formatura #recursos {
+  background: linear-gradient(180deg, var(--event-accent-soft), color-mix(in srgb, var(--event-wash) 55%, var(--paper)) 55%, var(--paper) 100%);
+}
+.event-theme-formatura .kicker,
+.event-theme-formatura .step-number {
+  color: var(--event-accent);
+}
+.event-theme-formatura .problem-bridge {
+  color: color-mix(in srgb, var(--event-accent) 78%, var(--ink));
+}
+.event-theme-formatura .cta-line::before,
+.event-theme-formatura .cta-line::after {
+  background: color-mix(in srgb, var(--event-accent) 45%, var(--line));
+}
+.event-theme-formatura .cta-dot {
+  background: var(--event-accent);
+}
+.event-theme-formatura .final-cta {
+  background: linear-gradient(160deg, var(--event-wash-strong), var(--event-accent-soft));
+}
+.event-theme-formatura .event-cover-actions .button-dark { color: #f3f7fb; }
+:root[data-theme="dark"] .event-theme-formatura .button-dark { background: var(--event-accent); color: #0f1c28; }
+:root[data-theme="dark"] .event-theme-formatura .button-dark:hover { background: color-mix(in srgb, var(--event-accent) 85%, #fff); }
+
+/* The cover's radial glow and all its text default to light-on-dark
+   (built for wedding's dark ink); formatura's ink is light like baby
+   shower's, so both need inverting here too. */
+.event-theme-formatura .event-cover-bg {
+  background: radial-gradient(ellipse 120% 80% at 20% 0%, color-mix(in srgb, var(--event-accent) 35%, var(--event-ink)), var(--event-ink) 60%);
+}
+.event-theme-formatura .event-cover-bg::before {
+  background:
+    radial-gradient(circle at 28% 22%, color-mix(in srgb, var(--event-accent) 38%, transparent), transparent 55%),
+    radial-gradient(circle at 78% 78%, color-mix(in srgb, var(--event-accent) 24%, transparent), transparent 50%);
+  opacity: .5;
+}
+.event-theme-formatura .event-cover-bg::after {
+  opacity: .28;
+}
+.event-theme-formatura .event-cover-eyebrow {
+  color: color-mix(in srgb, var(--event-accent) 72%, #16283d);
+}
+.event-theme-formatura .event-cover-title {
+  color: #16283d;
+}
+.event-theme-formatura .event-cover-sub {
+  color: color-mix(in srgb, #16283d 78%, transparent);
+}
+.event-theme-formatura .event-cover-date {
+  color: color-mix(in srgb, #16283d 65%, transparent);
+}
+.event-theme-formatura .event-cover-note {
+  color: color-mix(in srgb, #16283d 55%, transparent);
 }
