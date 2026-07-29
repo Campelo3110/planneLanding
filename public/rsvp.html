@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Planne — RSVP</title>
+    <title>Planne - RSVP</title>
     <meta name="robots" content="noindex, nofollow">
     <meta name="theme-color" content="#f8fafc">
     <script>try{document.documentElement.dataset.theme=localStorage.getItem('planne-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
@@ -552,7 +552,7 @@ const STRINGS = {
         errGeneric: "Something went wrong. Please try again.",
 
         successYesTitle: "You're confirmed!",
-        successYesSub: "Thanks for letting us know — see you there!",
+        successYesSub: "Thanks for letting us know, see you there!",
         successNoTitle: "Thanks for letting us know",
         successNoSub: "We're sorry you can't make it. Thanks for responding!",
         successPendingTitle: "Response received",
@@ -613,7 +613,7 @@ const STRINGS = {
         errGeneric: "Algo deu errado. Tente novamente.",
 
         successYesTitle: "Presença confirmada!",
-        successYesSub: "Obrigado por avisar — te esperamos lá!",
+        successYesSub: "Obrigado por avisar, te esperamos lá!",
         successNoTitle: "Obrigado por avisar",
         successNoSub: "Sentimos muito que você não poderá vir. Obrigado por responder!",
         successPendingTitle: "Resposta recebida",
@@ -1207,10 +1207,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         currentThankYouMessage = event.rsvpThankYouMessage || null;
 
         // Aba do navegador com o nome do evento em vez do genérico
-        // "Planne — RSVP" — só depois de resolver o evento (antes disso
+        // "Planne - RSVP" — só depois de resolver o evento (antes disso
         // não temos o nome ainda; o <title> estático segue como fallback).
         if (currentEventTitle) {
-            document.title = 'Planne — ' + currentEventTitle;
+            document.title = 'Planne - ' + currentEventTitle;
         }
 
         // Idioma É o do evento (settings.language do organizador) — fixo
