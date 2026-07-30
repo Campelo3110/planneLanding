@@ -68,6 +68,36 @@
     } else {
       revealItems.forEach((item) => item.classList.add('is-visible'));
     }
+
+    // Event-cover background video: markup only ever carries data-src on the
+    // <source> tags, so nothing is fetched until we decide it's worth it —
+    // skips entirely on reduced motion, narrow viewports (mobile bandwidth
+    // is exactly what this is guarding against) and slow/save-data
+    // connections, and even then waits until after load so it never
+    // competes with the page's own critical assets.
+    document.querySelectorAll('.event-cover-video').forEach((video) => {
+      const activate = () => {
+        if (!root.classList.contains('has-motion')) return;
+        if (!window.matchMedia('(min-width: 700px)').matches) return;
+        const conn = navigator.connection || navigator.webkitConnection || navigator.mozConnection;
+        if (conn && (conn.saveData || /(^|-)2g$/.test(conn.effectiveType || ''))) return;
+        video.querySelectorAll('source[data-src]').forEach((source) => { source.src = source.dataset.src; });
+        video.load();
+        video.play().catch(() => {});
+      };
+      const schedule = () => {
+        if ('requestIdleCallback' in window) requestIdleCallback(activate, { timeout: 2500 });
+        else setTimeout(activate, 800);
+      };
+      if (document.readyState === 'complete') schedule();
+      else window.addEventListener('load', schedule, { once: true });
+      document.addEventListener('visibilitychange', () => {
+        if (!video.currentSrc) return;
+        if (document.hidden) video.pause();
+        else video.play().catch(() => {});
+      });
+    });
+
     updateToggle();
   });
 })();

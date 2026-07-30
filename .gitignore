@@ -63,3 +63,7 @@ coverage/
 .codex/
 
 planne (1)
+
+# Raw video masters (uncompressed camera exports) — never deployed, only
+# the compressed derivatives in public/assets/video/ are checked in/served.
+video-sources/

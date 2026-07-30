@@ -103,6 +103,27 @@
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   mix-blend-mode: overlay;
 }
+/* Optional cover video — sits behind .event-cover-bg purely by DOM order
+   (both position:absolute, no z-index needed). It never loads anything by
+   itself: the markup only carries data-src on its <source>s, and JS (see
+   site-preferences.js) decides whether the real file is worth fetching at
+   all (connection, viewport, reduced-motion) before swapping data-src in.
+   Until then — or on any page without a video — this is a no-op and the
+   poster image (or nothing) shows through the same gradient as always. */
+.event-cover-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  background: var(--event-ink);
+}
+/* Dial back the color wash so the cover photo/video reads through it
+   instead of being fully hidden underneath. Applies whenever a video
+   element is in the markup, whether or not motion ever actually loads —
+   the poster alone is meant to show through at this opacity too. */
+.event-cover-video ~ .event-cover-bg { opacity: .76; }
 .event-cover-inner { position: relative; z-index: 1; width: min(720px, 100%); }
 .event-cover-eyebrow {
   margin: 0 0 1.5rem;
