@@ -800,6 +800,62 @@ function applyAccentColor(hex) {
 }
 
 // ═══════════════════════════════════════════════════════
+//  FONTE CURADA (rsvpFontPairId) — sobrescreve --display-font/
+//  --body-font em cima de QUALQUER estilo (rsvpTemplateId), mesmo
+//  mecanismo do applyAccentColor acima (inline style sempre vence uma
+//  regra de stylesheet sem !important). Catálogo espelhado em
+//  rsvp_local_preview.dart (_fontPairs, prévia dentro do app) e nas
+//  labels i18n do seletor em convite_settings_widget.dart — mudou aqui,
+//  muda nos outros 2.
+// ═══════════════════════════════════════════════════════
+const FONT_PAIRS = {
+    'script-dourado': {
+        display: '"Bonheur Royale", cursive', body: '"Jost", "Planne Inter", sans-serif',
+        families: ['Bonheur+Royale', 'Jost:wght@400;500;600'],
+    },
+    suico: {
+        display: '"Familjen Grotesk", "Planne Inter", sans-serif', body: '"Archivo", "Planne Inter", sans-serif',
+        families: ['Familjen+Grotesk:wght@500;600', 'Archivo:wght@400;500;600'],
+    },
+    divertido: {
+        display: '"Fredoka", "Planne Inter", sans-serif', body: '"Quicksand", "Planne Inter", sans-serif',
+        families: ['Fredoka:wght@500;600;700', 'Quicksand:wght@500;600;700'],
+    },
+    postal: {
+        display: '"Unbounded", "Planne Inter", sans-serif', body: '"Karla", "Planne Inter", sans-serif',
+        families: ['Unbounded:wght@500;600;700', 'Karla:wght@400;500;600'],
+    },
+    literario: {
+        display: '"Vollkorn", Georgia, serif', body: '"Nunito Sans", "Planne Inter", sans-serif',
+        families: ['Vollkorn:ital,wght@0,500;1,500;0,600', 'Nunito+Sans:wght@400;500;600'],
+    },
+    tecnico: {
+        display: '"Martian Mono", ui-monospace, monospace', body: '"Work Sans", "Planne Inter", sans-serif',
+        families: ['Martian+Mono:wght@400;500;600', 'Work+Sans:wght@400;500;600'],
+    },
+};
+const loadedFontPairs = new Set();
+function applyFontPairOverride(fontPairId) {
+    const root = document.documentElement;
+    const pair = FONT_PAIRS[fontPairId];
+    if (!pair) {
+        root.style.removeProperty('--display-font');
+        root.style.removeProperty('--body-font');
+        return;
+    }
+    if (!loadedFontPairs.has(fontPairId)) {
+        loadedFontPairs.add(fontPairId);
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'https://fonts.googleapis.com/css2?' +
+            pair.families.map((f) => `family=${f}`).join('&') + '&display=swap';
+        document.head.appendChild(link);
+    }
+    root.style.setProperty('--display-font', pair.display);
+    root.style.setProperty('--body-font', pair.body);
+}
+
+// ═══════════════════════════════════════════════════════
 //  MAPA (rsvpLocationInfo — texto livre usado como endereço)
 // ═══════════════════════════════════════════════════════
 function renderMapSection(event) {
@@ -1231,6 +1287,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         // sobrescreve a cor nativa do estilo acima, em QUALQUER um dos 3
         // estilos. Ausente/inválida = mantém a cor nativa do estilo.
         applyAccentColor(event.rsvpAccentColor);
+
+        // Par de fonte curado (rsvpFontPairId) — mesma regra: sobrescreve
+        // a fonte nativa do estilo em cima de qualquer um dos 3, ausente/
+        // desconhecido mantém a fonte nativa.
+        applyFontPairOverride(event.rsvpFontPairId);
 
         renderCoverHero(event);
         renderEventExtras(event);
