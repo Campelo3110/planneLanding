@@ -54,7 +54,7 @@ body::after {
    navegação de volta pra home, sem troca de idioma, sem termos.
    ─────────────────────────────────────────────────────────────── */
 .invite-header {
-    position: relative; z-index: 3; display: flex; justify-content: flex-end;
+    position: relative; z-index: 3; display: flex; justify-content: space-between;
     align-items: center; padding: 14px 18px; min-height: 52px;
 }
 .theme-btn {
