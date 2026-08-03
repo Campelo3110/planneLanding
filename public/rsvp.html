@@ -177,6 +177,11 @@
         .companion-row input[type="text"] { flex: 1; min-width: 0; }
         .companion-row select { flex: 0 0 132px; }
 
+        /* ── DDI + telefone (modo público) ── */
+        .phone-row { display: flex; gap: .5rem; }
+        .phone-row select { flex: 0 0 100px; }
+        .phone-row input[type="tel"] { flex: 1; min-width: 0; }
+
         /* ── phone-verification digits, styled like a code entry ── */
         .otp-group { display: flex; gap: .6rem; }
         .otp-box {
@@ -330,11 +335,14 @@
 
         <div class="field">
             <label for="pubName" data-i18n="labelName"></label>
-            <input type="text" id="pubName" autocomplete="name">
+            <input type="text" id="pubName" autocomplete="name" maxlength="120">
         </div>
         <div class="field">
             <label for="pubPhone" data-i18n="labelPhone"></label>
-            <input type="tel" id="pubPhone" autocomplete="tel" data-i18n-placeholder="placeholderPhone">
+            <div class="phone-row">
+                <select id="pubPhoneCountry" aria-label="Country code"></select>
+                <input type="tel" id="pubPhone" autocomplete="tel" data-i18n-placeholder="placeholderPhone" maxlength="30">
+            </div>
         </div>
         <div class="field">
             <label data-i18n="labelPresence"></label>
@@ -393,7 +401,7 @@
 
         <div class="field">
             <label for="searchName" data-i18n="labelName"></label>
-            <input type="text" id="searchName" autocomplete="name">
+            <input type="text" id="searchName" autocomplete="name" maxlength="120">
         </div>
 
         <button class="btn-primary" id="searchBtn" onclick="lookupGuest()">
@@ -564,6 +572,7 @@ const STRINGS = {
 
         errMissingName: "Please enter your name.",
         errMissingPhone: "Please enter your phone number.",
+        errPhoneInvalid: "Invalid phone number. Numbers only.",
         errMissingPresence: "Please let us know if you'll attend.",
         errNotFound: "We couldn't find an invitation under that name.",
         errPhoneMismatch: "Those digits don't match our records. Please try again.",
@@ -628,6 +637,7 @@ const STRINGS = {
 
         errMissingName: "Digite seu nome.",
         errMissingPhone: "Digite seu telefone.",
+        errPhoneInvalid: "Telefone inválido. Use apenas números.",
         errMissingPresence: "Diga se você vai comparecer.",
         errNotFound: "Não encontramos um convite com esse nome.",
         errPhoneMismatch: "Esses dígitos não batem com o que temos cadastrado. Tente de novo.",
@@ -1059,6 +1069,7 @@ function renderCompanionNames(scope) {
         const input = document.createElement('input');
         input.type = 'text';
         input.autocomplete = 'off';
+        input.maxLength = 120;
         input.placeholder = s.companionNamePlaceholder.replace('{n}', i + 1);
         input.value = existingValues[i] || '';
         row.appendChild(input);
@@ -1087,6 +1098,68 @@ function getCompanionNames(scope) {
 function getCompanionTypes(scope) {
     const list = document.getElementById(scope === 'pub' ? 'pubCompanionNames' : 'privCompanionNames');
     return [...list.querySelectorAll('select')].map(sel => sel.value);
+}
+
+// ═══════════════════════════════════════════════════════
+//  TELEFONE (modo público) — só dígitos e caracteres de formatação
+//  (espaço, parênteses, traço, +), igual ao validador nativo do app
+//  (ver tfTelefoneTextControllerValidator em add_guest_model.dart/
+//  edit_guest_model.dart). Filtra em tempo real (cola incluído, o
+//  navegador já dispara 'input' pra paste) — isValidPhoneFormat() abaixo
+//  é só um cinto-de-segurança pro submit, já que o input nunca deveria
+//  conseguir chegar lá com caractere fora desse conjunto.
+// ═══════════════════════════════════════════════════════
+function initPhoneMasking() {
+    const input = document.getElementById('pubPhone');
+    input.addEventListener('input', () => {
+        const cleaned = input.value.replace(/[^0-9()+\-\s]/g, '');
+        if (cleaned === input.value) return;
+        const diff = input.value.length - cleaned.length;
+        const pos = Math.max(0, input.selectionStart - diff);
+        input.value = cleaned;
+        input.setSelectionRange(pos, pos);
+    });
+}
+function isValidPhoneFormat(value) {
+    return /^[0-9()+\-\s]+$/.test(value);
+}
+function phoneDigitCount(value) {
+    return (value.match(/\d/g) || []).length;
+}
+
+// ═══════════════════════════════════════════════════════
+//  PAÍS DO TELEFONE (modo público) — mesmo catálogo de DDIs de
+//  custom_cloud_functions/rsvp.js (DIAL_CODES) e de
+//  custom_code/functions/to_e164_phone.dart no app. Pré-selecionado com
+//  rsvpDefaultCountry (ver resolveEvent em rsvp.js), detectado do
+//  dispositivo de quem configurou o convite — o convidado pode trocar se
+//  não for o país certo.
+// ═══════════════════════════════════════════════════════
+const DIAL_CODES = {
+    BR: '55', US: '1', GB: '44', CA: '1', AU: '61', NZ: '64',
+    AO: '244', MZ: '258', CV: '238', SN: '221', CM: '237', ST: '239', MO: '853',
+    ZA: '27', NG: '234', KE: '254', GH: '233',
+    SG: '65', IN: '91', HK: '852', JP: '81', CN: '86', AE: '971', CH: '41',
+    PT: '351', GW: '245', GQ: '240', TL: '670', IE: '353', JM: '1876', ZW: '263',
+};
+
+function countryFlagEmoji(id) {
+    return String.fromCodePoint(...[...id.toUpperCase()].map(c => 127397 + c.charCodeAt(0)));
+}
+
+function initPhoneCountrySelect() {
+    const select = document.getElementById('pubPhoneCountry');
+    select.innerHTML = '';
+    Object.keys(DIAL_CODES).forEach(id => {
+        const option = document.createElement('option');
+        option.value = id;
+        option.textContent = `${countryFlagEmoji(id)} +${DIAL_CODES[id]}`;
+        select.appendChild(option);
+    });
+}
+
+function isValidCountryId(value) {
+    return Object.prototype.hasOwnProperty.call(DIAL_CODES, String(value || '').toUpperCase());
 }
 
 // ═══════════════════════════════════════════════════════
@@ -1161,6 +1234,10 @@ async function submitPublic() {
 
     if (!name) { markInvalid('pubName'); return showPublicError(s.errMissingName); }
     if (!phone) { markInvalid('pubPhone'); return showPublicError(s.errMissingPhone); }
+    if (!isValidPhoneFormat(phone) || phoneDigitCount(phone) < 8) {
+        markInvalid('pubPhone');
+        return showPublicError(s.errPhoneInvalid);
+    }
     if (attending === null) { pulseAttention('pubPresenceToggle'); return showPublicError(s.errMissingPresence); }
 
     const btn = document.getElementById('pubSubmitBtn');
@@ -1173,10 +1250,12 @@ async function submitPublic() {
             : 0;
         const companionNames = window.__rsvpAllowCompanions ? getCompanionNames('pub') : [];
         const companionTypes = window.__rsvpAllowCompanions ? getCompanionTypes('pub') : [];
+        const phoneCountry = document.getElementById('pubPhoneCountry').value;
         const result = await callRsvpApi({
             action: 'submitPublic',
             name,
             phone,
+            phoneCountry,
             confirmationStatus: attending ? 1 : 0,
             menu: parseInt(document.getElementById('pubMenu').value, 10),
             companions,
@@ -1325,6 +1404,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     applyLang(detectLang());
     initSteppers();
     initOtpBoxes();
+    initPhoneMasking();
+    initPhoneCountrySelect();
 
     if (!window.__rsvpToken) {
         showState('stateInvalid');
@@ -1340,6 +1421,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.__rsvpAllowCompanions = event.rsvpAllowCompanions === true;
         window.__rsvpMaxCompanions = typeof event.rsvpMaxCompanions === 'number' && event.rsvpMaxCompanions > 0
             ? event.rsvpMaxCompanions : Infinity;
+        document.getElementById('pubPhoneCountry').value =
+            isValidCountryId(event.rsvpDefaultCountry) ? event.rsvpDefaultCountry.toUpperCase() : 'BR';
         currentEventTitle = event.eventTitle || null;
         currentEventDate = event.eventDate || null;
         currentThankYouMessage = event.rsvpThankYouMessage || null;
