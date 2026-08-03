@@ -168,10 +168,14 @@
         }
         .stepper input:focus { outline: none; }
 
-        /* ── nomes dos acompanhantes: um input por acompanhante, gerado
-           dinamicamente em sincronia com o valor do stepper acima ── */
+        /* ── nomes dos acompanhantes: uma linha (nome + tipo) por
+           acompanhante, gerada dinamicamente em sincronia com o valor do
+           stepper acima ── */
         .companion-names { display: flex; flex-direction: column; gap: .6rem; margin-top: .6rem; }
         .companion-names:empty { margin-top: 0; }
+        .companion-row { display: flex; gap: .5rem; }
+        .companion-row input[type="text"] { flex: 1; min-width: 0; }
+        .companion-row select { flex: 0 0 132px; }
 
         /* ── phone-verification digits, styled like a code entry ── */
         .otp-group { display: flex; gap: .6rem; }
@@ -530,6 +534,8 @@ const STRINGS = {
         presenceNo: "Can't make it",
         labelCompanions: "Companions",
         companionNamePlaceholder: "Guest {n} name",
+        companionTypeCompanion: "Companion",
+        companionTypeChild: "Child",
         labelMenu: "Meal preference",
         labelPhoneLast4: "Last 4 digits of your phone",
         privateGreeting: "Hello, {name}!",
@@ -592,6 +598,8 @@ const STRINGS = {
         presenceNo: "Não vou poder ir",
         labelCompanions: "Acompanhantes",
         companionNamePlaceholder: "Nome do acompanhante {n}",
+        companionTypeCompanion: "Acompanhante",
+        companionTypeChild: "Criança",
         labelMenu: "Preferência de menu",
         labelPhoneLast4: "Últimos 4 dígitos do seu telefone",
         privateGreeting: "Olá, {name}!",
@@ -1041,21 +1049,44 @@ function renderCompanionNames(scope) {
     const count = parseInt(countInput.value || '0', 10);
     const list = document.getElementById(scope === 'pub' ? 'pubCompanionNames' : 'privCompanionNames');
     const existingValues = [...list.querySelectorAll('input')].map(i => i.value);
+    const existingTypes = [...list.querySelectorAll('select')].map(sel => sel.value);
 
     list.innerHTML = '';
     for (let i = 0; i < count; i++) {
+        const row = document.createElement('div');
+        row.className = 'companion-row';
+
         const input = document.createElement('input');
         input.type = 'text';
         input.autocomplete = 'off';
         input.placeholder = s.companionNamePlaceholder.replace('{n}', i + 1);
         input.value = existingValues[i] || '';
-        list.appendChild(input);
+        row.appendChild(input);
+
+        const select = document.createElement('select');
+        const companionOpt = document.createElement('option');
+        companionOpt.value = 'companion';
+        companionOpt.textContent = s.companionTypeCompanion;
+        const childOpt = document.createElement('option');
+        childOpt.value = 'child';
+        childOpt.textContent = s.companionTypeChild;
+        select.appendChild(companionOpt);
+        select.appendChild(childOpt);
+        select.value = existingTypes[i] === 'child' ? 'child' : 'companion';
+        row.appendChild(select);
+
+        list.appendChild(row);
     }
 }
 
 function getCompanionNames(scope) {
     const list = document.getElementById(scope === 'pub' ? 'pubCompanionNames' : 'privCompanionNames');
     return [...list.querySelectorAll('input')].map(i => i.value.trim());
+}
+
+function getCompanionTypes(scope) {
+    const list = document.getElementById(scope === 'pub' ? 'pubCompanionNames' : 'privCompanionNames');
+    return [...list.querySelectorAll('select')].map(sel => sel.value);
 }
 
 // ═══════════════════════════════════════════════════════
@@ -1141,6 +1172,7 @@ async function submitPublic() {
             ? parseInt(document.getElementById('pubCompanions').value || '0', 10)
             : 0;
         const companionNames = window.__rsvpAllowCompanions ? getCompanionNames('pub') : [];
+        const companionTypes = window.__rsvpAllowCompanions ? getCompanionTypes('pub') : [];
         const result = await callRsvpApi({
             action: 'submitPublic',
             name,
@@ -1149,6 +1181,7 @@ async function submitPublic() {
             menu: parseInt(document.getElementById('pubMenu').value, 10),
             companions,
             companionNames,
+            companionTypes,
         });
         showSuccess(attending, result.pendingApproval === true);
     } catch (e) {
@@ -1227,6 +1260,7 @@ async function submitPrivate() {
             ? parseInt(document.getElementById('privCompanions').value || '0', 10)
             : 0;
         const companionNames = window.__rsvpAllowCompanions ? getCompanionNames('priv') : [];
+        const companionTypes = window.__rsvpAllowCompanions ? getCompanionTypes('priv') : [];
         await callRsvpApi({
             action: 'verifyAndSubmitPrivate',
             name: confirmedName,
@@ -1235,6 +1269,7 @@ async function submitPrivate() {
             menu: parseInt(document.getElementById('privMenu').value, 10),
             companions,
             companionNames,
+            companionTypes,
         });
         showSuccess(attending, false);
     } catch (e) {
