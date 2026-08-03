@@ -168,6 +168,11 @@
         }
         .stepper input:focus { outline: none; }
 
+        /* ── nomes dos acompanhantes: um input por acompanhante, gerado
+           dinamicamente em sincronia com o valor do stepper acima ── */
+        .companion-names { display: flex; flex-direction: column; gap: .6rem; margin-top: .6rem; }
+        .companion-names:empty { margin-top: 0; }
+
         /* ── phone-verification digits, styled like a code entry ── */
         .otp-group { display: flex; gap: .6rem; }
         .otp-box {
@@ -343,6 +348,7 @@
                 <input type="text" inputmode="numeric" id="pubCompanions" value="0" readonly>
                 <button type="button" class="stepper-btn" data-step="1" data-target="pubCompanions" aria-label="+">+</button>
             </div>
+            <div class="companion-names" id="pubCompanionNames"></div>
         </div>
         <div class="field">
             <label for="pubMenu" data-i18n="labelMenu"></label>
@@ -433,6 +439,7 @@
                 <input type="text" inputmode="numeric" id="privCompanions" value="0" readonly>
                 <button type="button" class="stepper-btn" data-step="1" data-target="privCompanions" aria-label="+">+</button>
             </div>
+            <div class="companion-names" id="privCompanionNames"></div>
         </div>
         <div class="field">
             <label for="privMenu" data-i18n="labelMenu"></label>
@@ -518,6 +525,7 @@ const STRINGS = {
         presenceYes: "I'll be there",
         presenceNo: "Can't make it",
         labelCompanions: "Companions",
+        companionNamePlaceholder: "Guest {n} name",
         labelMenu: "Meal preference",
         labelPhoneLast4: "Last 4 digits of your phone",
         privateGreeting: "Hello, {name}!",
@@ -579,6 +587,7 @@ const STRINGS = {
         presenceYes: "Vou comparecer",
         presenceNo: "Não vou poder ir",
         labelCompanions: "Acompanhantes",
+        companionNamePlaceholder: "Nome do acompanhante {n}",
         labelMenu: "Preferência de menu",
         labelPhoneLast4: "Últimos 4 dígitos do seu telefone",
         privateGreeting: "Olá, {name}!",
@@ -1011,8 +1020,38 @@ function initSteppers() {
             const next = Math.max(0, Math.min(max, parseInt(input.value || '0', 10) + parseInt(btn.dataset.step, 10)));
             input.value = next;
             updateStepperState(input);
+            renderCompanionNames(input.id === 'pubCompanions' ? 'pub' : 'priv');
         });
     });
+}
+
+// ═══════════════════════════════════════════════════════
+//  COMPANION NAMES — um <input> por acompanhante, gerado/removido em
+//  sincronia com o valor do stepper de quantidade acima. Preserva o que
+//  já foi digitado quando a quantidade muda (ex.: 3→2 mantém os 2
+//  primeiros nomes; 2→3 mantém os 2 e abre um 3º vazio).
+// ═══════════════════════════════════════════════════════
+function renderCompanionNames(scope) {
+    const s = STRINGS[currentLang];
+    const countInput = document.getElementById(scope === 'pub' ? 'pubCompanions' : 'privCompanions');
+    const count = parseInt(countInput.value || '0', 10);
+    const list = document.getElementById(scope === 'pub' ? 'pubCompanionNames' : 'privCompanionNames');
+    const existingValues = [...list.querySelectorAll('input')].map(i => i.value);
+
+    list.innerHTML = '';
+    for (let i = 0; i < count; i++) {
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.autocomplete = 'off';
+        input.placeholder = s.companionNamePlaceholder.replace('{n}', i + 1);
+        input.value = existingValues[i] || '';
+        list.appendChild(input);
+    }
+}
+
+function getCompanionNames(scope) {
+    const list = document.getElementById(scope === 'pub' ? 'pubCompanionNames' : 'privCompanionNames');
+    return [...list.querySelectorAll('input')].map(i => i.value.trim());
 }
 
 // ═══════════════════════════════════════════════════════
@@ -1097,6 +1136,7 @@ async function submitPublic() {
         const companions = window.__rsvpAllowCompanions
             ? parseInt(document.getElementById('pubCompanions').value || '0', 10)
             : 0;
+        const companionNames = window.__rsvpAllowCompanions ? getCompanionNames('pub') : [];
         const result = await callRsvpApi({
             action: 'submitPublic',
             name,
@@ -1104,6 +1144,7 @@ async function submitPublic() {
             confirmationStatus: attending ? 1 : 0,
             menu: parseInt(document.getElementById('pubMenu').value, 10),
             companions,
+            companionNames,
         });
         showSuccess(attending, result.pendingApproval === true);
     } catch (e) {
@@ -1181,6 +1222,7 @@ async function submitPrivate() {
         const companions = window.__rsvpAllowCompanions
             ? parseInt(document.getElementById('privCompanions').value || '0', 10)
             : 0;
+        const companionNames = window.__rsvpAllowCompanions ? getCompanionNames('priv') : [];
         await callRsvpApi({
             action: 'verifyAndSubmitPrivate',
             name: confirmedName,
@@ -1188,6 +1230,7 @@ async function submitPrivate() {
             confirmationStatus: attending ? 1 : 0,
             menu: parseInt(document.getElementById('privMenu').value, 10),
             companions,
+            companionNames,
         });
         showSuccess(attending, false);
     } catch (e) {
