@@ -341,7 +341,7 @@
             <label for="pubPhone" data-i18n="labelPhone"></label>
             <div class="phone-row">
                 <select id="pubPhoneCountry" aria-label="Country code"></select>
-                <input type="tel" id="pubPhone" autocomplete="tel" data-i18n-placeholder="placeholderPhone" maxlength="30">
+                <input type="tel" id="pubPhone" autocomplete="tel" data-i18n-placeholder="placeholderPhone" maxlength="20">
             </div>
         </div>
         <div class="field">
@@ -515,6 +515,10 @@
 </footer>
 
 <script>
+// Teto padrão de acompanhantes quando o evento não define rsvpMaxCompanions
+// (evita permitir uma quantidade ilimitada via stepper ou campo manipulado).
+const DEFAULT_MAX_COMPANIONS = 10;
+
 // ═══════════════════════════════════════════════════════
 //  i18n — trancado no idioma do evento (organizador), sem troca
 //  manual pelo convidado. `detectLang()` só serve de fallback
@@ -1027,8 +1031,17 @@ function pulseAttention(id) {
 // ═══════════════════════════════════════════════════════
 //  QUANTITY STEPPER (companions)
 // ═══════════════════════════════════════════════════════
+// Clampa qualquer valor (inclusive digitado manualmente, caso o atributo
+// `readonly` do input seja contornado via devtools) para um inteiro válido
+// entre 0 e o teto configurado — nunca confiar no valor bruto do campo.
+function clampCompanions(rawValue) {
+    const max = window.__rsvpMaxCompanions ?? DEFAULT_MAX_COMPANIONS;
+    const v = parseInt(rawValue, 10);
+    if (!Number.isFinite(v)) return 0;
+    return Math.max(0, Math.min(max, v));
+}
 function updateStepperState(input) {
-    const max = window.__rsvpMaxCompanions ?? Infinity;
+    const max = window.__rsvpMaxCompanions ?? DEFAULT_MAX_COMPANIONS;
     const v = parseInt(input.value || '0', 10);
     const wrap = input.closest('.stepper');
     wrap.querySelector('[data-step="-1"]').disabled = v <= 0;
@@ -1038,9 +1051,17 @@ function initSteppers() {
     document.querySelectorAll('.stepper-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             const input = document.getElementById(btn.dataset.target);
-            const max = window.__rsvpMaxCompanions ?? Infinity;
-            const next = Math.max(0, Math.min(max, parseInt(input.value || '0', 10) + parseInt(btn.dataset.step, 10)));
+            const next = clampCompanions((parseInt(input.value || '0', 10) + parseInt(btn.dataset.step, 10)).toString());
             input.value = next;
+            updateStepperState(input);
+            renderCompanionNames(input.id === 'pubCompanions' ? 'pub' : 'priv');
+        });
+    });
+    // Defesa extra: se o campo (readonly) for editado manualmente via
+    // devtools, reclampa e re-renderiza os nomes ao perder o foco.
+    document.querySelectorAll('#pubCompanions, #privCompanions').forEach(input => {
+        input.addEventListener('input', () => {
+            input.value = clampCompanions(input.value);
             updateStepperState(input);
             renderCompanionNames(input.id === 'pubCompanions' ? 'pub' : 'priv');
         });
@@ -1109,10 +1130,22 @@ function getCompanionTypes(scope) {
 //  é só um cinto-de-segurança pro submit, já que o input nunca deveria
 //  conseguir chegar lá com caractere fora desse conjunto.
 // ═══════════════════════════════════════════════════════
+const MAX_PHONE_DIGITS = 15; // teto do E.164 (ITU-T) — nenhum telefone real passa disso
+function truncatePhoneDigits(value) {
+    let digits = 0;
+    let cut = value.length;
+    for (let i = 0; i < value.length; i++) {
+        if (/\d/.test(value[i])) {
+            digits++;
+            if (digits > MAX_PHONE_DIGITS) { cut = i; break; }
+        }
+    }
+    return value.slice(0, cut);
+}
 function initPhoneMasking() {
     const input = document.getElementById('pubPhone');
     input.addEventListener('input', () => {
-        const cleaned = input.value.replace(/[^0-9()+\-\s]/g, '');
+        const cleaned = truncatePhoneDigits(input.value.replace(/[^0-9()+\-\s]/g, ''));
         if (cleaned === input.value) return;
         const diff = input.value.length - cleaned.length;
         const pos = Math.max(0, input.selectionStart - diff);
@@ -1234,7 +1267,7 @@ async function submitPublic() {
 
     if (!name) { markInvalid('pubName'); return showPublicError(s.errMissingName); }
     if (!phone) { markInvalid('pubPhone'); return showPublicError(s.errMissingPhone); }
-    if (!isValidPhoneFormat(phone) || phoneDigitCount(phone) < 8) {
+    if (!isValidPhoneFormat(phone) || phoneDigitCount(phone) < 8 || phoneDigitCount(phone) > 15) {
         markInvalid('pubPhone');
         return showPublicError(s.errPhoneInvalid);
     }
@@ -1246,7 +1279,7 @@ async function submitPublic() {
 
     try {
         const companions = window.__rsvpAllowCompanions
-            ? parseInt(document.getElementById('pubCompanions').value || '0', 10)
+            ? clampCompanions(document.getElementById('pubCompanions').value)
             : 0;
         const companionNames = window.__rsvpAllowCompanions ? getCompanionNames('pub') : [];
         const companionTypes = window.__rsvpAllowCompanions ? getCompanionTypes('pub') : [];
@@ -1336,7 +1369,7 @@ async function submitPrivate() {
 
     try {
         const companions = window.__rsvpAllowCompanions
-            ? parseInt(document.getElementById('privCompanions').value || '0', 10)
+            ? clampCompanions(document.getElementById('privCompanions').value)
             : 0;
         const companionNames = window.__rsvpAllowCompanions ? getCompanionNames('priv') : [];
         const companionTypes = window.__rsvpAllowCompanions ? getCompanionTypes('priv') : [];
@@ -1420,7 +1453,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         window.__rsvpAllowCompanions = event.rsvpAllowCompanions === true;
         window.__rsvpMaxCompanions = typeof event.rsvpMaxCompanions === 'number' && event.rsvpMaxCompanions > 0
-            ? event.rsvpMaxCompanions : Infinity;
+            ? event.rsvpMaxCompanions : DEFAULT_MAX_COMPANIONS;
         document.getElementById('pubPhoneCountry').value =
             isValidCountryId(event.rsvpDefaultCountry) ? event.rsvpDefaultCountry.toUpperCase() : 'BR';
         currentEventTitle = event.eventTitle || null;
