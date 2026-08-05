@@ -27,6 +27,74 @@
         window.__rsvpToken = __p.get("token");
     </script>
 
+    <script type="module">
+        // ─── App Check ────────────────────────────────────────
+        // Atesta pro backend que esta chamada vem do rsvp.html de verdade,
+        // não de um script batendo direto no endpoint público. Mesma
+        // proteção que o app nativo já ganhou (ver firebase_config.dart),
+        // adaptada pra site estático via reCAPTCHA v3 (não tem Play
+        // Integrity/App Attest no navegador).
+        //
+        // Reaproveita o mesmo Firebase Web App já registrado pro alvo web
+        // do Flutter (ver lib/backend/firebase/firebase_config.dart) — App
+        // Check é por appId, não precisa de um segundo app web só pra isso.
+        //
+        // Site key do reCAPTCHA v3 (mesmo Firebase Web App do client
+        // Flutter — público por natureza, a chave secreta correspondente
+        // NÃO entra aqui, fica só no Firebase Console).
+        const RECAPTCHA_V3_SITE_KEY = '6LeCA3YtAAAAANSEdxmY375Ti8X6j0iIQMbFSxNd';
+
+        // Descomente pra testar localmente sem uma site key real: o SDK
+        // imprime um debug token no console do navegador na primeira carga,
+        // que precisa ser registrado em Firebase Console > App Check > apps
+        // web > "Manage debug tokens".
+        // self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+
+        let __appCheckTokenPromise = null;
+
+        async function __initAppCheck() {
+            const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js');
+            const { initializeAppCheck, ReCaptchaV3Provider, getToken } =
+                await import('https://www.gstatic.com/firebasejs/10.14.1/firebase-app-check.js');
+
+            const app = initializeApp({
+                apiKey: 'AIzaSyB1wOwTWEIjxhx4hvkOzBF8rMZcgLLOVUA',
+                authDomain: 'planne-692f7.firebaseapp.com',
+                projectId: 'planne-692f7',
+                storageBucket: 'planne-692f7.firebasestorage.app',
+                messagingSenderId: '136432930965',
+                appId: '1:136432930965:web:83213ea34af4c013bc0b9c',
+            });
+            const appCheck = initializeAppCheck(app, {
+                provider: new ReCaptchaV3Provider(RECAPTCHA_V3_SITE_KEY),
+                isTokenAutoRefreshEnabled: true,
+            });
+            return { appCheck, getToken };
+        }
+
+        // Nunca lança: se App Check falhar por qualquer motivo (site key
+        // ausente, reCAPTCHA bloqueado por extensão, etc.), o RSVP não pode
+        // travar por causa disso — só perde a proteção extra, o publicToken
+        // continua sendo a autenticação real do fluxo.
+        window.__getAppCheckToken = async function () {
+            try {
+                if (!__appCheckTokenPromise) {
+                    __appCheckTokenPromise = __initAppCheck();
+                }
+                const { appCheck, getToken } = await __appCheckTokenPromise;
+                const result = await getToken(appCheck, /* forceRefresh */ false);
+                return result.token;
+            } catch (e) {
+                console.warn('App Check indisponível, seguindo sem o header:', e);
+                // showAppCheckWarning() é definida no <script> clássico mais
+                // abaixo no documento — scripts type="module" só rodam depois
+                // que o parsing do HTML termina, então ela já existe aqui.
+                window.showAppCheckWarning?.();
+                return null;
+            }
+        };
+    </script>
+
     <style>
         /* ── capa do evento (rsvpCoverImageUrl) ── */
         .cover-photo { display: none; } /* substituída pelo .hero full-bleed abaixo */
@@ -243,6 +311,17 @@
         </svg>
     </button>
 </header>
+
+<!-- Aviso não-bloqueante: aparece só se o reCAPTCHA/App Check falhar ao
+     carregar (ad blocker, extensão de privacidade, etc.) — não impede o
+     convidado de confirmar presença, só avisa. Ver window.__getAppCheckToken
+     no <script type="module"> do <head>. -->
+<div style="max-width:560px;margin:0 auto;padding:0 20px;box-sizing:border-box;">
+    <div class="msg msg-error" id="appCheckWarning" role="alert">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span id="appCheckWarningText"></span>
+    </div>
+</div>
 
 <!-- CAPA — retrato emoldurado (rsvpCoverImageUrl), não mais full-bleed
      com texto por cima (ilegível dependendo da foto). Título/data ficam
@@ -530,6 +609,7 @@ const STRINGS = {
         loading: "Loading your invitation…",
         invalidTitle: "Invitation not found",
         invalidSub: "This invitation link is invalid or has been disabled.\nAsk the organizer for a new one.",
+        appCheckWarning: "We couldn't load a security check on this page (often caused by an ad blocker or privacy extension). You can still RSVP normally.",
 
         invitedEyebrow: "You're invited",
         publicSubtitle: "Fill in your details to confirm your presence.",
@@ -595,6 +675,7 @@ const STRINGS = {
         loading: "Carregando seu convite…",
         invalidTitle: "Convite não encontrado",
         invalidSub: "Este link de convite é inválido ou foi desativado.\nPeça um novo link ao organizador.",
+        appCheckWarning: "Não conseguimos carregar uma verificação de segurança desta página (geralmente causado por um bloqueador de anúncios ou extensão de privacidade). Você ainda pode confirmar presença normalmente.",
 
         invitedEyebrow: "Você foi convidado",
         publicSubtitle: "Preencha seus dados para confirmar presença.",
@@ -998,9 +1079,14 @@ function showState(id) {
 //  4=Infantil, 5=Sem glúten, 6=Sem lactose, 7=Outro.
 // ═══════════════════════════════════════════════════════
 async function callRsvpApi(payload) {
+    const appCheckToken = await window.__getAppCheckToken();
+    const headers = { 'Content-Type': 'application/json' };
+    if (appCheckToken) {
+        headers['X-Firebase-AppCheck'] = appCheckToken;
+    }
     const res = await fetch(window.__RSVP_ENDPOINT, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({ publicToken: window.__rsvpToken, ...payload }),
     });
     const data = await res.json().catch(() => ({}));
@@ -1247,6 +1333,14 @@ function setPresence(scope, attending) {
     if (companionsField) {
         companionsField.classList.toggle('show', attending === true && window.__rsvpAllowCompanions === true);
     }
+}
+
+// Chamado pelo <script type="module"> (App Check) quando o token não
+// pôde ser obtido — não impede o RSVP, só avisa. Idempotente: seguro
+// chamar de novo em toda tentativa de fetch enquanto continuar bloqueado.
+function showAppCheckWarning() {
+    document.getElementById('appCheckWarningText').textContent = STRINGS[currentLang].appCheckWarning;
+    document.getElementById('appCheckWarning').classList.add('show');
 }
 
 // ═══════════════════════════════════════════════════════
