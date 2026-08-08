@@ -45,6 +45,10 @@
       {
         "source": "/auth-action.html",
         "headers": [{ "key": "Cache-Control", "value": "no-store" }]
+      },
+      {
+        "source": "/assets/invite-previews/**",
+        "headers": [{ "key": "X-Frame-Options", "value": "SAMEORIGIN" }]
       }
     ],
     "rewrites": [
