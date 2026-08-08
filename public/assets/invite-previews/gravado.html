@@ -32,6 +32,7 @@
     box-shadow: 0 20px 44px -18px rgba(0,0,0,.55);
     background: linear-gradient(160deg, #3a2c1c, #1c2b26 55%, #0a1f1a);
   }
+  .hero-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
   .hero-frame { position: absolute; inset: 6px; z-index: 1; pointer-events: none; }
   .hero-corner { position: absolute; width: 22px; height: 22px; }
   .hero-corner svg { width: 100%; height: 100%; stroke: var(--teal); fill: none; stroke-width: 1.4; }
@@ -89,7 +90,7 @@
 
 <div class="hero">
   <div class="hero-photo-frame">
-    <div class="hero-photo-clip"></div>
+    <div class="hero-photo-clip"><img class="hero-photo" id="photo" alt=""></div>
     <div class="hero-frame">
       <div class="hero-corner tl"><svg viewBox="0 0 26 26"><path d="M2 24 C2 10 10 2 24 2"/><path d="M2 18 C2 9 9 2 18 2" opacity=".5"/></svg></div>
       <div class="hero-corner tr"><svg viewBox="0 0 26 26"><path d="M2 24 C2 10 10 2 24 2"/><path d="M2 18 C2 9 9 2 18 2" opacity=".5"/></svg></div>
@@ -130,6 +131,35 @@
 (function () {
   var qs = new URLSearchParams(location.search);
   var lang = qs.get('lang') === 'en' ? 'en' : 'pt';
+  // "photo"/"accent" — usados pelas páginas de evento pra mostrar a
+  // imagem e a cor predominante DAQUELE evento neste convite de
+  // demonstração, mesmo mecanismo do rsvp.html real (applyAccentColor).
+  // Este estilo é sempre escuro, então clareamos (não escurecemos) a cor
+  // escolhida pro texto/borda continuar legível em cima do fundo escuro,
+  // mesma regra do isDark em applyAccentColor no rsvp.html real.
+  var photoParam = qs.get('photo');
+  if (photoParam) {
+    var img = document.getElementById('photo');
+    img.onerror = function () { img.style.display = 'none'; };
+    img.src = photoParam;
+  }
+  function lightenHex(hex, amount) {
+    var n = parseInt(hex.slice(1), 16);
+    var mix = function (channel) { return Math.min(255, Math.round(channel + (255 - channel) * amount)); };
+    var r = mix((n >> 16) & 255);
+    var g = mix((n >> 8) & 255);
+    var b = mix(n & 255);
+    return '#' + [r, g, b].map(function (x) { return x.toString(16).padStart(2, '0'); }).join('');
+  }
+  var accentParam = qs.get('accent');
+  if (accentParam) {
+    var hex = accentParam.charAt(0) === '#' ? accentParam : '#' + accentParam;
+    if (/^#[0-9a-fA-F]{6}$/.test(hex)) {
+      var root = document.documentElement;
+      root.style.setProperty('--teal', hex);
+      root.style.setProperty('--teal-dark', lightenHex(hex, 0.6));
+    }
+  }
   var STR = {
     pt: {
       eyebrow: "Você foi convidado", title: "Júlia & Marcos", date: "Sábado, 26 de setembro de 2026",

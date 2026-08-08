@@ -1074,15 +1074,35 @@ function darkenHex(hex, amount) {
     const b = Math.max(0, Math.round((n & 255) * (1 - amount)));
     return '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
 }
+function lightenHex(hex, amount) {
+    const n = parseInt(hex.slice(1), 16);
+    const mix = (channel) => Math.min(255, Math.round(channel + (255 - channel) * amount));
+    const r = mix((n >> 16) & 255);
+    const g = mix((n >> 8) & 255);
+    const b = mix(n & 255);
+    return '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
+}
+// --teal-dark é usado como cor de TEXTO (countdown, saudação privada,
+// "rsvp-another" etc.) em cima do fundo da página (--paper/--mist). No
+// modo claro esse fundo é claro, então escurecer a cor escolhida pelo
+// organizador garante contraste. No modo escuro o fundo já é bem escuro
+// (#101715) — se a cor escolhida também for escura, escurecer ainda mais
+// deixa o texto ilegível. Por isso, no escuro clareamos em vez de
+// escurecer. currentAccentHex guarda a última cor pra recalcular quando
+// o tema muda (ver toggleTheme).
+let currentAccentHex = null;
 function applyAccentColor(hex) {
     const root = document.documentElement;
     if (!hex || !/^#[0-9a-fA-F]{6}$/.test(hex)) {
+        currentAccentHex = null;
         root.style.removeProperty('--teal');
         root.style.removeProperty('--teal-dark');
         return;
     }
+    currentAccentHex = hex;
+    const isDark = root.dataset.theme === 'dark';
     root.style.setProperty('--teal', hex);
-    root.style.setProperty('--teal-dark', darkenHex(hex, 0.35));
+    root.style.setProperty('--teal-dark', isDark ? lightenHex(hex, 0.6) : darkenHex(hex, 0.35));
 }
 
 // ═══════════════════════════════════════════════════════
@@ -1204,6 +1224,9 @@ function toggleTheme() {
     localStorage.setItem('planne-theme', next);
     document.getElementById('theme-icon').innerHTML = next === 'dark' ? MOON_ICON : SUN_ICON;
     updateThemeColor();
+    // Recalcula --teal-dark pro novo tema (claro escurece, escuro clareia
+    // a cor escolhida pelo organizador — ver applyAccentColor).
+    if (currentAccentHex) applyAccentColor(currentAccentHex);
 }
 function updateThemeColor() {
     document.querySelector('meta[name="theme-color"]')?.setAttribute('content', document.documentElement.dataset.theme === 'dark' ? '#101715' : '#f8fafc');

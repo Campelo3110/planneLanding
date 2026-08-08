@@ -32,6 +32,7 @@
     box-shadow: 0 20px 40px -18px rgba(201,116,138,.5);
     background: radial-gradient(circle at 32% 28%, #f2d3da, #d98ba0 55%, #8a4258 100%);
   }
+  .hero-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
   .hero-eyebrow { font: 600 .72rem "Quicksand", sans-serif; text-transform: uppercase; letter-spacing: .2em; color: var(--muted); margin: 0 0 .5rem; }
   .hero-title { font-family: var(--display-font); font-weight: 400; font-size: clamp(2.4rem, 9vw, 3.2rem); line-height: 1.15; margin: 0; color: var(--ink); }
   .hero-date { font: 500 .9rem "Quicksand", sans-serif; color: var(--muted); margin: .55rem 0 0; text-transform: capitalize; }
@@ -73,7 +74,7 @@
 <div class="hero">
   <div class="hero-photo-frame">
     <div class="hero-blossoms"></div>
-    <div class="hero-photo-clip"></div>
+    <div class="hero-photo-clip"><img class="hero-photo" id="photo" alt=""></div>
   </div>
   <p class="hero-eyebrow" id="eyebrow"></p>
   <h1 class="hero-title" id="title"></h1>
@@ -107,6 +108,31 @@
 (function () {
   var qs = new URLSearchParams(location.search);
   var lang = qs.get('lang') === 'en' ? 'en' : 'pt';
+  // "photo"/"accent" — usados pelas páginas de evento pra mostrar a
+  // imagem e a cor predominante DAQUELE evento neste convite de
+  // demonstração, mesmo mecanismo do rsvp.html real (applyAccentColor).
+  var photoParam = qs.get('photo');
+  if (photoParam) {
+    var img = document.getElementById('photo');
+    img.onerror = function () { img.style.display = 'none'; };
+    img.src = photoParam;
+  }
+  function darkenHex(hex, amount) {
+    var n = parseInt(hex.slice(1), 16);
+    var r = Math.max(0, Math.round(((n >> 16) & 255) * (1 - amount)));
+    var g = Math.max(0, Math.round(((n >> 8) & 255) * (1 - amount)));
+    var b = Math.max(0, Math.round((n & 255) * (1 - amount)));
+    return '#' + [r, g, b].map(function (x) { return x.toString(16).padStart(2, '0'); }).join('');
+  }
+  var accentParam = qs.get('accent');
+  if (accentParam) {
+    var hex = accentParam.charAt(0) === '#' ? accentParam : '#' + accentParam;
+    if (/^#[0-9a-fA-F]{6}$/.test(hex)) {
+      var root = document.documentElement;
+      root.style.setProperty('--teal', hex);
+      root.style.setProperty('--teal-dark', darkenHex(hex, 0.35));
+    }
+  }
   var STR = {
     pt: {
       eyebrow: "Você foi convidado", title: "Júlia & Marcos", date: "Sábado, 26 de setembro de 2026",

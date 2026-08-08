@@ -28,6 +28,7 @@
     box-shadow: 0 24px 48px -20px rgba(0,0,0,.4), 0 4px 14px -4px rgba(0,0,0,.12);
     background: linear-gradient(155deg, #e9c9a8, #cfa27a 45%, #9c6b4d 75%, #5b3a2c);
   }
+  .hero-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
   .hero-eyebrow { font: 600 .72rem "Jost", sans-serif; text-transform: uppercase; letter-spacing: .3em; color: var(--muted); margin: 0 0 .5rem; }
   .hero-title { font-family: var(--display-font); font-style: italic; font-weight: 500; font-size: clamp(1.9rem, 7vw, 2.7rem); line-height: 1.15; margin: 0; letter-spacing: -.01em; color: var(--ink); }
   .hero-date { font: 500 .9rem "Jost", sans-serif; color: var(--muted); margin: .55rem 0 0; text-transform: capitalize; }
@@ -67,7 +68,7 @@
 <body>
 
 <div class="hero">
-  <div class="hero-photo-frame"><div class="hero-photo-clip"></div></div>
+  <div class="hero-photo-frame"><div class="hero-photo-clip"><img class="hero-photo" id="photo" alt=""></div></div>
   <p class="hero-eyebrow" id="eyebrow"></p>
   <h1 class="hero-title" id="title"></h1>
   <p class="hero-date" id="date"></p>
@@ -100,6 +101,31 @@
 (function () {
   var qs = new URLSearchParams(location.search);
   var lang = qs.get('lang') === 'en' ? 'en' : 'pt';
+  // "photo"/"accent" — usados pelas páginas de evento pra mostrar a
+  // imagem e a cor predominante DAQUELE evento neste convite de
+  // demonstração, mesmo mecanismo do rsvp.html real (applyAccentColor).
+  var photoParam = qs.get('photo');
+  if (photoParam) {
+    var img = document.getElementById('photo');
+    img.onerror = function () { img.style.display = 'none'; };
+    img.src = photoParam;
+  }
+  function darkenHex(hex, amount) {
+    var n = parseInt(hex.slice(1), 16);
+    var r = Math.max(0, Math.round(((n >> 16) & 255) * (1 - amount)));
+    var g = Math.max(0, Math.round(((n >> 8) & 255) * (1 - amount)));
+    var b = Math.max(0, Math.round((n & 255) * (1 - amount)));
+    return '#' + [r, g, b].map(function (x) { return x.toString(16).padStart(2, '0'); }).join('');
+  }
+  var accentParam = qs.get('accent');
+  if (accentParam) {
+    var hex = accentParam.charAt(0) === '#' ? accentParam : '#' + accentParam;
+    if (/^#[0-9a-fA-F]{6}$/.test(hex)) {
+      var root = document.documentElement;
+      root.style.setProperty('--teal', hex);
+      root.style.setProperty('--teal-dark', darkenHex(hex, 0.35));
+    }
+  }
   var STR = {
     pt: {
       eyebrow: "Você foi convidado", title: "Júlia & Marcos", date: "Sábado, 26 de setembro de 2026",
