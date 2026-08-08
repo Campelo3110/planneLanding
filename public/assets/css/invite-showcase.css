@@ -1,11 +1,12 @@
 /* Digital invitation showcase — three design directions (foto editorial,
    ilustrado, cartão gravado), each a live, scaled-down peek of the real
-   RSVP template it represents (public/assets/invite-previews/*.html —
-   parametrized copies of templetesSites/01-03), not a hand-drawn
-   reinterpretation. The .invite-peek frame renders the real page inside
-   an <iframe> at its true design width (480px) and crops it before the
-   submit button/footer, so what's shown is pixel-identical to the actual
-   invitation guests get, form fields included. */
+   RSVP invitation it represents (public/assets/invite-previews/*.html —
+   parametrized copies of the actual hero+card structure/classes from
+   rsvp.html + rsvp-templates.css, with fake copy and a placeholder photo),
+   not a hand-drawn reinterpretation. The .invite-peek frame renders the
+   real page inside an <iframe> at its true design width (480px) and crops
+   it right after the presence toggle, before the rest of the form/footer,
+   so what's shown matches the actual invitation guests get. */
 
 .invite-showcase {
   padding: 5rem 0;
@@ -109,9 +110,9 @@
   pointer-events: none;
 }
 
-.invite-peek-editorial { --peek-h: 930; }
-.invite-peek-ilustrado { --peek-h: 540; }
-.invite-peek-gravado { --peek-h: 650; }
+.invite-peek-editorial { --peek-h: 1030; }
+.invite-peek-ilustrado { --peek-h: 965; }
+.invite-peek-gravado { --peek-h: 1040; }
 
 /* ── Collaboration placeholder (home "feature row" #4) ───────────────
    Same slot/markup shape as the real screenshot rows (.v2-phone-screen),

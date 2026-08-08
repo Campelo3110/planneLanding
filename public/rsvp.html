@@ -130,6 +130,7 @@
         .private-greeting[hidden] { display: none; }
 
         /* ── botão "adicionar ao calendário" (sucesso) ── */
+        .calendar-wrap { position: relative; }
         .btn-calendar {
             display: flex; align-items: center; justify-content: center; gap: 8px;
             width: 100%; height: 46px; margin-top: 1rem; border-radius: var(--radius-sm);
@@ -138,6 +139,34 @@
         }
         .btn-calendar[hidden] { display: none; }
         .btn-calendar svg { width: 16px; height: 16px; stroke: currentColor; stroke-width: 2; fill: none; }
+
+        /* ── menu de opções (desktop): sem um app de calendário óbvio pra
+           abrir direto (ao contrário de iOS/Android), mostra as 3 opções
+           mais usadas em vez de só derrubar um .ics sem explicação. ── */
+        .calendar-menu {
+            position: absolute; z-index: 5; top: calc(100% + 6px); left: 0; right: 0;
+            border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--paper);
+            box-shadow: 0 12px 28px -10px rgba(0,0,0,.22), 0 4px 10px -4px rgba(0,0,0,.12);
+            padding: 6px; display: flex; flex-direction: column; gap: 2px;
+        }
+        .calendar-menu[hidden] { display: none; }
+        .calendar-menu-item {
+            display: block; width: 100%; padding: 10px 12px; border: none; border-radius: calc(var(--radius-sm) - 4px);
+            background: transparent; color: var(--ink); text-decoration: none; text-align: left;
+            font: 500 .86rem "Planne Inter", sans-serif; cursor: pointer;
+        }
+        .calendar-menu-item:hover { background: var(--mist); }
+
+        /* ── "confirmar para outra pessoa" (modo público): dispositivo
+           compartilhado (ex.: alguém confirmando pela família toda) —
+           reabre o formulário em branco sem sair da página. ── */
+        .rsvp-another {
+            display: block; width: 100%; margin: 1.4rem 0 0; padding: 0; border: none; background: none;
+            color: var(--teal-dark); font: 600 .85rem "Planne Inter", sans-serif; cursor: pointer; text-align: center;
+        }
+        .rsvp-another[hidden] { display: none; }
+        .rsvp-another::after { content: "→"; margin-left: 6px; display: inline-block; transition: transform .15s; }
+        .rsvp-another:hover::after { transform: translateX(3px); }
     </style>
 
     <link rel="stylesheet" href="/assets/css/utility-pages.css">
@@ -562,9 +591,25 @@
         </div>
         <p class="state-title" id="successTitle"></p>
         <p class="state-sub" id="successSub"></p>
-        <button class="btn-calendar" id="btnAddCalendar" hidden onclick="downloadIcs()">
-            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-            <span data-i18n="btnAddCalendar"></span>
+        <div class="calendar-wrap">
+            <button class="btn-calendar" id="btnAddCalendar" hidden onclick="onAddCalendarClick()">
+                <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                <span data-i18n="btnAddCalendar"></span>
+            </button>
+            <div class="calendar-menu" id="calendarMenu" hidden>
+                <a class="calendar-menu-item" id="calendarMenuGoogle" target="_blank" rel="noopener" onclick="closeCalendarMenu()">
+                    <span data-i18n="btnAddCalendarGoogle"></span>
+                </a>
+                <a class="calendar-menu-item" id="calendarMenuOutlook" target="_blank" rel="noopener" onclick="closeCalendarMenu()">
+                    <span data-i18n="btnAddCalendarOutlook"></span>
+                </a>
+                <button type="button" class="calendar-menu-item" id="calendarMenuIcs" onclick="downloadIcs()">
+                    <span data-i18n="btnAddCalendarIcs"></span>
+                </button>
+            </div>
+        </div>
+        <button type="button" class="rsvp-another" id="btnAddAnother" hidden onclick="startAnotherPublicRsvp()">
+            <span data-i18n="btnAddAnother"></span>
         </button>
     </div>
 
@@ -597,6 +642,28 @@
 // Teto padrão de acompanhantes quando o evento não define rsvpMaxCompanions
 // (evita permitir uma quantidade ilimitada via stepper ou campo manipulado).
 const DEFAULT_MAX_COMPANIONS = 10;
+
+// ═══════════════════════════════════════════════════════
+//  MEMÓRIA DE PREENCHIMENTO (modo público) — guarda no localStorage que
+//  esse navegador já confirmou presença nesse convite, pra quem reabre o
+//  link (ex.: voltou pelo WhatsApp) cair direto na tela de sucesso em vez
+//  de ver o formulário em branco de novo e achar que precisa reenviar.
+//  Só faz sentido em modo público: em modo privado cada convidado busca
+//  pelo próprio nome, então o mesmo aparelho pode legitimamente responder
+//  por pessoas diferentes sem que isso seja um reenvio acidental.
+// ═══════════════════════════════════════════════════════
+function rsvpStorageKey() { return `planne_rsvp_${window.__rsvpToken}`; }
+function saveRsvpCompletion(name, attending, pendingApproval) {
+    try {
+        localStorage.setItem(rsvpStorageKey(), JSON.stringify({ name, attending, pendingApproval, ts: Date.now() }));
+    } catch (e) { /* modo privado do navegador, quota, etc. — não é crítico */ }
+}
+function loadRsvpCompletion() {
+    try {
+        const raw = localStorage.getItem(rsvpStorageKey());
+        return raw ? JSON.parse(raw) : null;
+    } catch (e) { return null; }
+}
 
 // ═══════════════════════════════════════════════════════
 //  i18n — trancado no idioma do evento (organizador), sem troca
@@ -650,6 +717,10 @@ const STRINGS = {
         faqLabel: "Good to know",
 
         btnAddCalendar: "Add to calendar",
+        btnAddCalendarGoogle: "Google Calendar",
+        btnAddCalendarOutlook: "Outlook",
+        btnAddCalendarIcs: "Apple Calendar / other (.ics file)",
+        btnAddAnother: "RSVP for someone else",
 
         btnSend: "Send RSVP",
         btnSearch: "Search",
@@ -716,6 +787,10 @@ const STRINGS = {
         faqLabel: "Bom saber",
 
         btnAddCalendar: "Adicionar ao calendário",
+        btnAddCalendarGoogle: "Google Agenda",
+        btnAddCalendarOutlook: "Outlook",
+        btnAddCalendarIcs: "Apple Calendar / outro (arquivo .ics)",
+        btnAddAnother: "Confirmar presença de mais alguém",
 
         btnSend: "Enviar confirmação",
         btnSearch: "Buscar",
@@ -827,19 +902,27 @@ function startCountdown() {
 }
 
 // ═══════════════════════════════════════════════════════
-//  ADICIONAR AO CALENDÁRIO (.ics)
+//  ADICIONAR AO CALENDÁRIO
+//  iOS: navegação direta pro .ics abre a tela nativa "Adicionar ao
+//  Calendário" (ver isIOS abaixo). Android: não tem esse atalho — navegar
+//  pra um blob text/calendar só baixa o arquivo pro Downloads sem abrir
+//  nada, então usamos o link de criação de evento do Google Agenda (o app
+//  padrão de calendário em praticamente todo Android), que abre com os
+//  dados já preenchidos. Desktop: não existe "o" app de calendário certo
+//  pra adivinhar, então mostra um menu com as opções mais comuns em vez de
+//  só derrubar um arquivo sem explicação.
 // ═══════════════════════════════════════════════════════
-function downloadIcs() {
-    if (!currentEventDate) return;
+function eventTimeRange() {
+    if (!currentEventDate) return null;
     const start = new Date(currentEventDate);
-    if (Number.isNaN(start.getTime())) return;
+    if (Number.isNaN(start.getTime())) return null;
     const end = new Date(start.getTime() + 4 * 60 * 60 * 1000); // 4h de duração default
+    return { start, end };
+}
 
+function buildIcs(start, end, title, description) {
     const toIcsDate = (d) => d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
-    const title = currentEventTitle || 'Planne';
-    const description = window.__rsvpLocationInfo || '';
-
-    const ics = [
+    return [
         'BEGIN:VCALENDAR',
         'VERSION:2.0',
         'PRODID:-//Planne//RSVP//PT',
@@ -853,9 +936,58 @@ function downloadIcs() {
         'END:VEVENT',
         'END:VCALENDAR',
     ].filter(Boolean).join('\r\n');
+}
+
+function buildGoogleCalendarUrl(start, end, title, description) {
+    const toGDate = (d) => d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    const params = new URLSearchParams({
+        action: 'TEMPLATE',
+        text: title,
+        dates: `${toGDate(start)}/${toGDate(end)}`,
+    });
+    if (description) params.set('details', description);
+    return `https://calendar.google.com/calendar/render?${params.toString()}`;
+}
+
+function buildOutlookCalendarUrl(start, end, title, description) {
+    const params = new URLSearchParams({
+        path: '/calendar/action/compose',
+        rru: 'addevent',
+        startdt: start.toISOString(),
+        enddt: end.toISOString(),
+        subject: title,
+    });
+    if (description) params.set('body', description);
+    return `https://outlook.live.com/calendar/0/deeplink/compose?${params.toString()}`;
+}
+
+function isIOSDevice() {
+    return /iP(hone|ad|od)/.test(navigator.userAgent) ||
+        (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+}
+function isAndroidDevice() {
+    return /Android/.test(navigator.userAgent);
+}
+
+function downloadIcs() {
+    const range = eventTimeRange();
+    if (!range) return;
+    const title = currentEventTitle || 'Planne';
+    const description = window.__rsvpLocationInfo || '';
+    const ics = buildIcs(range.start, range.end, title, description);
 
     const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
     const url = URL.createObjectURL(blob);
+
+    if (isIOSDevice()) {
+        // Attribute `download` faz o iOS salvar silenciosamente no app
+        // Arquivos em vez de abrir a tela nativa — por isso a navegação
+        // direta aqui, sem esse atributo.
+        window.location.href = url;
+        setTimeout(() => URL.revokeObjectURL(url), 4000);
+        return;
+    }
+
     const a = document.createElement('a');
     a.href = url;
     a.download = `${title.replace(/[^\w\- ]/g, '').trim() || 'evento'}.ics`;
@@ -863,6 +995,44 @@ function downloadIcs() {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+    closeCalendarMenu();
+}
+
+function closeCalendarMenu() {
+    document.getElementById('calendarMenu').hidden = true;
+    document.removeEventListener('click', onCalendarMenuOutsideClick);
+}
+function onCalendarMenuOutsideClick(e) {
+    const wrap = document.getElementById('btnAddCalendar').closest('.calendar-wrap');
+    if (!wrap.contains(e.target)) closeCalendarMenu();
+}
+
+function onAddCalendarClick() {
+    const range = eventTimeRange();
+    if (!range) return;
+    const title = currentEventTitle || 'Planne';
+    const description = window.__rsvpLocationInfo || '';
+
+    if (isAndroidDevice()) {
+        window.open(buildGoogleCalendarUrl(range.start, range.end, title, description), '_blank', 'noopener');
+        return;
+    }
+    if (isIOSDevice()) {
+        downloadIcs();
+        return;
+    }
+
+    // Desktop: sem um app de calendário óbvio pra abrir direto, mostra as
+    // opções mais comuns em vez de só derrubar um .ics sem contexto.
+    document.getElementById('calendarMenuGoogle').href = buildGoogleCalendarUrl(range.start, range.end, title, description);
+    document.getElementById('calendarMenuOutlook').href = buildOutlookCalendarUrl(range.start, range.end, title, description);
+    const menu = document.getElementById('calendarMenu');
+    const wasOpen = !menu.hidden;
+    closeCalendarMenu();
+    if (!wasOpen) {
+        menu.hidden = false;
+        setTimeout(() => document.addEventListener('click', onCalendarMenuOutsideClick), 0);
+    }
 }
 
 // ═══════════════════════════════════════════════════════
@@ -1389,6 +1559,7 @@ async function submitPublic() {
             companionNames,
             companionTypes,
         });
+        saveRsvpCompletion(name, attending, result.pendingApproval === true);
         showSuccess(attending, result.pendingApproval === true);
     } catch (e) {
         showPublicError(s.errGeneric);
@@ -1520,7 +1691,27 @@ function showSuccess(attending, pendingApproval) {
     const calendarBtn = document.getElementById('btnAddCalendar');
     calendarBtn.hidden = !(attending && !pendingApproval && currentEventDate);
 
+    document.getElementById('btnAddAnother').hidden = window.__rsvpMode !== 'publico';
+
     showState('stateSuccess');
+}
+
+// Reabre o formulário público em branco sem sair da página — pro caso de
+// alguém confirmando por mais de uma pessoa no mesmo aparelho (ex.: pela
+// família toda). A confirmação anterior fica salva; só a mais recente é
+// usada como "já respondeu" no próximo carregamento (ver loadRsvpCompletion).
+function startAnotherPublicRsvp() {
+    hidePublicError();
+    document.getElementById('pubName').value = '';
+    document.getElementById('pubPhone').value = '';
+    document.getElementById('pubCompanions').value = '0';
+    document.getElementById('pubCompanionNames').innerHTML = '';
+    document.getElementById('pubMenu').value = '1';
+    setPresence('pub', null);
+    document.getElementById('pubSubmitBtn').disabled = false;
+    document.getElementById('pubSpinner').style.display = 'none';
+    showState('statePublicForm');
+    document.getElementById('pubName').focus();
 }
 
 // ═══════════════════════════════════════════════════════
@@ -1591,8 +1782,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         renderOrganizerMessage(event);
         startCountdown();
 
-        const targetState = event.rsvpMode === 'privado' ? 'statePrivateSearch' : 'statePublicForm';
-        showState(targetState);
+        window.__rsvpMode = event.rsvpMode === 'privado' ? 'privado' : 'publico';
+
+        // Já respondeu nesse aparelho (modo público)? Pula direto pra tela
+        // de sucesso em vez de mostrar o formulário em branco de novo —
+        // ver comentário em cima de rsvpStorageKey().
+        const cachedCompletion = window.__rsvpMode === 'publico' ? loadRsvpCompletion() : null;
+        if (cachedCompletion) {
+            showSuccess(cachedCompletion.attending, cachedCompletion.pendingApproval === true);
+        } else {
+            const targetState = window.__rsvpMode === 'privado' ? 'statePrivateSearch' : 'statePublicForm';
+            showState(targetState);
+        }
     } catch (e) {
         showState('stateInvalid');
     }

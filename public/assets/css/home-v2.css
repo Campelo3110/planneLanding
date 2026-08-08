@@ -152,7 +152,7 @@
 .v2-event-card img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
 .v2-event-card:hover img { transform: scale(1.05); }
 .v2-event-card::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, color-mix(in oklch, black 70%, transparent), color-mix(in oklch, black 10%, transparent) 60%, transparent); }
-.v2-event-card h3 { position: absolute; left: 1rem; bottom: 1rem; z-index: 1; margin: 0; font-family: var(--v2-font-serif); font-weight: 600; font-size: 1.25rem; color: var(--v2-background); }
+.v2-event-card h3 { position: absolute; left: 1rem; bottom: 1rem; z-index: 1; margin: 0; font-family: var(--v2-font-serif); font-weight: 600; font-size: 1.25rem; color: var(--v2-primary-foreground); }
 .v2-events-soon { margin-top: 1.5rem; display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem; }
 .v2-events-soon span { display: inline-flex; align-items: center; gap: .4rem; border-radius: 999px; border: 1px solid var(--v2-border); background: var(--v2-card); padding: .35rem 1rem; font-size: .85rem; color: var(--v2-muted-foreground); }
 .v2-events-soon b { font-size: .6rem; text-transform: uppercase; letter-spacing: .05em; color: var(--v2-muted-foreground); opacity: .75; }
