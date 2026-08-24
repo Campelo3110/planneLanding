@@ -1283,7 +1283,13 @@ async function callRsvpApi(payload) {
         body: JSON.stringify({ publicToken: window.__rsvpToken, ...payload }),
     });
     const data = await res.json().catch(() => ({}));
-    if (!res.ok) {
+    // rsvp.js devolve alguns erros (ex: "not_found" de nome/telefone que não
+    // batem) com HTTP 200 de propósito, pra não dar pista via status code de
+    // qual parte errou — mas isso significa que `res.ok` sozinho não basta
+    // pra saber se deu certo. Sem checar `data.error` aqui, toda chamada que
+    // falhasse assim caía direto no "sucesso" do chamador, sem nunca ter
+    // gravado nada no Firestore.
+    if (!res.ok || data.error) {
         const err = new Error(data.error || 'request_failed');
         err.code = data.error;
         throw err;

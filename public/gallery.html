@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Planne - Álbum do evento</title>
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#f8fafc">
+    <script>try{document.documentElement.dataset.theme=localStorage.getItem('planne-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/brand/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/brand/favicon-16x16.png">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
+    <script>
+        // ─── CONFIG ───────────────────────────────────────────
+        // Endpoint da Cloud Function `uploadEventPhoto` (região
+        // southamerica-east1 — mesma região de todas as outras functions
+        // deste projeto, ver rsvp.html pro histórico do bug de região
+        // errada que isso já causou uma vez).
+        window.__GALLERY_ENDPOINT = "https://southamerica-east1-planne-692f7.cloudfunctions.net/uploadEventPhoto";
+        // ────────────────────────────────────────────────────
+
+        const __p = new URLSearchParams(window.location.search);
+        window.__galleryToken = __p.get("token");
+    </script>
+
+    <script type="module">
+        // ─── App Check ────────────────────────────────────────
+        // Mesmo bloco de rsvp.html, mesmo Firebase Web App — App Check é
+        // por appId, não por página. Ver rsvp.html pro comentário
+        // completo do porquê e do que acontece se falhar (nunca trava o
+        // fluxo, só perde a proteção extra).
+        const RECAPTCHA_V3_SITE_KEY = '6LeCA3YtAAAAANSEdxmY375Ti8X6j0iIQMbFSxNd';
+
+        let __appCheckTokenPromise = null;
+
+        async function __initAppCheck() {
+            const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js');
+            const { initializeAppCheck, ReCaptchaV3Provider, getToken } =
+                await import('https://www.gstatic.com/firebasejs/10.14.1/firebase-app-check.js');
+
+            const app = initializeApp({
+                apiKey: 'AIzaSyB1wOwTWEIjxhx4hvkOzBF8rMZcgLLOVUA',
+                authDomain: 'planne-692f7.firebaseapp.com',
+                projectId: 'planne-692f7',
+                storageBucket: 'planne-692f7.firebasestorage.app',
+                messagingSenderId: '136432930965',
+                appId: '1:136432930965:web:83213ea34af4c013bc0b9c',
+            });
+            const appCheck = initializeAppCheck(app, {
+                provider: new ReCaptchaV3Provider(RECAPTCHA_V3_SITE_KEY),
+                isTokenAutoRefreshEnabled: true,
+            });
+            return { appCheck, getToken };
+        }
+
+        window.__getAppCheckToken = async function () {
+            try {
+                if (!__appCheckTokenPromise) {
+                    __appCheckTokenPromise = __initAppCheck();
+                }
+                const { appCheck, getToken } = await __appCheckTokenPromise;
+                const result = await getToken(appCheck, /* forceRefresh */ false);
+                return result.token;
+            } catch (e) {
+                console.warn('App Check indisponível, seguindo sem o header:', e);
+                return null;
+            }
+        };
+    </script>
+
+    <link rel="stylesheet" href="/assets/css/utility-pages.css">
+    <style>
+        main.utility-main { padding-top: clamp(1.5rem, 5vw, 2.25rem); padding-bottom: clamp(2rem, 6vw, 4rem); }
+        .card { position: relative; }
+        .card-icon svg, .state-icon svg { fill: none; stroke-width: 1.8; }
+
+        .state-centered { display: none; text-align: left; align-items: flex-start; flex-direction: column; }
+        .state-centered.active { display: flex; animation: cardIn .4s cubic-bezier(.22,1,.36,1) both; }
+        @keyframes cardIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
+        /* ── seletor de foto ── */
+        .drop-zone {
+            width: 100%; margin-bottom: 1.1rem; border: 1.5px dashed var(--line); border-radius: var(--radius-lg);
+            background: var(--paper); padding: 1.6rem 1rem; display: flex; flex-direction: column; align-items: center;
+            gap: .6rem; text-align: center; cursor: pointer;
+        }
+        .drop-zone:hover, .drop-zone:focus-visible { border-color: var(--teal); background: var(--mist); }
+        .drop-zone svg { width: 30px; height: 30px; stroke: var(--teal-dark); fill: none; stroke-width: 1.6; }
+        .drop-zone-label { font-size: .85rem; color: var(--muted); }
+        .drop-zone input[type="file"] { display: none; }
+
+        .preview-wrap { position: relative; width: 100%; margin-bottom: 1.1rem; border-radius: var(--radius-lg); overflow: hidden; }
+        .preview-wrap[hidden] { display: none; }
+        .preview-wrap img { display: block; width: 100%; max-height: 340px; object-fit: cover; }
+        .preview-clear {
+            position: absolute; top: 8px; right: 8px; width: 32px; height: 32px; border-radius: 999px; border: none;
+            background: rgba(17,24,39,.65); color: #fff; display: grid; place-items: center; cursor: pointer;
+        }
+        .preview-clear svg { width: 16px; height: 16px; stroke: currentColor; stroke-width: 2; fill: none; }
+
+        .field input[type="text"] { width: 100%; padding: 0 14px; }
+
+        .upload-progress { display: flex; flex-direction: column; align-items: center; gap: 1.2rem; width: 100%; }
+        .pulse-ring {
+            width: 40px; height: 40px; border: 3px solid var(--line); border-top-color: var(--teal); border-radius: 999px;
+            animation: spin .8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .msg { display: none; padding: 12px 14px; border-radius: var(--radius-sm); font-size: .82rem; line-height: 1.5; margin-bottom: 1rem; align-items: flex-start; gap: 8px; }
+        .msg.show { display: flex; }
+        .msg svg { flex-shrink: 0; width: 15px; height: 15px; stroke-width: 2; fill: none; margin-top: 1px; }
+        .msg-error { border: 1px solid color-mix(in srgb, var(--coral) 35%, var(--line)); background: var(--danger-soft); color: var(--coral); }
+        .msg-error svg { stroke: var(--coral); }
+    </style>
+</head>
+
+<body>
+
+<header class="utility-header">
+    <a class="utility-brand" href="https://planneapp.com">
+        <img src="/assets/brand/logo-64x64.png" alt="">
+        <span>Planne</span>
+    </a>
+</header>
+
+<main class="utility-main">
+    <div class="card" aria-live="polite">
+
+        <div class="state-centered active" id="stateLoading">
+            <div class="upload-progress" style="align-items:flex-start">
+                <div class="pulse-ring"></div>
+            </div>
+        </div>
+
+        <div class="state-centered" id="statePicker">
+            <p class="card-title">Álbum do evento</p>
+            <p class="card-subtitle">Manda uma foto sua do evento — ela entra no álbum na hora, pra todo mundo ver.</p>
+
+            <div class="msg msg-error" id="pickerError">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <span id="pickerErrorText"></span>
+            </div>
+
+            <label class="drop-zone" id="dropZone" tabindex="0">
+                <svg viewBox="0 0 24 24"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14M14 8h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span class="drop-zone-label" id="dropZoneLabel">Toque para escolher ou tirar uma foto</span>
+                <input type="file" id="fileInput" accept="image/*" capture="environment">
+            </label>
+
+            <div class="preview-wrap" id="previewWrap" hidden>
+                <img id="previewImg" alt="">
+                <button class="preview-clear" id="previewClear" type="button" aria-label="Remover foto">
+                    <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+
+            <div class="field">
+                <label for="uploaderName">Seu nome (opcional)</label>
+                <input type="text" id="uploaderName" maxlength="80" placeholder="Pra aparecer junto da foto">
+            </div>
+
+            <button class="utility-button" id="submitBtn" type="button" disabled style="width:100%">
+                Enviar foto
+            </button>
+        </div>
+
+        <div class="state-centered" id="stateUploading">
+            <div class="upload-progress">
+                <div class="pulse-ring"></div>
+                <p class="state-sub" style="margin:0">Enviando sua foto…</p>
+            </div>
+        </div>
+
+        <div class="state-centered" id="stateSuccess">
+            <div class="state-icon">
+                <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <p class="state-title">Foto enviada!</p>
+            <p class="state-sub">Ela já está no álbum do evento. Quer mandar outra?</p>
+            <button class="utility-button secondary" id="uploadAnotherBtn" type="button" style="width:100%">
+                Enviar outra foto
+            </button>
+        </div>
+
+        <div class="state-centered" id="stateError">
+            <div class="state-icon icon-error">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            </div>
+            <p class="state-title" id="fatalErrorTitle">Não foi possível abrir o álbum</p>
+            <p class="state-sub" id="fatalErrorSub"></p>
+        </div>
+
+    </div>
+</main>
+
+<footer class="utility-footer">
+    <a href="https://planneapp.com">planneapp.com</a>
+</footer>
+
+<script>
+// ═══════════════════════════════════════════════════════
+//  STATE SWITCHER — mesmo padrão de auth-action.html
+// ═══════════════════════════════════════════════════════
+function showState(id) {
+    ['stateLoading', 'statePicker', 'stateUploading', 'stateSuccess', 'stateError']
+        .forEach((s) => document.getElementById(s).classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+}
+
+// ═══════════════════════════════════════════════════════
+//  ERRO FATAL — token ausente ou algo que não tem como
+//  seguir sem recarregar a página com um link novo.
+// ═══════════════════════════════════════════════════════
+const FATAL_MESSAGES = {
+    missing_token: 'Este link está incompleto. Peça pra quem organiza o evento mandar de novo.',
+    invalid_token: 'Este link expirou ou não existe mais. Peça pra quem organiza o evento mandar um novo.',
+    gallery_disabled: 'O álbum deste evento não está ativo no momento. Fale com quem organiza.',
+};
+
+function showFatalError(code) {
+    document.getElementById('fatalErrorSub').textContent =
+        FATAL_MESSAGES[code] || 'Algo deu errado ao abrir o álbum. Tente novamente em alguns minutos.';
+    showState('stateError');
+}
+
+// ═══════════════════════════════════════════════════════
+//  COMPRESSÃO CLIENT-SIDE — via <canvas>, sempre reduz pra
+//  JPEG. Sem isso, uma foto de celular moderna facilmente
+//  passa do limite de payload da Cloud Function (onRequest
+//  aceita ~10MB, e base64 já adiciona ~33% de overhead em
+//  cima do binário).
+// ═══════════════════════════════════════════════════════
+const MAX_DIMENSION = 1600;
+const JPEG_QUALITY = 0.82;
+
+function compressImage(file) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        const objectUrl = URL.createObjectURL(file);
+        img.onload = () => {
+            URL.revokeObjectURL(objectUrl);
+            let { width, height } = img;
+            if (width > MAX_DIMENSION || height > MAX_DIMENSION) {
+                const scale = MAX_DIMENSION / Math.max(width, height);
+                width = Math.round(width * scale);
+                height = Math.round(height * scale);
+            }
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            canvas.toBlob(
+                (blob) => {
+                    if (!blob) return reject(new Error('compress_failed'));
+                    resolve(blob);
+                },
+                'image/jpeg',
+                JPEG_QUALITY,
+            );
+        };
+        img.onerror = () => {
+            URL.revokeObjectURL(objectUrl);
+            reject(new Error('decode_failed'));
+        };
+        img.src = objectUrl;
+    });
+}
+
+function blobToBase64(blob) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result).split(',')[1] || '');
+        reader.onerror = () => reject(new Error('read_failed'));
+        reader.readAsDataURL(blob);
+    });
+}
+
+// ═══════════════════════════════════════════════════════
+//  API
+// ═══════════════════════════════════════════════════════
+async function uploadPhoto({ imageBase64, contentType, uploaderName }) {
+    const appCheckToken = await window.__getAppCheckToken();
+    const headers = { 'Content-Type': 'application/json' };
+    if (appCheckToken) {
+        headers['X-Firebase-AppCheck'] = appCheckToken;
+    }
+    const res = await fetch(window.__GALLERY_ENDPOINT, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+            publicToken: window.__galleryToken,
+            imageBase64,
+            contentType,
+            uploaderName,
+        }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+        const err = new Error(data.error || 'request_failed');
+        err.code = data.error;
+        throw err;
+    }
+    return data;
+}
+
+// ═══════════════════════════════════════════════════════
+//  PICKER — seleção de foto, preview, envio
+// ═══════════════════════════════════════════════════════
+const UPLOAD_ERROR_MESSAGES = {
+    invalid_token: 'Este link expirou. Peça um link novo pra quem organiza o evento.',
+    gallery_disabled: 'O álbum não está mais ativo neste evento.',
+    unsupported_type: 'Esse tipo de arquivo não é aceito — tente outra foto.',
+    file_too_large: 'Essa foto é grande demais. Tente outra ou tire uma nova.',
+    rate_limited: 'Muitas fotos em pouco tempo — espere alguns minutos e tente de novo.',
+    appcheck_failed: 'Não foi possível confirmar que este é um acesso válido. Recarregue a página.',
+};
+
+let selectedBlob = null;
+
+const fileInput = document.getElementById('fileInput');
+const dropZone = document.getElementById('dropZone');
+const previewWrap = document.getElementById('previewWrap');
+const previewImg = document.getElementById('previewImg');
+const submitBtn = document.getElementById('submitBtn');
+const pickerError = document.getElementById('pickerError');
+const pickerErrorText = document.getElementById('pickerErrorText');
+
+function setPickerError(message) {
+    if (!message) {
+        pickerError.classList.remove('show');
+        return;
+    }
+    pickerErrorText.textContent = message;
+    pickerError.classList.add('show');
+}
+
+dropZone.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        fileInput.click();
+    }
+});
+
+fileInput.addEventListener('change', async () => {
+    const file = fileInput.files && fileInput.files[0];
+    if (!file) return;
+
+    setPickerError(null);
+    submitBtn.disabled = true;
+
+    try {
+        selectedBlob = await compressImage(file);
+        previewImg.src = URL.createObjectURL(selectedBlob);
+        previewWrap.hidden = false;
+        submitBtn.disabled = false;
+    } catch (e) {
+        selectedBlob = null;
+        previewWrap.hidden = true;
+        setPickerError('Não conseguimos abrir essa foto. Tente outra.');
+    }
+});
+
+document.getElementById('previewClear').addEventListener('click', () => {
+    selectedBlob = null;
+    previewWrap.hidden = true;
+    submitBtn.disabled = true;
+    fileInput.value = '';
+});
+
+submitBtn.addEventListener('click', async () => {
+    if (!selectedBlob) return;
+    setPickerError(null);
+    showState('stateUploading');
+
+    try {
+        const imageBase64 = await blobToBase64(selectedBlob);
+        const uploaderName = document.getElementById('uploaderName').value.trim();
+        await uploadPhoto({ imageBase64, contentType: 'image/jpeg', uploaderName });
+        showState('stateSuccess');
+    } catch (e) {
+        showState('statePicker');
+        setPickerError(UPLOAD_ERROR_MESSAGES[e.code] || 'Não foi possível enviar sua foto. Tente de novo.');
+    }
+});
+
+document.getElementById('uploadAnotherBtn').addEventListener('click', () => {
+    selectedBlob = null;
+    previewWrap.hidden = true;
+    submitBtn.disabled = true;
+    fileInput.value = '';
+    document.getElementById('uploaderName').value = '';
+    setPickerError(null);
+    showState('statePicker');
+});
+
+// ═══════════════════════════════════════════════════════
+//  BOOT
+// ═══════════════════════════════════════════════════════
+if (!window.__galleryToken) {
+    showFatalError('missing_token');
+} else {
+    // Sem endpoint de "resolveEvent" dedicado pra galeria — a primeira
+    // tentativa de envio já valida token/galleryEnabled/premium do lado
+    // do servidor (ver event_gallery.js) e mostra o erro certo se algo
+    // estiver errado. Evita manter 2 chamadas de rede pra cada visita.
+    showState('statePicker');
+}
+</script>
+
+</body>
+</html>

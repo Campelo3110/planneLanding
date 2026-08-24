@@ -22,6 +22,10 @@
       header { padding: 32px 0 20px; }
       main { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: clamp(20px, 4vw, 44px); box-shadow: 0 20px 50px rgb(15 23 42 / 0.06); overflow-wrap: anywhere; }
       footer { padding: 24px 0 40px; color: var(--muted); font-size: 0.95rem; }
+      footer .brand { margin-bottom: 10px; }
+      footer p { margin: 0; }
+      footer a { color: var(--muted); font-weight: 500; }
+      footer a:hover { color: var(--primary); }
       a { color: var(--primary); font-weight: 700; text-decoration: none; }
       a:hover { text-decoration: underline; }
       .brand { display: inline-flex; align-items: center; gap: 12px; color: var(--text); }
@@ -99,8 +103,8 @@ word-break: break-word !important;
     </main>
 
     <footer>
-      <span>&copy; 2026 Planne.</span>
-      <span> Read also the <a href="/terms">Terms of Use</a>.</span>
+      <a class="brand" href="/"><img src="/assets/brand/logo-64x64.png" alt="" width="40" height="40"><span>Planne</span></a>
+      <p>&copy; 2026 Planne &nbsp;&middot;&nbsp; <a href="/terms.html">Terms</a> &nbsp;&middot;&nbsp; <a href="/">Home</a></p>
     </footer>
   </body>
 </html>

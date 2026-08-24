@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Planne - Mapa de mesas</title>
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#f8fafc">
+    <script>try{document.documentElement.dataset.theme=localStorage.getItem('planne-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/brand/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/brand/favicon-16x16.png">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
+    <script>
+        // ─── CONFIG ───────────────────────────────────────────
+        // Endpoint da Cloud Function `lookupTable` (região
+        // southamerica-east1 — mesma região de todas as outras functions
+        // deste projeto, ver rsvp.html pro histórico do bug de região
+        // errada que isso já causou uma vez).
+        window.__SEATING_ENDPOINT = "https://southamerica-east1-planne-692f7.cloudfunctions.net/lookupTable";
+        // ────────────────────────────────────────────────────
+
+        const __p = new URLSearchParams(window.location.search);
+        window.__seatingToken = __p.get("token");
+    </script>
+
+    <script type="module">
+        // ─── App Check ────────────────────────────────────────
+        // Mesmo bloco de rsvp.html/gallery.html, mesmo Firebase Web App.
+        const RECAPTCHA_V3_SITE_KEY = '6LeCA3YtAAAAANSEdxmY375Ti8X6j0iIQMbFSxNd';
+
+        let __appCheckTokenPromise = null;
+
+        async function __initAppCheck() {
+            const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js');
+            const { initializeAppCheck, ReCaptchaV3Provider, getToken } =
+                await import('https://www.gstatic.com/firebasejs/10.14.1/firebase-app-check.js');
+
+            const app = initializeApp({
+                apiKey: 'AIzaSyB1wOwTWEIjxhx4hvkOzBF8rMZcgLLOVUA',
+                authDomain: 'planne-692f7.firebaseapp.com',
+                projectId: 'planne-692f7',
+                storageBucket: 'planne-692f7.firebasestorage.app',
+                messagingSenderId: '136432930965',
+                appId: '1:136432930965:web:83213ea34af4c013bc0b9c',
+            });
+            const appCheck = initializeAppCheck(app, {
+                provider: new ReCaptchaV3Provider(RECAPTCHA_V3_SITE_KEY),
+                isTokenAutoRefreshEnabled: true,
+            });
+            return { appCheck, getToken };
+        }
+
+        window.__getAppCheckToken = async function () {
+            try {
+                if (!__appCheckTokenPromise) {
+                    __appCheckTokenPromise = __initAppCheck();
+                }
+                const { appCheck, getToken } = await __appCheckTokenPromise;
+                const result = await getToken(appCheck, /* forceRefresh */ false);
+                return result.token;
+            } catch (e) {
+                console.warn('App Check indisponível, seguindo sem o header:', e);
+                return null;
+            }
+        };
+    </script>
+
+    <link rel="stylesheet" href="/assets/css/utility-pages.css">
+    <style>
+        main.utility-main { padding-top: clamp(1.5rem, 5vw, 2.25rem); padding-bottom: clamp(2rem, 6vw, 4rem); }
+        .card { position: relative; }
+        .card-icon svg, .state-icon svg { fill: none; stroke-width: 1.8; }
+
+        .state-centered { display: none; text-align: left; align-items: flex-start; flex-direction: column; }
+        .state-centered.active { display: flex; animation: cardIn .4s cubic-bezier(.22,1,.36,1) both; }
+        @keyframes cardIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
+        .field { margin-bottom: 1.25rem; width: 100%; }
+        .field input[type="text"] { width: 100%; padding: 0 14px; }
+
+        .table-result {
+            width: 100%; padding: 1.6rem 1.2rem; border-radius: var(--radius-lg);
+            background: var(--mist); text-align: center; margin-bottom: 1rem;
+        }
+        .table-result .label { font-size: .78rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: .4rem; }
+        .table-result .value { font: 700 2.1rem "Planne Inter", sans-serif; color: var(--teal-dark); }
+
+        .msg { display: none; padding: 12px 14px; border-radius: var(--radius-sm); font-size: .82rem; line-height: 1.5; margin-bottom: 1rem; align-items: flex-start; gap: 8px; }
+        .msg.show { display: flex; }
+        .msg svg { flex-shrink: 0; width: 15px; height: 15px; stroke-width: 2; fill: none; margin-top: 1px; }
+        .msg-error { border: 1px solid color-mix(in srgb, var(--coral) 35%, var(--line)); background: var(--danger-soft); color: var(--coral); }
+        .msg-error svg { stroke: var(--coral); }
+
+        .pulse-ring {
+            width: 40px; height: 40px; border: 3px solid var(--line); border-top-color: var(--teal); border-radius: 999px;
+            animation: spin .8s linear infinite; margin: 0 auto;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+
+<body>
+
+<header class="utility-header">
+    <a class="utility-brand" href="https://planneapp.com">
+        <img src="/assets/brand/logo-64x64.png" alt="">
+        <span>Planne</span>
+    </a>
+</header>
+
+<main class="utility-main">
+    <div class="card" aria-live="polite">
+
+        <div class="state-centered active" id="statePicker">
+            <p class="card-title">Ache sua mesa</p>
+            <p class="card-subtitle">Digite seu nome do jeitinho que está na lista de convidados.</p>
+
+            <div class="msg msg-error" id="pickerError">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <span id="pickerErrorText"></span>
+            </div>
+
+            <form id="lookupForm" style="width:100%">
+                <div class="field">
+                    <label for="guestName">Seu nome</label>
+                    <input type="text" id="guestName" placeholder="Como está no convite" autocomplete="name" required>
+                </div>
+                <button class="utility-button" type="submit" id="submitBtn" style="width:100%">
+                    Ver minha mesa
+                </button>
+            </form>
+        </div>
+
+        <div class="state-centered" id="stateLoading">
+            <div style="width:100%"><div class="pulse-ring"></div></div>
+        </div>
+
+        <div class="state-centered" id="stateFound">
+            <div class="table-result">
+                <div class="label">Sua mesa</div>
+                <div class="value" id="tableNameValue"></div>
+            </div>
+            <button class="utility-button secondary" id="searchAgainBtn1" type="button" style="width:100%">
+                Buscar outro nome
+            </button>
+        </div>
+
+        <div class="state-centered" id="stateNoTable">
+            <div class="state-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <p class="state-title">Ainda sem mesa</p>
+            <p class="state-sub">Achamos seu nome, mas você ainda não foi colocado em nenhuma mesa. Pergunte a quem organiza o evento.</p>
+            <button class="utility-button secondary" id="searchAgainBtn2" type="button" style="width:100%">
+                Buscar outro nome
+            </button>
+        </div>
+
+        <div class="state-centered" id="stateNotFound">
+            <div class="state-icon icon-error">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            </div>
+            <p class="state-title">Não encontramos esse nome</p>
+            <p class="state-sub">Confira se digitou igual ao convite, ou pergunte a quem organiza o evento.</p>
+            <button class="utility-button secondary" id="searchAgainBtn3" type="button" style="width:100%">
+                Tentar de novo
+            </button>
+        </div>
+
+        <div class="state-centered" id="stateError">
+            <div class="state-icon icon-error">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            </div>
+            <p class="state-title">Não foi possível abrir o mapa de mesas</p>
+            <p class="state-sub" id="fatalErrorSub"></p>
+        </div>
+
+    </div>
+</main>
+
+<footer class="utility-footer">
+    <a href="https://planneapp.com">planneapp.com</a>
+</footer>
+
+<script>
+function showState(id) {
+    ['statePicker', 'stateLoading', 'stateFound', 'stateNoTable', 'stateNotFound', 'stateError']
+        .forEach((s) => document.getElementById(s).classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+}
+
+const FATAL_MESSAGES = {
+    missing_token: 'Este link está incompleto. Peça pra quem organiza o evento mandar de novo.',
+    invalid_token: 'Este link expirou ou não existe mais. Peça pra quem organiza o evento mandar um novo.',
+};
+
+function showFatalError(code) {
+    document.getElementById('fatalErrorSub').textContent =
+        FATAL_MESSAGES[code] || 'Algo deu errado ao abrir o mapa de mesas. Tente novamente em alguns minutos.';
+    showState('stateError');
+}
+
+const LOOKUP_ERROR_MESSAGES = {
+    invalid_token: 'Este link expirou. Peça um link novo pra quem organiza o evento.',
+    rate_limited: 'Muitas tentativas em pouco tempo — espere alguns minutos e tente de novo.',
+    appcheck_failed: 'Não foi possível confirmar que este é um acesso válido. Recarregue a página.',
+};
+
+async function lookupTable(name) {
+    const appCheckToken = await window.__getAppCheckToken();
+    const headers = { 'Content-Type': 'application/json' };
+    if (appCheckToken) {
+        headers['X-Firebase-AppCheck'] = appCheckToken;
+    }
+    const res = await fetch(window.__SEATING_ENDPOINT, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ publicToken: window.__seatingToken, name }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+        const err = new Error(data.error || 'request_failed');
+        err.code = data.error;
+        throw err;
+    }
+    return data;
+}
+
+const pickerError = document.getElementById('pickerError');
+const pickerErrorText = document.getElementById('pickerErrorText');
+
+function setPickerError(message) {
+    if (!message) {
+        pickerError.classList.remove('show');
+        return;
+    }
+    pickerErrorText.textContent = message;
+    pickerError.classList.add('show');
+}
+
+document.getElementById('lookupForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = document.getElementById('guestName').value.trim();
+    if (!name) return;
+
+    setPickerError(null);
+    showState('stateLoading');
+
+    try {
+        const data = await lookupTable(name);
+        if (!data.found) {
+            showState('stateNotFound');
+        } else if (!data.tableName) {
+            showState('stateNoTable');
+        } else {
+            document.getElementById('tableNameValue').textContent = data.tableName;
+            showState('stateFound');
+        }
+    } catch (e) {
+        showState('statePicker');
+        setPickerError(LOOKUP_ERROR_MESSAGES[e.code] || 'Não foi possível buscar sua mesa agora. Tente de novo.');
+    }
+});
+
+['searchAgainBtn1', 'searchAgainBtn2', 'searchAgainBtn3'].forEach((id) => {
+    document.getElementById(id).addEventListener('click', () => {
+        document.getElementById('guestName').value = '';
+        setPickerError(null);
+        showState('statePicker');
+    });
+});
+
+// ═══════════════════════════════════════════════════════
+//  BOOT
+// ═══════════════════════════════════════════════════════
+if (!window.__seatingToken) {
+    showFatalError('missing_token');
+}
+</script>
+
+</body>
+</html>

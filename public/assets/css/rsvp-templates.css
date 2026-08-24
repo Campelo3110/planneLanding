@@ -245,6 +245,14 @@ input[type="text"], input[type="password"] { width: 100%; height: 50px; }
     --body-font: "Quicksand", "Planne Inter", sans-serif;
     --teal: #c9748a; --teal-dark: #8a4258; --mist: #fdeef1;
 }
+/* --mist acima é sempre um rosa claro, mas --ink (texto) continua vindo do
+   tema (claro/escuro) — no modo escuro --ink fica quase branco, então
+   .organizer-message-body (fundo var(--mist), texto var(--ink)) virava
+   texto claro sobre rosa claro, quase ilegível. --teal/--teal-dark não têm
+   esse problema (nunca combinam com --ink). */
+:root[data-theme="dark"][data-invite-style="ilustrado"] {
+    --mist: #3a1f28;
+}
 [data-invite-style="ilustrado"] .hero-title { font-size: clamp(2.4rem, 9vw, 3.2rem); font-weight: 400; }
 [data-invite-style="ilustrado"] .card { border-radius: 28px; }
 [data-invite-style="ilustrado"] .btn-primary { border-radius: 18px; }
@@ -279,6 +287,15 @@ input[type="text"], input[type="password"] { width: 100%; height: 50px; }
     --teal: #d4b56a; --teal-dark: #f3ead4; --mist: #16352d;
     --paper: #0a1f1a !important;
     --ink: #f3ead4; --muted: #b9ab8a; --line: rgba(212,181,106,.3);
+    /* Esse template é sempre escuro (ver comentário acima), mas até aqui só
+       sobrescrevia paper/ink/muted/line/teal/mist — --surface, --coral e
+       --danger-soft continuavam vindo de :root (claro por padrão, a não ser
+       que o toggle do site também esteja em dark). Resultado: com o site em
+       modo claro + template Gravado, .stepper-btn/.seal-no ficavam com
+       --ink (creme claro) sobre --surface (quase branco) — texto some. Mesmos
+       valores já usados em :root[data-theme="dark"], que já são o par
+       correto pra esse fundo escuro. */
+    --surface: #16201d; --coral: #ff6b6b; --danger-soft: #442a25;
 }
 [data-invite-style="gravado"] body::before {
     background: radial-gradient(ellipse 90% 60% at 50% 0%, #163a32 0%, #0e2b25 55%, #081a16 100%);
