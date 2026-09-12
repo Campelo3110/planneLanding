@@ -392,6 +392,65 @@
       .section-divider { max-width: 190px; margin-top: 16px; }
       .hero.no-cover .hero-grid { min-height: 500px; }
     }
+
+    /* Celular: a composição permanece editorial, mas sem transferir a escala
+       do desktop para uma tela de leitura e toque. */
+    @media (max-width: 719px) {
+      .demo-bar {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        min-height: 58px;
+        gap: .65rem;
+        padding: .5rem 1.5rem;
+        text-align: left;
+      }
+      .demo-bar span { max-width: 21ch; line-height: 1.3; }
+      .model-select { min-height: 42px; padding-inline: .55rem; }
+
+      .site-header { gap: 0; padding: 1rem 1.5rem .15rem; }
+      .brand { font-size: 1.55rem; }
+      .site-nav {
+        width: 100%;
+        flex-wrap: nowrap;
+        gap: .9rem;
+        overflow-x: auto;
+        padding-bottom: .15rem;
+        font-size: .82rem;
+        scrollbar-width: none;
+      }
+      .site-nav::-webkit-scrollbar { display: none; }
+      .site-nav a { flex: 0 0 auto; min-height: 40px; }
+
+      .hero { padding: 1.3rem 1.5rem 2.5rem; }
+      .hero-copy { padding-top: .75rem; }
+      h1 { margin-bottom: .9rem; font-size: clamp(2.85rem, 12vw, 3.25rem); line-height: .95; }
+      html[data-invite-style="ilustrado"] h1 { font-size: clamp(3.1rem, 13vw, 3.55rem); line-height: .86; }
+      .hero-lead { margin-bottom: 1rem; font-size: 1rem; line-height: 1.6; }
+      .hero-meta { margin: 1rem 0 1.2rem; font-size: .94rem; line-height: 1.65; }
+      .hero-actions { display: grid; grid-template-columns: 1fr 1fr; gap: .65rem; }
+      .hero-actions .button { min-height: 50px; padding-inline: .5rem; font-size: .92rem; text-align: center; }
+      .hero-photo { aspect-ratio: 5 / 4; max-height: none; }
+
+      .summary-grid { margin-inline: 1.5rem; padding-block: 1.15rem; }
+      .summary-item { gap: .25rem; padding-block: .9rem; }
+      .summary-item dd { font-size: 1rem; line-height: 1.45; }
+
+      .section, .practical-inner, .rsvp-wrap { padding-inline: 1.5rem; }
+      .section { padding-block: 3.25rem; }
+      .section + .section { padding-top: 1.75rem; }
+      .section-heading { margin-bottom: 2rem; }
+      .section-heading h2, .venue-copy h2 { font-size: clamp(2rem, 9vw, 2.45rem); }
+      html[data-invite-style="ilustrado"] .section-heading h2 { font-size: clamp(2.35rem, 10vw, 2.8rem); }
+      .story-copy, .section-heading p { font-size: 1rem; }
+      .pull-quote { padding-block: 1.5rem; font-size: clamp(1.55rem, 7vw, 2rem); }
+      .venue { gap: 1.5rem; }
+      .venue-map, .venue-map iframe { min-height: 260px; }
+      .rsvp-wrap { gap: 2rem; padding-block: 3.5rem 6rem; }
+      .rsvp-intro h2 { font-size: clamp(2.15rem, 9vw, 2.6rem); }
+      .field input, .field select { min-height: 52px; font-size: 1rem; }
+      .attendance-options { gap: .65rem; }
+      .attendance-options label { min-height: 52px; padding: .65rem .45rem; }
+    }
   </style>
 </head>
 <body>

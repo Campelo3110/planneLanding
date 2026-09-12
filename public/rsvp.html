@@ -8,6 +8,17 @@
     <title>Planne - RSVP</title>
     <meta name="robots" content="noindex, nofollow">
     <meta name="theme-color" content="#f8fafc">
+    <script>
+      // Links compartilhados pela versão 3.0.0 mantêm o mesmo token. A nova
+      // página resolve esse token e grava as respostas na mesma estrutura.
+      // `replace` evita que o convidado volte sem querer à página legada.
+      (function () {
+        var next = new URL('/rsvp-v2.html', window.location.origin);
+        next.search = window.location.search;
+        next.hash = window.location.hash;
+        window.location.replace(next.href);
+      }());
+    </script>
     <script>try{document.documentElement.dataset.theme=localStorage.getItem('planne-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
 
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/brand/favicon-32x32.png">
