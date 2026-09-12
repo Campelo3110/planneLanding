@@ -1,0 +1,14 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["TEAMID.com.planne.planne"],
+        "components": [
+          { "/": "/rsvp", "comment": "Convite/RSVP" },
+          { "/": "/gallery", "comment": "Galeria colaborativa" },
+          { "/": "/mesa", "comment": "Mapa de mesas" }
+        ]
+      }
+    ]
+  }
+}

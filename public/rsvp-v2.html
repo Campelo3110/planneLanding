@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="pt-BR" data-invite-style="foto-editorial">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f4f0e8">
+  <title>Convite | Planne</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/brand/favicon-32x32.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://images.unsplash.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bonheur+Royale&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Jost:wght@400;500;600&family=Quicksand:wght@500;600;700&display=swap">
+  <link rel="stylesheet" href="/assets/css/rsvp-v2.css">
+</head>
+<body>
+  <svg class="ornament-defs" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <symbol id="ornament-editorial" viewBox="0 0 180 240">
+        <g fill="none" stroke="currentColor" stroke-width=".85">
+          <path d="M160 230C40 188 35 80 137 12M160 214C68 176 59 78 140 30"/>
+          <path d="M102 54c-42-20-57 7-24 39M75 103c-46-6-55 26-14 40M82 170c-31 6-35 31-1 31"/>
+          <path d="M92 70c29-6 35-27 21-37M64 122c31 3 46-18 33-33M77 163c32-3 44-18 32-33"/>
+          <circle cx="136" cy="16" r="3"/><path d="M147 210h18m-9-9v18"/>
+        </g>
+      </symbol>
+      <symbol id="ornament-illustrated" viewBox="0 0 180 240">
+        <g stroke="currentColor" stroke-width="1" fill="none">
+          <path d="M158 233Q62 154 99 30M93 116Q43 85 28 45M91 147q35-55 66-56"/>
+          <g fill="currentColor" fill-opacity=".15">
+            <path d="M96 73Q55 68 73 34Q106 44 96 73ZM92 110Q121 65 143 81Q146 114 92 110ZM91 142Q48 138 52 108Q87 107 91 142ZM114 187Q136 144 157 152Q165 187 114 187Z"/>
+          </g>
+          <path d="M29 45C0 52 3 25 20 29C5 6 36 0 37 21C60 6 67 36 46 39C65 60 32 72 29 45Z"/>
+          <circle cx="32" cy="34" r="5"/><path d="M111 23c-10-22 13-28 16-9 17-7 22 16 3 18 2 19-21 19-19 0-17 5-22-18 0-9Z"/>
+        </g>
+      </symbol>
+      <symbol id="ornament-engraved" viewBox="0 0 180 240">
+        <g fill="none" stroke="currentColor" stroke-width=".9">
+          <path d="M155 226V27H35M146 214V36H47M137 201V45H59"/>
+          <path d="M155 105C103 105 92 61 117 60C135 60 131 86 114 82M95 27c0 48-44 59-44 34 0-18 26-14 22 3M137 131l18-18 18 18-18 18Z"/>
+          <path d="M34 27l8-8 8 8-8 8ZM155 211l8 8-8 8-8-8Z"/>
+        </g>
+      </symbol>
+      <symbol id="ornament-divider" viewBox="0 0 80 32">
+        <g fill="none" stroke="currentColor" stroke-width="1">
+          <path d="M40 5l9 11-9 11-9-11ZM29 16H4c7-14 22-10 17-3M51 16h25c-7-14-22-10-17-3"/>
+          <circle cx="40" cy="16" r="2"/>
+        </g>
+      </symbol>
+    </defs>
+  </svg>
+  <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
+  <p class="invite-status" id="inviteStatus" role="status">Carregando convite</p>
+
+  <header class="site-header">
+    <a class="brand" href="/pt-br/" aria-label="Planne">
+      <span id="eventMonogram">P</span>
+    </a>
+    <nav class="site-nav" aria-label="Navegação do evento">
+      <a href="#historia">Nossa história</a>
+      <a href="#cronograma">Cronograma</a>
+      <a href="#local">Local</a>
+      <a href="#rsvp">Confirmar</a>
+    </nav>
+  </header>
+
+  <main id="conteudo">
+    <section class="hero" aria-labelledby="event-title">
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow" id="eventKicker">Você é nosso convidado</p>
+          <h1 id="event-title">Seu evento</h1>
+          <p class="hero-lead" id="organizerMessage" hidden></p>
+          <p class="hero-meta"><time id="eventDate"></time><br><span id="eventLocation"></span></p>
+          <div class="hero-actions">
+            <a class="button" href="#rsvp">Confirmar presença</a>
+            <a class="button secondary" href="#local">Como chegar</a>
+          </div>
+        </div>
+        <div class="hero-photo">
+          <img width="960" height="1200" fetchpriority="high" alt="Imagem de capa do evento">
+        </div>
+        <div class="hero-no-photo" aria-hidden="true">
+          <svg viewBox="0 0 180 240" focusable="false">
+            <use class="ornament-editorial" href="#ornament-editorial"/>
+            <use class="ornament-illustrated" href="#ornament-illustrated"/>
+            <use class="ornament-engraved" href="#ornament-engraved"/>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <section class="event-summary" aria-label="Resumo do evento">
+      <dl class="summary-grid">
+        <div class="summary-item"><dt>Quando</dt><dd id="summaryDate">A definir</dd></div>
+        <div class="summary-item"><dt>Onde</dt><dd id="summaryLocation">A definir</dd></div>
+        <div class="summary-item"><dt>RSVP</dt><dd id="summaryRsvp">Confirme sua presença</dd></div>
+      </dl>
+    </section>
+
+    <section class="section" id="historia" aria-labelledby="story-title" hidden>
+      <div class="section-heading">
+        <p class="eyebrow">Um capítulo nosso</p>
+        <h2 id="story-title">Nossa história</h2>
+      </div>
+      <div class="story">
+        <div class="story-copy">
+          <p>Foi numa tarde de sábado, entre uma conversa que parecia curta e um café que já tinha esfriado, que percebemos que havia algo especial ali.</p>
+          <p>Seis anos depois, escolhemos celebrar esse encontro cercados por quem acompanhou cada fase, deu conselho, riu junto e tornou a nossa história ainda mais bonita.</p>
+        </div>
+        <blockquote class="pull-quote">“Tudo começou com um sim para mais um café.”</blockquote>
+      </div>
+    </section>
+
+    <section class="section" id="cronograma" aria-labelledby="schedule-title" hidden>
+      <div class="section-heading">
+        <p class="eyebrow">O dia da celebração</p>
+        <h2 id="schedule-title">Programação do dia</h2>
+      </div>
+      <div class="timeline">
+        <article class="timeline-item"><time class="timeline-time" datetime="2027-07-18T16:30">16h30</time><div><h3>Recepção</h3><p>Recebemos você nos jardins da Casa das Palmeiras. Aproveite para encontrar os amigos e registrar os primeiros momentos.</p></div></article>
+        <article class="timeline-item"><time class="timeline-time" datetime="2027-07-18T17:30">17h30</time><div><h3>Cerimônia</h3><p>Pedimos a gentileza de chegar antes desse horário para começarmos juntos.</p></div></article>
+        <article class="timeline-item"><time class="timeline-time" datetime="2027-07-18T18:30">18h30</time><div><h3>Brinde e jantar</h3><p>Depois da cerimônia, a celebração continua com jantar, música e uma pista pronta para durar a noite inteira.</p></div></article>
+      </div>
+    </section>
+
+    <section class="practical" id="detalhes" aria-labelledby="details-title" hidden>
+      <div class="practical-inner">
+        <div class="section-heading">
+          <p class="eyebrow">Para aproveitar sem preocupação</p>
+          <h2 id="details-title">Antes de sair de casa</h2>
+        </div>
+        <div class="details-grid">
+          <article class="detail"><h3>Dress code</h3><p id="dressCode"></p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="local" aria-labelledby="venue-title" hidden>
+      <div class="venue">
+        <div class="venue-copy">
+          <p class="eyebrow">Como chegar</p>
+          <h2 id="venue-title">Local do evento</h2>
+          <address id="venueAddress"></address>
+          <a class="button secondary" id="mapLink" target="_blank" rel="noopener">Abrir rota no mapa</a>
+        </div>
+        <div class="venue-map">
+          <iframe id="venueMap" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Mapa do local do evento"></iframe>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="faqSection" aria-labelledby="faq-title" hidden>
+      <div class="section-heading">
+        <p class="eyebrow">Bom saber</p>
+        <h2 id="faq-title">Perguntas frequentes</h2>
+      </div>
+      <div class="faq" id="faqList"></div>
+    </section>
+
+    <section class="rsvp-section" id="rsvp" aria-labelledby="rsvp-title">
+      <div class="rsvp-wrap">
+        <div class="rsvp-intro">
+          <p class="eyebrow">RSVP</p>
+          <h2 id="rsvp-title">Vamos celebrar juntos?</h2>
+          <p id="rsvpIntroText">Responda por aqui. Se não puder vir, avise também.</p>
+        </div>
+        <form class="rsvp-form" id="publicRsvp" novalidate>
+          <div class="field"><label for="guestName">Seu nome completo</label><input id="guestName" name="name" autocomplete="name" maxlength="120" aria-describedby="nameError" required><p class="field-error" id="nameError" hidden>Digite seu nome completo.</p></div>
+          <div class="field"><label for="guestPhone">Seu telefone</label><input id="guestPhone" name="phone" autocomplete="tel" inputmode="tel" maxlength="30" required></div>
+          <fieldset><legend>Você vai comparecer?</legend><div class="attendance-options"><input id="yes" type="radio" name="attendance" value="yes" required><label for="yes">Vou comparecer</label><input id="no" type="radio" name="attendance" value="no"><label for="no">Não poderei ir</label></div></fieldset>
+          <p class="field-error" id="attendanceError" hidden>Escolha se você poderá comparecer.</p>
+          <div class="field" id="companionsField" hidden><label for="guestCount">Acompanhantes</label><select id="guestCount" name="guests" disabled><option value="0">Somente eu</option><option value="1">1 acompanhante</option><option value="2">2 acompanhantes</option></select></div>
+          <button class="button" type="submit">Confirmar resposta</button>
+          <p class="form-message" id="formMessage" role="status" tabindex="-1"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer"><span>Feito com a Planne</span><a href="/privacy.html">Política de privacidade</a></footer>
+  <a class="mobile-rsvp" href="#rsvp">Confirmar presença</a>
+  <script src="/assets/js/rsvp-v2.js" defer data-endpoint="https://southamerica-east1-planne-692f7.cloudfunctions.net/rsvpV2"></script>
+
+</body>
+</html>

@@ -61,6 +61,8 @@ coverage/
 # Generated SEO audit cache
 .seo-cache/
 .codex/
+.github
+.agents
 
 planne (1)
 

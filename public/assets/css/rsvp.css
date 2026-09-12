@@ -1,0 +1,233 @@
+/* rsvp.html: bloco 1 */
+/* ── capa do evento (rsvpCoverImageUrl) ── */
+        .cover-photo { display: none; } /* substituída pelo .hero full-bleed abaixo */
+
+        /* ── contagem regressiva ── */
+        .countdown { display: flex; gap: 10px; margin-bottom: 1.1rem; }
+        .countdown[hidden] { display: none; }
+        .countdown-unit {
+            flex: 1; text-align: center; padding: 8px 4px; border-radius: var(--radius-sm);
+            background: var(--mist); border: 1px solid var(--line);
+        }
+        .countdown-num { font: 700 1.15rem "Planne Inter", sans-serif; color: var(--teal-dark); display: block; }
+        .countdown-label { font-size: .62rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+
+        /* ── detalhes do evento: dress code / FAQ (local agora é a seção de mapa, fora do card) ── */
+        .event-details { margin-top: .25rem; margin-bottom: 1.25rem; }
+        .event-details[hidden] { display: none; }
+        .event-details summary {
+            cursor: pointer; font: 600 .84rem "Planne Inter", sans-serif; color: var(--teal-dark);
+            list-style: none; display: flex; align-items: center; gap: 6px;
+        }
+        .event-details summary::-webkit-details-marker { display: none; }
+        .event-details summary svg { width: 14px; height: 14px; stroke: currentColor; stroke-width: 2; fill: none; transition: transform .2s; }
+        .event-details[open] summary svg { transform: rotate(90deg); }
+        .event-detail-block { margin-top: .7rem; padding: .8rem .9rem; background: var(--mist); border-radius: var(--radius-sm); }
+        .event-detail-block + .event-detail-block { margin-top: .5rem; }
+        .event-detail-block-title { font: 700 .72rem "Planne Inter", sans-serif; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin-bottom: .3rem; }
+        .event-detail-block-body { font-size: .85rem; color: var(--ink); white-space: pre-wrap; line-height: 1.5; }
+        .event-detail-block[hidden] { display: none; }
+
+        /* ── saudação nominal (modo privado) ── */
+        .private-greeting { font: 700 1rem "Planne Inter", sans-serif; color: var(--teal-dark); margin-bottom: .2rem; }
+        .private-greeting[hidden] { display: none; }
+
+        /* ── botão "adicionar ao calendário" (sucesso) ── */
+        .calendar-wrap { position: relative; }
+        .btn-calendar {
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            width: 100%; height: 46px; margin-top: 1rem; border-radius: var(--radius-sm);
+            border: 1px solid var(--line); background: var(--paper); color: var(--ink);
+            font: 600 .88rem "Planne Inter", sans-serif; cursor: pointer;
+        }
+        .btn-calendar[hidden] { display: none; }
+        .btn-calendar svg { width: 16px; height: 16px; stroke: currentColor; stroke-width: 2; fill: none; }
+
+        /* ── menu de opções (desktop): sem um app de calendário óbvio pra
+           abrir direto (ao contrário de iOS/Android), mostra as 3 opções
+           mais usadas em vez de só derrubar um .ics sem explicação. ── */
+        .calendar-menu {
+            position: absolute; z-index: 5; top: calc(100% + 6px); left: 0; right: 0;
+            border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--paper);
+            box-shadow: 0 12px 28px -10px rgba(0,0,0,.22), 0 4px 10px -4px rgba(0,0,0,.12);
+            padding: 6px; display: flex; flex-direction: column; gap: 2px;
+        }
+        .calendar-menu[hidden] { display: none; }
+        .calendar-menu-item {
+            display: block; width: 100%; padding: 10px 12px; border: none; border-radius: calc(var(--radius-sm) - 4px);
+            background: transparent; color: var(--ink); text-decoration: none; text-align: left;
+            font: 500 .86rem "Planne Inter", sans-serif; cursor: pointer;
+        }
+        .calendar-menu-item:hover { background: var(--mist); }
+
+        /* ── "confirmar para outra pessoa" (modo público): dispositivo
+           compartilhado (ex.: alguém confirmando pela família toda) —
+           reabre o formulário em branco sem sair da página. ── */
+        .rsvp-another {
+            display: block; width: 100%; margin: 1.4rem 0 0; padding: 0; border: none; background: none;
+            color: var(--teal-dark); font: 600 .85rem "Planne Inter", sans-serif; cursor: pointer; text-align: center;
+        }
+        .rsvp-another[hidden] { display: none; }
+        .rsvp-another::after { content: "→"; margin-left: 6px; display: inline-block; transition: transform .15s; }
+        .rsvp-another:hover::after { transform: translateX(3px); }
+
+        /* ── CTA "crie seu próprio convite" (loop do convidado) — só depois
+           que a pessoa já confirmou presença na de outra pessoa. Estilo
+           preenchido pra se destacar do calendário/rsvp-another (ambos
+           secundários); sem equivalente iOS por enquanto (app não
+           publicado na App Store ainda), por isso escondido nesse caso via
+           JS em showSuccess(). ── */
+        .btn-referral {
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            width: 100%; height: 48px; margin-top: .85rem; border-radius: var(--radius-sm);
+            background: var(--teal); color: #fff; text-decoration: none;
+            font: 600 .88rem "Planne Inter", sans-serif; cursor: pointer;
+        }
+        .btn-referral[hidden] { display: none; }
+        .btn-referral svg { width: 16px; height: 16px; stroke: currentColor; stroke-width: 2; fill: none; }
+
+/* rsvp.html: bloco 2 */
+body { overflow-x: hidden; }
+
+        main.utility-main { padding-top: clamp(1.5rem, 5vw, 2.25rem); padding-bottom: clamp(2rem, 6vw, 4rem); }
+
+        .card { position: relative; }
+
+        /* utility-pages.css sets stroke color for these icons but not fill,
+           so unstyled paths render as solid black shapes — fix here. */
+        .card-icon svg, .state-icon svg { fill: none; stroke-width: 1.8; }
+
+        /* alert banners: utility-pages.css only carries the border color,
+           not the show/hide + layout behaviour this page needs. */
+        .msg {
+            display: none; padding: 14px 16px; font-size: .84rem; line-height: 1.5;
+            margin-bottom: 1.25rem; align-items: flex-start; gap: 10px;
+        }
+        .msg.show { display: flex; animation: msgIn .3s ease; }
+        @keyframes msgIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+        .msg svg { flex-shrink: 0; width: 16px; height: 16px; stroke-width: 2; fill: none; margin-top: 1px; }
+        .msg-error { border: 1px solid color-mix(in srgb, var(--coral) 35%, var(--line)); background: var(--danger-soft); color: var(--coral); }
+        .msg-error svg { stroke: var(--coral); }
+
+        /* ── state machine ── */
+        .state { display: none; }
+        .state.active { display: block; animation: cardIn .4s cubic-bezier(.22,1,.36,1) both; }
+        @keyframes cardIn {
+            from { opacity: 0; transform: translateY(18px) scale(.98); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @media (prefers-reduced-motion: no-preference) {
+            .card { animation: cardIn .55s cubic-bezier(.22,1,.36,1) both; }
+        }
+
+        .loading-pulse { display: flex; flex-direction: column; align-items: flex-start; gap: 1rem; }
+        .loading-pulse p { color: var(--muted); font-size: .9rem; }
+
+        /* ── step indicator: private mode is genuinely a two-step flow ── */
+        .step-track { display: flex; gap: 6px; margin-bottom: 1.2rem; }
+        .step-dot { width: 22px; height: 4px; border-radius: 2px; background: var(--line); }
+        .step-dot.active { background: var(--teal); }
+        .step-dot.done { background: var(--teal-dark); }
+
+        /* ── fields not already covered by the shared utility form styles ── */
+        input[type="tel"], select {
+            width: 100%; height: 50px; border: 1px solid var(--line); border-radius: var(--radius-sm);
+            padding: 0 14px; font-family: "Planne Inter", sans-serif; font-size: .95rem; color: var(--ink);
+            background: var(--paper); outline: none; transition: border-color .2s, box-shadow .2s;
+        }
+        select { appearance: none; cursor: pointer;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: right 12px center; background-size: 16px;
+        }
+        input[type="tel"]:focus, select:focus { border-color: var(--teal); box-shadow: 0 0 0 3px color-mix(in srgb, var(--teal) 18%, transparent); }
+        input.invalid, .otp-box.invalid { border-color: var(--coral) !important; box-shadow: 0 0 0 3px color-mix(in srgb, var(--coral) 18%, transparent) !important; }
+
+        @keyframes shake {
+            10%, 90% { transform: translateX(-1px); } 20%, 80% { transform: translateX(2px); }
+            30%, 50%, 70% { transform: translateX(-4px); } 40%, 60% { transform: translateX(4px); }
+        }
+        .shake { animation: shake .5s cubic-bezier(.36,.07,.19,.97) both; }
+
+        /* ── presence toggle ── */
+        .presence-toggle { display: flex; gap: 10px; }
+        .presence-opt {
+            flex: 1; height: 52px; border-radius: var(--radius-sm); border: 1px solid var(--line);
+            background: var(--paper); color: var(--ink); font: 600 .9rem "Planne Inter", sans-serif;
+            cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+            transition: border-color .2s, background .2s, color .2s, transform .15s;
+        }
+        .presence-opt svg { width: 16px; height: 16px; stroke: currentColor; stroke-width: 2.2; fill: none; }
+        .presence-opt:active { transform: scale(.97); }
+        .presence-opt.selected-yes { border-color: var(--teal); background: var(--mist); color: var(--teal-dark); }
+        .presence-opt.selected-no  { border-color: var(--coral); background: var(--danger-soft); color: var(--coral); }
+
+        .companions-field, .otp-field { display: none; }
+        .companions-field.show { display: block; }
+
+        /* ── companions quantity stepper ── */
+        .stepper { display: flex; align-items: stretch; height: 50px; border: 1px solid var(--line); border-radius: var(--radius-sm); overflow: hidden; }
+        .stepper-btn {
+            width: 46px; border: none; background: var(--surface); color: var(--ink);
+            font: 600 1.15rem "Planne Inter", sans-serif; cursor: pointer;
+            transition: background .15s, color .15s;
+        }
+        .stepper-btn:hover:not(:disabled) { background: var(--mist); color: var(--teal-dark); }
+        .stepper-btn:active:not(:disabled) { transform: scale(.94); }
+        .stepper-btn:disabled { opacity: .35; cursor: not-allowed; }
+        .stepper input {
+            flex: 1; min-width: 0; text-align: center; border: none; height: 100%;
+            background: var(--paper); font: 700 1rem "Planne Inter", sans-serif; color: var(--ink);
+            border-left: 1px solid var(--line); border-right: 1px solid var(--line);
+        }
+        .stepper input:focus { outline: none; }
+
+        /* ── nomes dos acompanhantes: uma linha (nome + tipo) por
+           acompanhante, gerada dinamicamente em sincronia com o valor do
+           stepper acima ── */
+        .companion-names { display: flex; flex-direction: column; gap: .6rem; margin-top: .6rem; }
+        .companion-names:empty { margin-top: 0; }
+        .companion-row { display: flex; gap: .5rem; }
+        .companion-row input[type="text"] { flex: 1; min-width: 0; }
+        .companion-row select { flex: 0 0 132px; }
+
+        /* ── DDI + telefone (modo público) ── */
+        .phone-row { display: flex; gap: .5rem; }
+        .phone-row select { flex: 0 0 100px; }
+        .phone-row input[type="tel"] { flex: 1; min-width: 0; }
+
+        /* ── phone-verification digits, styled like a code entry ── */
+        .otp-group { display: flex; gap: .6rem; }
+        .otp-box {
+            flex: 1; min-width: 0; height: 56px; text-align: center;
+            font: 700 1.3rem "Planne Inter", sans-serif; color: var(--ink);
+            border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--paper);
+            outline: none; transition: border-color .2s, box-shadow .2s, transform .15s;
+        }
+        .otp-box:focus { border-color: var(--teal); box-shadow: 0 0 0 3px color-mix(in srgb, var(--teal) 18%, transparent); transform: translateY(-1px); }
+
+        /* ── success: a stamped wax seal, not a generic checkmark circle ── */
+        .seal {
+            width: 68px; height: 68px; border-radius: 50%; position: relative;
+            display: flex; align-items: center; justify-content: center; margin-bottom: 1.3rem;
+        }
+        .seal svg { width: 28px; height: 28px; stroke-width: 2.2; fill: none; }
+        @media (prefers-reduced-motion: no-preference) {
+            .seal { animation: sealStamp .5s cubic-bezier(.34,1.56,.64,1) both; }
+            .seal::before { content: ""; position: absolute; inset: -10px; border-radius: 50%; background: inherit; opacity: 0; animation: sealBloom .6s ease-out .05s both; }
+        }
+        @keyframes sealStamp { 0% { transform: scale(1.6) rotate(-8deg); opacity: 0; } 60% { transform: scale(.94) rotate(2deg); opacity: 1; } 100% { transform: scale(1) rotate(0); } }
+        @keyframes sealBloom { 0% { transform: scale(.6); opacity: .35; } 100% { transform: scale(1.5); opacity: 0; } }
+        .seal-yes { background: var(--teal); box-shadow: 0 10px 26px color-mix(in srgb, var(--teal) 45%, transparent); }
+        .seal-yes svg { stroke: #fff; }
+        .seal-no { background: var(--surface); border: 1.5px solid var(--line); }
+        .seal-no svg { stroke: var(--muted); }
+        .seal-pending { background: #fef3c7; border: 1.5px solid #f59e0b88; }
+        .seal-pending svg { stroke: #b45309; }
+        :root[data-theme="dark"] .seal-pending, html.dark .seal-pending { background: #3a2a12; border-color: #f59e0b55; }
+        :root[data-theme="dark"] .seal-pending svg, html.dark .seal-pending svg { stroke: #fbbf24; }
+
+        .btn-primary .spinner {
+            width: 18px; height: 18px; border: 2px solid rgba(255,255,255,.3);
+            border-radius: 50%; animation: spin .7s linear infinite; display: none;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
