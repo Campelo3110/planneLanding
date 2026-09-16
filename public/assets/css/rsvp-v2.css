@@ -1,4 +1,9 @@
+    @font-face { font-family: "Planne Brand"; src: url("/assets/fonts/PatuaOne-Regular.ttf") format("truetype"); font-style: normal; font-weight: 400; font-display: swap; }
+    @font-face { font-family: "Planne UI"; src: url("/assets/fonts/inter-var-latin.woff2") format("woff2"); font-style: normal; font-weight: 100 900; font-display: swap; }
     :root {
+      --planne-teal: #13b8a7;
+      --planne-brand: "Planne Brand", Georgia, serif;
+      --planne-ui: "Planne UI", system-ui, sans-serif;
       --paper: oklch(96.8% .012 83);
       --surface: oklch(99% .006 83);
       --ink: oklch(25% .025 58);
@@ -199,7 +204,21 @@
     .form-message { display: none; padding: var(--space-4); border: 1px solid color-mix(in oklch, var(--success) 75%, var(--surface)); color: var(--surface); }
     .form-message.show { display: block; animation: appear 300ms var(--ease-out) both; }
 
-    .site-footer { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-4); max-width: 1120px; margin: 0 auto; padding: var(--space-6) var(--space-5) max(2rem, env(safe-area-inset-bottom)); color: var(--muted); font-size: .84rem; }
+    .site-footer { border-top: 1px solid var(--line); margin: 0 auto; padding: var(--space-6) var(--space-5) max(2rem, env(safe-area-inset-bottom)); color: var(--muted); font: 400 .8rem/1.6 var(--planne-ui); }
+    .footer-inner { max-width: 1072px; margin: auto; display: grid; grid-template-columns: 1fr auto; align-items: start; gap: 24px 48px; }
+    .planne-wordmark { font: 400 1.2rem/1.4 var(--planne-brand); letter-spacing: .01em; }
+    .footer-copy { margin: 8px 0 0; }
+    .footer-copy .planne-wordmark { font-size: .95rem; }
+    .brand-heart { color: color-mix(in srgb, var(--planne-teal) 65%, #111827); }
+    .footer-discover { max-width: 34ch; }
+    .footer-invitation { margin: 8px 0 4px; }
+    .footer-create { display: inline-flex; align-items: center; gap: 12px; min-height: 44px; color: var(--ink); font-weight: 500; text-decoration-color: var(--planne-teal); }
+    .footer-create span[aria-hidden] { color: var(--ink); transition: transform 180ms var(--ease-out); }
+    .footer-create:hover span[aria-hidden] { transform: translate(2px,-2px); }
+    .footer-links { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 4px 24px; }
+    .footer-links a { display: inline-flex; align-items: center; min-height: 44px; }
+    .site-footer a:hover { text-decoration-color: var(--planne-teal); }
+    @media (max-width: 600px) { .footer-inner { grid-template-columns: 1fr; gap: 20px; } .footer-discover { max-width: 38ch; } }
     .site-footer a { text-underline-offset: .2em; }
     .mobile-rsvp { display: none; }
     @keyframes appear { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -360,7 +379,7 @@
       box-shadow: 0 12px 30px color-mix(in oklch, var(--accent-dark) 11%, transparent);
     }
     html[data-invite-style="ilustrado"] .hero.no-cover h1 {
-      font-family: "Italiana", Georgia, serif;
+      font-family: var(--display);
       font-size: clamp(3.3rem, 10vw, 6rem);
       line-height: .92;
     }
@@ -379,3 +398,43 @@
       .section-divider { max-width: 190px; margin-top: 16px; }
       .hero.no-cover .hero-grid { min-height: 500px; }
     }
+
+/* Marca independente da paleta do evento; o papel preserva o loading original. */
+.invite-loading { overflow: hidden; }
+.invite-loading .site-header, .invite-loading main, .invite-loading .site-footer,
+.invite-loading .mobile-rsvp { visibility: hidden; }
+.invite-status { position: fixed; inset: 0; z-index: 30; flex-direction: column;
+  gap: 24px; padding: 24px; overflow-y: auto; background: #f8fafc; color: #111827; font-family: var(--planne-ui); }
+.loading-stationery { flex-shrink: 0; width: min(64vw, 240px, 42svh); aspect-ratio: .78; border: 1px solid #e5eaf0;
+  outline: 1px solid #e5eaf0; outline-offset: -10px; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 16px; background: #fafbfc;
+  animation: stationery-breathe 3.6s ease-in-out infinite; }
+.loading-signature { position: relative; width: 96px; height: 100px; color: var(--planne-teal); font: 400 96px/1 var(--planne-brand); }
+.loading-signature span { position: absolute; inset: 0; animation: planne-compose 3.6s var(--ease-out) infinite both; }
+.loading-signature span:nth-child(1) { clip-path: inset(0 54% 0 0); }
+.loading-signature span:nth-child(2) { clip-path: inset(0 0 53% 46%); animation-delay: 120ms; }
+.loading-signature span:nth-child(3) { clip-path: inset(47% 0 0 46%); animation-delay: 240ms; }
+.loading-stationery svg { width: 80px; height: 32px; color: var(--planne-teal); opacity: .65; }
+.loading-rule { width: 48%; height: 1px; background: #c4dfdc; animation: planne-rule 3.6s var(--ease-out) infinite both; }
+.loading-rule.short { width: 30%; animation-delay: 140ms; }
+.loading-copy { max-width: 30ch; margin: 0; font-size: .85rem; color: #6b7280; }
+.loading-brand { font: 400 1.5rem/1.2 var(--planne-brand); letter-spacing: .01em; }
+.has-error .loading-stationery, .has-error .loading-stationery * { animation: none; }
+.companion-names { display: grid; gap: 24px; }
+.companion-names .field { padding-top: 16px; border-top: 1px solid var(--line); }
+.rsvp-form.is-complete > :not(.rsvp-completion) { display: none; }
+.rsvp-completion { align-self: center; text-align: center; padding: clamp(24px,5vw,48px) 24px;
+  border: 1px solid var(--line); background: var(--paper); animation: appear 300ms var(--ease-out) both; }
+.rsvp-completion h3 { font: 400 clamp(2rem,5vw,3rem)/1.1 var(--display); color: var(--accent-dark); margin: 16px 0; }
+.rsvp-completion p { color: var(--muted); margin: 0; overflow-wrap: anywhere; }
+.completion-ornament svg { width: 80px; height: 32px; color: var(--accent-dark); }
+.rsvp-form[aria-busy="true"] { cursor: progress; }
+.rsvp-form button:disabled { opacity: .65; cursor: default; }
+.attendance-options input:focus-visible + label { outline: 2px solid var(--accent-dark); outline-offset: 3px; }
+@keyframes stationery-breathe { 50% { transform: translateY(-4px); } }
+@keyframes planne-compose { 0%, 100% { opacity: .18; transform: translateY(5px); } 22%, 78% { opacity: 1; transform: translateY(0); } }
+@keyframes planne-rule { 0%, 100% { opacity: .35; transform: scaleX(.65); } 30%, 75% { opacity: 1; transform: scaleX(1); } }
+@media (prefers-reduced-motion: reduce) {
+  .loading-stationery, .loading-stationery .loading-signature span, .loading-stationery .loading-rule, .rsvp-completion, .form-message.show { animation: none; }
+  .footer-create span[aria-hidden] { transition: none; transform: none; }
+}

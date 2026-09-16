@@ -9,9 +9,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://images.unsplash.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bonheur+Royale&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Jost:wght@400;500;600&family=Quicksand:wght@500;600;700&display=swap">
-  <link rel="stylesheet" href="/assets/css/rsvp-v2.css">
+  <link rel="preload" href="/assets/fonts/PatuaOne-Regular.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="stylesheet" href="/assets/css/rsvp-v2.css?v=20260915-footer">
 </head>
-<body>
+<body class="invite-loading">
   <svg class="ornament-defs" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <symbol id="ornament-editorial" viewBox="0 0 180 240">
@@ -48,9 +49,17 @@
     </defs>
   </svg>
   <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
-  <p class="invite-status" id="inviteStatus" role="status">Carregando convite</p>
+  <div class="invite-status" id="inviteStatus" role="status" aria-live="polite">
+    <div class="loading-stationery" aria-hidden="true">
+      <span class="loading-signature"><span>P</span><span>P</span><span>P</span></span>
+      <svg viewBox="0 0 80 32"><use href="#ornament-divider"/></svg>
+      <span class="loading-rule"></span><span class="loading-rule short"></span>
+    </div>
+    <p class="loading-copy">Preparando seu convite</p>
+    <span class="loading-brand">Planne</span>
+  </div>
 
-  <header class="site-header">
+  <header class="site-header" inert data-loading-inert>
     <a class="brand" href="/pt-br/" aria-label="Planne">
       <span id="eventMonogram">P</span>
     </a>
@@ -62,7 +71,7 @@
     </nav>
   </header>
 
-  <main id="conteudo">
+  <main id="conteudo" inert data-loading-inert>
     <section class="hero" aria-labelledby="event-title">
       <div class="hero-grid">
         <div class="hero-copy">
@@ -165,6 +174,7 @@
         </div>
         <form class="rsvp-form" id="publicRsvp" novalidate>
           <div class="field"><label for="guestName">Seu nome completo</label><input id="guestName" name="name" autocomplete="name" maxlength="120" aria-describedby="nameError" required><p class="field-error" id="nameError" hidden>Digite seu nome completo.</p></div>
+          <div class="field"><label for="phoneCountry">País do telefone</label><select id="phoneCountry" name="phoneCountry"><option value="BR">BR +55</option><option value="US">US +1</option><option value="GB">GB +44</option><option value="CA">CA +1</option><option value="AU">AU +61</option><option value="NZ">NZ +64</option><option value="AO">AO +244</option><option value="MZ">MZ +258</option><option value="CV">CV +238</option><option value="SN">SN +221</option><option value="CM">CM +237</option><option value="ST">ST +239</option><option value="MO">MO +853</option><option value="ZA">ZA +27</option><option value="NG">NG +234</option><option value="KE">KE +254</option><option value="GH">GH +233</option><option value="SG">SG +65</option><option value="IN">IN +91</option><option value="HK">HK +852</option><option value="JP">JP +81</option><option value="CN">CN +86</option><option value="AE">AE +971</option><option value="CH">CH +41</option></select></div>
           <div class="field"><label for="guestPhone">Seu telefone</label><input id="guestPhone" name="phone" autocomplete="tel" inputmode="tel" maxlength="30" required></div>
           <fieldset><legend>Você vai comparecer?</legend><div class="attendance-options"><input id="yes" type="radio" name="attendance" value="yes" required><label for="yes">Vou comparecer</label><input id="no" type="radio" name="attendance" value="no"><label for="no">Não poderei ir</label></div></fieldset>
           <p class="field-error" id="attendanceError" hidden>Escolha se você poderá comparecer.</p>
@@ -176,9 +186,21 @@
     </section>
   </main>
 
-  <footer class="site-footer"><span>Feito com a Planne</span><a href="/privacy.html">Política de privacidade</a></footer>
+  <footer class="site-footer" inert data-loading-inert>
+    <div class="footer-inner">
+      <div class="footer-brand-block">
+        <p class="footer-copy"><span data-brand-made>Feito com</span> <span class="brand-heart" aria-label="amor">♥</span> <span data-brand-by>pela</span> <span class="planne-wordmark">Planne</span></p>
+      </div>
+      <div class="footer-discover">
+        <p class="footer-invitation" data-brand-invitation>Gostou deste convite? Crie o seu com a Planne também.</p>
+        <a class="footer-create" data-planne-home href="/pt-br/"><span data-brand-cta>Criar meu convite</span><span aria-hidden="true">↗</span></a>
+      </div>
+      <nav class="footer-links footer-legal" aria-label="Informações legais"><a href="/terms.html" data-brand-terms>Termos de Uso</a><a href="/privacy.html" data-brand-privacy>Política de Privacidade</a></nav>
+    </div>
+  </footer>
   <a class="mobile-rsvp" href="#rsvp">Confirmar presença</a>
-  <script src="/assets/js/rsvp-v2.js" defer data-endpoint="https://southamerica-east1-planne-692f7.cloudfunctions.net/rsvpV2"></script>
+  <script src="/assets/js/rsvp-v2-renderer.js?v=20260915-brand" defer></script>
+  <script src="/assets/js/rsvp-v2.js?v=20260916-custom-link" defer data-endpoint="https://southamerica-east1-planne-692f7.cloudfunctions.net/rsvpV2"></script>
 
 </body>
 </html>
