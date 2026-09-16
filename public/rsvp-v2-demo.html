@@ -300,7 +300,8 @@
       html[data-invite-style="ilustrado"] .hero-photo { order: -1; }
     }
     @media (max-width: 719px) {
-      .site-header { gap: .25rem; padding-bottom: .5rem; }
+      .site-header {     justify-content: center;
+ }
       .site-nav { width: 100%; justify-content: space-between; gap: .25rem; font-size: .85rem; }
       .hero { padding-bottom: 2rem; }
       .hero-photo { min-height: 0; max-height: 420px; }
@@ -308,6 +309,11 @@
       .hero-copy { padding-top: 1rem; }
       .summary-grid { margin-inline: 1.5rem; padding-inline: 0; }
       .summary-item { padding-block: .75rem; }
+        .brand {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
       .mobile-rsvp { left: 1rem; right: 1rem; text-align: center; bottom: 0; border-radius: 4px 4px 0 0; padding-bottom: env(safe-area-inset-bottom); }
     }
     /* Ornamentos vetoriais locais: acompanham a cor e o modelo do convite. */
@@ -498,6 +504,11 @@
       <option value="ilustrado">Ilustrado</option>
       <option value="gravado">Cartão gravado</option>
     </select>
+    <label for="languagePicker" class="sr-only" hidden>Idioma</label>
+    <select class="model-select" id="languagePicker" aria-label="Selecionar idioma">
+      <option value="pt-BR">Português</option>
+      <option value="en-US">English</option>
+    </select>
   </div>
 
   <header class="site-header">
@@ -679,6 +690,56 @@
     const picker = document.getElementById('stylePicker');
     picker.addEventListener('change', () => root.dataset.inviteStyle = picker.value);
 
+    const languagePicker = document.getElementById('languagePicker');
+    const translations = {
+      'pt-BR': {
+        title: 'Casamento de Júlia & Marcos | Planne', demoStrong: 'Demonstração', demoText: ' de novo site de evento',
+        styles: ['Foto editorial','Ilustrado','Cartão gravado'], nav: ['Nossa história','Cronograma','Local','Confirmar'],
+        brand: 'J & M', eyebrowHero: 'Você é nosso convidado', names: 'Júlia<br>&amp; Marcos',
+        lead: 'Vamos nos casar! Queremos você por perto neste dia tão nosso.',
+        meta: '18 de julho de 2028 · 16h30<br>Paróquia Nossa Senhora da Esperança · Cidade Dutra, São Paulo, SP',
+        confirm: 'Confirmar presença', directions: 'Como chegar', summary: [['Quando','18 de julho de 2028<br>16h30'],['Onde','Paróquia Nossa Senhora da Esperança<br>Cidade Dutra, São Paulo, SP'],['RSVP até','20 de junho<br>de 2028']],
+        storyEye:'Um capítulo nosso', storyTitle:'Nossa história', story:[
+          'Tudo começou com um correio elegante em uma festa junina. Entre a música, as bandeirinhas e a coragem de deixar um recado, nasceu uma conversa que parecia simples, mas já carregava algo especial.',
+          'No dia seguinte, a conversa continuou e nunca mais parou. Vieram as mensagens, as risadas, os planos e, acima de tudo, a alegria de rezar juntos e descobrir que a fé também nos aproximava.',
+          'Dois anos depois, olhando para a história que Deus vinha escrevendo com tanto carinho, decidimos nos casar. Agora queremos celebrar esse novo começo ao lado de quem faz parte da nossa caminhada.'
+        ], quote:'“Tudo começou com um correio elegante e virou uma vida inteira de conversa, oração e amor.”',
+        scheduleEye:'O dia da celebração', scheduleTitle:'Programação do dia', timeline:[['16h30','Recepção','Recebemos você para encontrar os amigos e registrar os primeiros momentos da celebração.'],['17h30','Cerimônia','Pedimos a gentileza de chegar antes desse horário para começarmos juntos.'],['18h30','Brinde e jantar','Depois da cerimônia, a celebração continua com jantar, música e uma pista pronta para durar a noite inteira.']],
+        detailsEye:'Para aproveitar sem preocupação', detailsTitle:'Antes de sair de casa', details:[['Dress code','Esporte fino em tons claros ou terrosos. A cerimônia será realizada dentro da paróquia.'],['Chegada e estacionamento','Há estacionamento no local. Ao chegar, siga a sinalização da celebração.'],['Para quem vem de fora','Indicamos ficar na região do Cambuí. No dia do evento, haverá transporte saindo do Hotel Vitória às 16h.']],
+        venueEye:'Como chegar', venueTitle:'Paróquia Nossa Senhora da Esperança', address:'R. Nossa Sra. de Nazaré, 101<br>Cidade Dutra, São Paulo, SP, 04805-100', mapButton:'Abrir rota no mapa',
+        faqEye:'Bom saber', faqTitle:'Perguntas frequentes', faq:[['Posso levar acompanhante?','Seu convite mostra se há acompanhante disponível. Ao confirmar presença, informe o nome de quem vai com você.'],['Posso levar crianças?','Queremos que todos aproveitem a noite com tranquilidade. Este será um evento para adultos, com exceção das crianças que já constam no convite.'],['Até quando posso confirmar?','Pedimos que a confirmação seja feita até 20 de junho de 2028 para organizarmos tudo com carinho.']],
+        rsvpTitle:'Vamos celebrar juntos?', rsvpIntro:'Responda até 20 de junho de 2028. Se não puder vir, avise por aqui também.', nameLabel:'Seu nome completo', nameError:'Digite seu nome completo.', attendanceLegend:'Você vai comparecer?', yes:'Vou comparecer', no:'Não poderei ir', attendanceError:'Escolha se você poderá comparecer.', companions:'Acompanhantes', guestOptions:['Somente eu','1 acompanhante','2 acompanhantes'], submit:'Confirmar resposta', note:'Esta demonstração não registra nem envia respostas.', footer:'Feito com a Planne', privacy:'Política de privacidade', successYes:n=>`Tudo certo, ${n}! Assim aparecerá sua confirmação. Esta é uma simulação, sem envio de dados.`, successNo:n=>`Obrigado por avisar, ${n}. Nesta demonstração, nenhuma resposta foi enviada.`
+      },
+      'en-US': {
+        title: "Sarah & James's Wedding | Planne", demoStrong:'Demo', demoText:' event website', styles:['Editorial photo','Illustrated','Engraved card'], nav:['Our story','Schedule','Venue','RSVP'], brand:'S & J', eyebrowHero:"You're invited", names:'Sarah<br>&amp; James', lead:"We're getting married! We would love to have you with us on this special day.", meta:'July 18, 2028 · 4:30 PM<br>St. James Church · New York, NY', confirm:'RSVP', directions:'Get directions', summary:[['When','July 18, 2028<br>4:30 PM'],['Where','St. James Church<br>New York, NY'],['RSVP by','June 20<br>2028']],
+        storyEye:'A chapter of ours', storyTitle:'Our story', story:["Sarah and James first met at a summer gathering through mutual friends. One conversation turned into hours of laughter, and neither of them wanted the evening to end.","In the months that followed came coffee dates, long walks, shared dreams and countless little moments that slowly became a life built together.","Now, surrounded by the people who have been part of their journey, Sarah and James are ready to begin their next chapter and celebrate their wedding day."], quote:'“One conversation became a thousand memories — and now, a lifetime together.”',
+        scheduleEye:'The celebration', scheduleTitle:'Wedding day schedule', timeline:[['4:30 PM','Welcome','Join us, meet friends and family, and enjoy the first moments of the celebration.'],['5:30 PM','Ceremony','Please arrive a little early so we can begin the ceremony together.'],['6:30 PM','Dinner & toast','After the ceremony, the celebration continues with dinner, music and dancing.']],
+        detailsEye:'Everything you need to know', detailsTitle:'Before you arrive', details:[['Dress code','Cocktail attire in light or earthy tones. The ceremony will take place indoors.'],['Arrival & parking','Parking is available at the venue. Please follow the event signs when you arrive.'],['Traveling guests','We recommend staying near Midtown. Event transportation will leave the hotel at 4:00 PM.']],
+        venueEye:'Getting there', venueTitle:'St. James Church', address:'865 Madison Avenue<br>New York, NY 10021', mapButton:'Open in Maps', faqEye:'Good to know', faqTitle:'Frequently asked questions', faq:[['Can I bring a guest?','Your invitation will indicate whether a plus-one is included. If so, please add their name when you RSVP.'],['Can I bring children?','We want everyone to enjoy the evening. This will be an adults-only celebration, except for children specifically included on the invitation.'],['When should I RSVP?','Please RSVP by June 20, 2028 so we can finalize all the details for the celebration.']],
+        rsvpTitle:'Will you celebrate with us?', rsvpIntro:"Please reply by June 20, 2028. If you can't make it, let us know here too.", nameLabel:'Full name', nameError:'Enter your full name.', attendanceLegend:'Will you attend?', yes:"I'll be there", no:"I can't attend", attendanceError:'Please select whether you will attend.', companions:'Guests', guestOptions:['Just me','1 guest','2 guests'], submit:'Submit RSVP', note:'This demo does not save or send responses.', footer:'Made with Planne', privacy:'Privacy policy', successYes:n=>`Thank you, ${n}! This is how your RSVP will appear. This is a demo, so no data was sent.`, successNo:n=>`Thank you for letting us know, ${n}. No response was sent in this demo.`
+      }
+    };
+    let currentLanguage = 'pt-BR';
+    function applyLanguage(lang) {
+      currentLanguage = lang; const t = translations[lang]; root.lang = lang; document.title=t.title;
+      const demoSpan=document.querySelector('.demo-bar span'); demoSpan.innerHTML=`<strong>${t.demoStrong}</strong>${t.demoText}`;
+      [...picker.options].forEach((o,i)=>o.textContent=t.styles[i]);
+      document.querySelector('.brand span').textContent=t.brand;
+      [...document.querySelectorAll('.site-nav a')].forEach((a,i)=>a.textContent=t.nav[i]);
+      document.querySelector('.hero-copy .eyebrow').textContent=t.eyebrowHero; document.getElementById('event-title').innerHTML=t.names; document.querySelector('.hero-lead').textContent=t.lead; document.querySelector('.hero-meta').innerHTML=t.meta;
+      const heroBtns=document.querySelectorAll('.hero-actions .button'); heroBtns[0].textContent=t.confirm; heroBtns[1].textContent=t.directions;
+      document.querySelectorAll('.summary-item').forEach((el,i)=>{el.querySelector('dt').textContent=t.summary[i][0];el.querySelector('dd').innerHTML=t.summary[i][1]});
+      const storySec=document.getElementById('historia'); storySec.querySelector('.eyebrow').textContent=t.storyEye; document.getElementById('story-title').textContent=t.storyTitle; storySec.querySelectorAll('.story-copy p').forEach((p,i)=>p.textContent=t.story[i]); storySec.querySelector('.pull-quote').textContent=t.quote;
+      const sch=document.getElementById('cronograma'); sch.querySelector('.eyebrow').textContent=t.scheduleEye; document.getElementById('schedule-title').textContent=t.scheduleTitle; sch.querySelectorAll('.timeline-item').forEach((el,i)=>{el.querySelector('.timeline-time').textContent=t.timeline[i][0];el.querySelector('h3').textContent=t.timeline[i][1];el.querySelector('p').textContent=t.timeline[i][2]});
+      const det=document.getElementById('detalhes'); det.querySelector('.eyebrow').textContent=t.detailsEye; document.getElementById('details-title').textContent=t.detailsTitle; det.querySelectorAll('.detail').forEach((el,i)=>{el.querySelector('h3').textContent=t.details[i][0];el.querySelector('p').textContent=t.details[i][1]});
+      const venue=document.getElementById('local'); venue.querySelector('.eyebrow').textContent=t.venueEye; document.getElementById('venue-title').textContent=t.venueTitle; venue.querySelector('address').innerHTML=t.address; venue.querySelector('.button').textContent=t.mapButton;
+      const faq=document.querySelector('[aria-labelledby="faq-title"]'); faq.querySelector('.eyebrow').textContent=t.faqEye; document.getElementById('faq-title').textContent=t.faqTitle; faq.querySelectorAll('details').forEach((el,i)=>{el.querySelector('summary').textContent=t.faq[i][0];el.querySelector('p').textContent=t.faq[i][1]});
+      document.getElementById('rsvp-title').textContent=t.rsvpTitle; document.querySelector('.rsvp-intro > p:last-child').textContent=t.rsvpIntro; document.querySelector('label[for="guestName"]').textContent=t.nameLabel; document.getElementById('nameError').textContent=t.nameError; document.querySelector('#demoRsvp legend').textContent=t.attendanceLegend; document.querySelector('label[for="yes"]').textContent=t.yes; document.querySelector('label[for="no"]').textContent=t.no; document.getElementById('attendanceError').textContent=t.attendanceError; document.querySelector('label[for="guestCount"]').textContent=t.companions; [...document.querySelectorAll('#guestCount option')].forEach((o,i)=>o.textContent=t.guestOptions[i]); document.querySelector('#demoRsvp button[type="submit"]').textContent=t.submit; document.querySelector('.demo-note').textContent=t.note; document.querySelector('.site-footer span').textContent=t.footer; document.querySelector('.site-footer a').textContent=t.privacy; document.querySelector('.mobile-rsvp').textContent=t.confirm;
+      document.getElementById('formMessage').classList.remove('show');
+    }
+    languagePicker.addEventListener('change',()=>applyLanguage(languagePicker.value));
+    applyLanguage('pt-BR');
+
     const demoForm = document.getElementById('demoRsvp');
     const nameInput = document.getElementById('guestName');
     const radios = [...demoForm.querySelectorAll('[name="attendance"]')];
@@ -731,9 +792,8 @@
         (name ? radios[0] : nameInput).focus();
         return;
       }
-      message.textContent = attendance === 'yes'
-        ? `Tudo certo, ${name}! Assim aparecerá sua confirmação. Esta é uma simulação, sem envio de dados.`
-        : `Obrigado por avisar, ${name}. Nesta demonstração, nenhuma resposta foi enviada.`;
+      const t = translations[currentLanguage];
+      message.textContent = attendance === 'yes' ? t.successYes(name) : t.successNo(name);
       message.style.borderColor = 'var(--success)';
       message.classList.add('show');
       message.focus();
