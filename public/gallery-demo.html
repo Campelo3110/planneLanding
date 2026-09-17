@@ -21,1234 +21,1547 @@
         href="/assets/brand/favicon-32x32.png"
     >
 
-    <!-- CSS -->
-     <style>
+    <style>
+
         /* =========================================================
-   PLANNE — CÂMERA DO EVENTO
-========================================================= */
+           RESET
+        ========================================================= */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --bg: #09090b;
+            --white: #ffffff;
+
+            --purple: #9b5cff;
+            --purple-light: #c6a7ff;
+
+            --surface:
+                rgba(18, 18, 22, .72);
+
+            --soft:
+                rgba(255, 255, 255, .12);
+
+            --muted:
+                rgba(255, 255, 255, .65);
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+
+            background: var(--bg);
+            color: var(--white);
+
+            font-family:
+                Inter,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+
+            overflow: hidden;
+        }
+
+        button,
+        input {
+            font: inherit;
+        }
+
+        button {
+            border: 0;
+            color: inherit;
+            cursor: pointer;
+        }
+
+        /* =========================================================
+           CAMERA APP
+        ========================================================= */
+
+        .camera-app {
+            position: relative;
+
+            width: 100%;
+            height: 100dvh;
+            min-height: 100%;
+
+            overflow: hidden;
+
+            background: #08080a;
+        }
+
+        /* =========================================================
+           CAMERA FAKE
+
+           Depois substituímos isso pelo <video>.
+        ========================================================= */
+
+        .camera-feed {
+            position: absolute;
+            inset: 0;
+
+            width: 100%;
+            height: 100%;
+
+            object-fit: cover;
+
+            background:
+                radial-gradient(
+                    circle at 60% 30%,
+                    rgba(125, 83, 180, .25),
+                    transparent 34%
+                ),
+                radial-gradient(
+                    circle at 30% 65%,
+                    rgba(61, 42, 82, .2),
+                    transparent 35%
+                ),
+                linear-gradient(
+                    145deg,
+                    #25222b 0%,
+                    #121116 45%,
+                    #08080a 100%
+                );
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+            transition:
+                transform .5s cubic-bezier(.22, 1, .36, 1),
+                opacity .5s ease;
+        }
 
-    -webkit-tap-highlight-color: transparent;
-}
+        /* =========================================================
+           VINHETA
+        ========================================================= */
 
+        .camera-vignette {
+            position: absolute;
+            z-index: 2;
+            inset: 0;
 
-/* =========================================================
-   VARIÁVEIS
-========================================================= */
+            pointer-events: none;
 
-:root {
+            background:
+                radial-gradient(
+                    ellipse at center,
+                    transparent 40%,
+                    rgba(0, 0, 0, .08) 65%,
+                    rgba(0, 0, 0, .45) 100%
+                );
+        }
 
-    --bg: #09090b;
+        /* =========================================================
+           GRÃO FOTOGRÁFICO
+        ========================================================= */
 
-    --surface:
-        rgba(18, 18, 22, .72);
+        .camera-grain {
+            position: absolute;
+            z-index: 3;
+            inset: 0;
 
-    --surface-strong:
-        rgba(18, 18, 22, .92);
+            pointer-events: none;
 
-    --white: #ffffff;
+            opacity: .025;
 
-    --muted:
-        rgba(255, 255, 255, .65);
+            background-image:
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='.8'/%3E%3C/svg%3E");
+        }
 
-    --soft:
-        rgba(255, 255, 255, .12);
+        /* =========================================================
+           HEADER
+        ========================================================= */
 
-    --purple: #9b5cff;
+        .camera-header {
+            position: absolute;
 
-    --purple-light: #c6a7ff;
+            z-index: 10;
 
-}
+            top: 0;
+            left: 0;
 
+            width: 100%;
 
-/* =========================================================
-   BASE
-========================================================= */
+            padding:
+                calc(env(safe-area-inset-top) + 16px)
+                18px
+                18px;
 
-html,
-body {
+            display: grid;
 
-    width: 100%;
-    height: 100%;
+            grid-template-columns:
+                48px
+                1fr
+                48px;
 
-    background: var(--bg);
+            align-items: center;
 
-    color: var(--white);
+            animation:
+                cameraHeaderEntrance
+                .8s cubic-bezier(.22, 1, .36, 1)
+                .8s both;
+        }
 
-    font-family:
-        Inter,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
+        @keyframes cameraHeaderEntrance {
 
-    overflow: hidden;
+            from {
+                opacity: 0;
+                transform: translateY(-18px);
+            }
 
-}
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
 
+        }
 
-button,
-input {
-    font: inherit;
-}
+        /* =========================================================
+           BOTÕES GLASS
+        ========================================================= */
 
+        .round-action {
+            width: 44px;
+            height: 44px;
 
-button {
+            display: flex;
 
-    border: 0;
+            align-items: center;
+            justify-content: center;
 
-    color: inherit;
+            border-radius: 50%;
 
-    cursor: pointer;
+            background:
+                rgba(10, 10, 12, .42);
 
-}
+            border:
+                1px solid rgba(255, 255, 255, .13);
 
+            backdrop-filter:
+                blur(18px);
 
-/* =========================================================
-   APP
-========================================================= */
+            -webkit-backdrop-filter:
+                blur(18px);
 
-.camera-app {
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, .08),
+                0 8px 25px rgba(0, 0, 0, .14);
 
-    position: relative;
+            transition:
+                transform .18s ease,
+                background .18s ease;
+        }
 
-    width: 100%;
+        .round-action:hover {
+            background:
+                rgba(255, 255, 255, .12);
+        }
 
-    height: 100dvh;
+        .round-action:active {
+            transform:
+                scale(.9);
+        }
 
-    min-height: 100%;
+        .round-action svg {
+            width: 21px;
+            height: 21px;
 
-    overflow: hidden;
+            fill: none;
 
-    background: #08080a;
+            stroke: white;
+            stroke-width: 1.8;
+        }
 
-}
+        /* =========================================================
+           EVENTO
+        ========================================================= */
 
+        .event-info {
+            min-width: 0;
 
-/* =========================================================
-   CAMERA BACKGROUND
+            padding:
+                0 10px;
 
-   Por enquanto é somente visual.
+            text-align: center;
+        }
 
-   Depois pode ser substituído pelo <video>
-   usando exatamente a mesma classe.
-========================================================= */
+        .event-name {
+            overflow: hidden;
 
-.camera-feed {
+            font-size: 15px;
+            font-weight: 650;
 
-    position: absolute;
+            letter-spacing: -.2px;
 
-    inset: 0;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
 
-    width: 100%;
+        .event-label {
+            margin-top: 3px;
 
-    height: 100%;
+            color:
+                rgba(255, 255, 255, .62);
 
-    object-fit: cover;
+            font-size: 11px;
+            font-weight: 500;
+        }
 
-    background:
+        /* =========================================================
+           STATUS
+        ========================================================= */
 
-        radial-gradient(
-            circle at 60% 30%,
-            rgba(125, 83, 180, .22),
-            transparent 34%
-        ),
+        .camera-message {
+            position: absolute;
 
-        linear-gradient(
-            145deg,
-            #25222b 0%,
-            #121116 45%,
-            #08080a 100%
-        );
+            z-index: 5;
 
-}
+            top:
+                calc(
+                    env(safe-area-inset-top)
+                    + 96px
+                );
 
+            left: 50%;
 
-/* Escurecimento para melhorar leitura */
+            transform:
+                translateX(-50%);
 
-.camera-feed::after {
+            width: max-content;
 
-    content: "";
+            max-width:
+                calc(100% - 48px);
 
-    position: absolute;
+            padding:
+                9px 14px;
 
-    inset: 0;
+            border:
+                1px solid rgba(255, 255, 255, .12);
 
-    background:
+            border-radius: 999px;
 
-        linear-gradient(
-            to bottom,
+            background:
+                rgba(10, 10, 12, .38);
 
-            rgba(0, 0, 0, .52) 0%,
+            backdrop-filter:
+                blur(18px);
 
-            rgba(0, 0, 0, .05) 25%,
+            -webkit-backdrop-filter:
+                blur(18px);
 
-            rgba(0, 0, 0, .03) 60%,
+            color:
+                rgba(255, 255, 255, .86);
 
-            rgba(0, 0, 0, .65) 100%
-        );
+            font-size: 12px;
+            font-weight: 500;
 
-}
+            white-space: nowrap;
 
+            animation:
+                cameraMessageEntrance
+                .7s cubic-bezier(.22, 1, .36, 1)
+                1s both;
+        }
 
-/* =========================================================
-   HEADER
-========================================================= */
+        @keyframes cameraMessageEntrance {
 
-.camera-header {
+            from {
+                opacity: 0;
 
-    position: absolute;
+                transform:
+                    translate(-50%, -8px)
+                    scale(.96);
+            }
 
-    z-index: 10;
+            to {
+                opacity: 1;
 
-    top: 0;
+                transform:
+                    translate(-50%, 0)
+                    scale(1);
+            }
 
-    left: 0;
+        }
 
-    width: 100%;
+        .live-dot {
+            width: 6px;
+            height: 6px;
 
+            display: inline-block;
 
-    padding:
+            margin-right: 5px;
 
-        calc(env(safe-area-inset-top) + 16px)
+            border-radius: 50%;
 
-        18px
+            background:
+                #b88cff;
 
-        18px;
+            box-shadow:
+                0 0 0 4px rgba(184, 140, 255, .09),
+                0 0 12px rgba(184, 140, 255, .65);
 
+            animation:
+                livePulse
+                2.2s ease-in-out infinite;
+        }
 
-    display: grid;
+        @keyframes livePulse {
 
-    grid-template-columns:
-        48px
-        1fr
-        48px;
+            0%,
+            100% {
+                opacity: .65;
+                transform: scale(.9);
+            }
 
-    align-items: center;
+            50% {
+                opacity: 1;
+                transform: scale(1.1);
+            }
 
-}
+        }
 
+        /* =========================================================
+           CONTROLES
+        ========================================================= */
 
-/* =========================================================
-   BOTÕES REDONDOS
-========================================================= */
+        .camera-controls {
+            position: absolute;
 
-.round-action {
+            z-index: 10;
 
-    width: 44px;
+            bottom: 0;
+            left: 0;
 
-    height: 44px;
+            width: 100%;
 
+            padding:
+                30px
+                24px
+                calc(env(safe-area-inset-bottom) + 18px);
 
-    display: flex;
+            background:
+                linear-gradient(
+                    to top,
+                    rgba(5, 5, 7, .98),
+                    rgba(5, 5, 7, .75) 50%,
+                    transparent
+                );
 
-    align-items: center;
+            animation:
+                cameraControlsEntrance
+                .9s cubic-bezier(.22, 1, .36, 1)
+                .85s both;
+        }
 
-    justify-content: center;
+        @keyframes cameraControlsEntrance {
 
+            from {
+                opacity: 0;
+                transform: translateY(35px);
+            }
 
-    border-radius: 50%;
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
 
+        }
 
-    background:
-        rgba(10, 10, 12, .42);
+        .controls-row {
+            display: grid;
 
+            grid-template-columns:
+                1fr
+                100px
+                1fr;
 
-    border:
-        1px solid
-        rgba(255, 255, 255, .13);
+            align-items: center;
 
+            max-width: 440px;
 
-    backdrop-filter:
-        blur(18px);
+            margin:
+                0 auto;
+        }
 
-    -webkit-backdrop-filter:
-        blur(18px);
+        /* =========================================================
+           CONTROLES LATERAIS
+        ========================================================= */
 
+        .side-control {
+            display: flex;
 
-    transition:
+            flex-direction: column;
 
-        transform .18s ease,
+            align-items: center;
+            justify-content: center;
 
-        background .18s ease;
+            gap: 8px;
 
-}
+            background:
+                transparent;
 
+            color:
+                rgba(255, 255, 255, .76);
 
-.round-action:active {
+            font-size: 11px;
+            font-weight: 500;
+        }
 
-    transform:
-        scale(.91);
+        .side-control:first-child {
+            justify-self: start;
+        }
 
-    background:
-        rgba(255, 255, 255, .18);
+        .side-control:last-child {
+            justify-self: end;
+        }
 
-}
+        .side-control-icon {
+            width: 46px;
+            height: 46px;
 
+            display: flex;
 
-.round-action svg {
+            align-items: center;
+            justify-content: center;
 
-    width: 21px;
+            border:
+                1px solid rgba(255, 255, 255, .1);
 
-    height: 21px;
+            border-radius: 15px;
 
-    fill: none;
+            background:
+                rgba(255, 255, 255, .1);
 
-    stroke: white;
+            backdrop-filter:
+                blur(12px);
 
-    stroke-width: 1.8;
+            -webkit-backdrop-filter:
+                blur(12px);
 
-}
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, .08),
+                0 8px 25px rgba(0, 0, 0, .14);
 
+            transition:
+                transform .22s cubic-bezier(.22, 1, .36, 1),
+                background .22s ease;
+        }
 
-/* =========================================================
-   EVENTO
-========================================================= */
+        .side-control:hover
+        .side-control-icon {
+            transform:
+                translateY(-2px);
 
-.event-info {
+            background:
+                rgba(255, 255, 255, .15);
+        }
 
-    text-align: center;
+        .side-control:active
+        .side-control-icon {
+            transform:
+                scale(.9);
+        }
 
-    min-width: 0;
+        .side-control svg {
+            width: 21px;
+            height: 21px;
 
-    padding:
-        0 10px;
+            fill: none;
 
-}
+            stroke: white;
+            stroke-width: 1.7;
+        }
 
+        /* =========================================================
+           SHUTTER
+        ========================================================= */
 
-.event-name {
+        .shutter {
+            position: relative;
 
-    font-size: 15px;
+            width: 82px;
+            height: 82px;
 
-    font-weight: 650;
+            display: flex;
 
-    letter-spacing: -.2px;
+            align-items: center;
+            justify-content: center;
 
+            justify-self: center;
 
-    overflow: hidden;
+            overflow: visible;
 
-    text-overflow: ellipsis;
+            border:
+                2px solid rgba(255, 255, 255, .92);
 
-    white-space: nowrap;
+            border-radius: 50%;
 
-}
+            background:
+                rgba(255, 255, 255, .08);
 
+            box-shadow:
+                0 8px 30px rgba(0, 0, 0, .35),
+                0 0 0 1px rgba(255, 255, 255, .08);
 
-.event-label {
+            transition:
+                transform .14s ease;
+        }
 
-    margin-top: 3px;
+        .shutter::before {
+            content: "";
 
-    font-size: 11px;
+            position: absolute;
 
-    font-weight: 500;
+            inset: -9px;
 
-    color:
-        rgba(255, 255, 255, .62);
+            border:
+                1px solid rgba(255, 255, 255, .08);
 
-}
+            border-radius: 50%;
 
+            opacity: .8;
 
-/* =========================================================
-   MENSAGEM SUPERIOR
-========================================================= */
+            transition:
+                transform .3s ease,
+                opacity .3s ease;
+        }
 
-.camera-message {
+        .shutter-inner {
+            width: 66px;
+            height: 66px;
 
-    position: absolute;
+            display: block;
 
-    z-index: 5;
+            border-radius: 50%;
 
+            background:
+                linear-gradient(
+                    145deg,
+                    #ffffff,
+                    #e9e9ed
+                );
 
-    top:
-        calc(
-            env(safe-area-inset-top)
-            + 96px
-        );
+            box-shadow:
+                inset 0 -2px 4px rgba(0, 0, 0, .08);
 
+            transition:
+                transform .16s cubic-bezier(.22, 1, .36, 1);
+        }
 
-    left: 50%;
+        .shutter:hover
+        .shutter-inner {
+            transform:
+                scale(.94);
+        }
 
-    transform:
-        translateX(-50%);
+        .shutter:active {
+            transform:
+                scale(.94);
+        }
 
+        .shutter:active
+        .shutter-inner {
+            transform:
+                scale(.82);
+        }
 
-    max-width:
-        calc(100% - 48px);
+        .shutter:active::before {
+            transform:
+                scale(1.08);
 
-    width: max-content;
+            opacity: 0;
+        }
 
+        /* =========================================================
+           PLANNE BRAND
+        ========================================================= */
 
-    padding:
-        9px 14px;
+        .planne-brand {
+            margin-top: 22px;
 
+            display: flex;
 
-    border-radius:
-        999px;
+            align-items: center;
+            justify-content: center;
 
+            gap: 6px;
 
-    border:
-        1px solid
-        rgba(255, 255, 255, .12);
+            color:
+                rgba(255, 255, 255, .38);
 
+            font-size: 10px;
+        }
 
-    background:
-        rgba(10, 10, 12, .38);
+        .planne-brand strong {
+            color:
+                rgba(255, 255, 255, .68);
 
+            font-weight: 600;
+        }
 
-    backdrop-filter:
-        blur(18px);
+        .planne-dot {
+            width: 4px;
+            height: 4px;
 
-    -webkit-backdrop-filter:
-        blur(18px);
+            border-radius: 50%;
 
+            background:
+                var(--purple);
 
-    color:
-        rgba(255, 255, 255, .86);
+            box-shadow:
+                0 0 10px rgba(155, 92, 255, .7);
+        }
 
+        /* =========================================================
+           FLASH
+        ========================================================= */
 
-    font-size: 12px;
+        .camera-flash {
+            position: absolute;
 
-    font-weight: 500;
+            z-index: 90;
 
-    white-space: nowrap;
+            inset: 0;
 
-}
+            pointer-events: none;
 
+            background:
+                white;
 
-.camera-message span {
+            opacity: 0;
+        }
 
-    color:
-        var(--purple-light);
+        .camera-flash.active {
+            animation:
+                cameraFlash
+                .35s ease-out;
+        }
 
-}
+        @keyframes cameraFlash {
 
+            0% {
+                opacity: 0;
+            }
 
-/* =========================================================
-   CONTROLES INFERIORES
-========================================================= */
+            12% {
+                opacity: .92;
+            }
 
-.camera-controls {
+            35% {
+                opacity: .4;
+            }
 
-    position: absolute;
+            100% {
+                opacity: 0;
+            }
 
-    z-index: 10;
+        }
 
+        /* =========================================================
+           FOCUS
+        ========================================================= */
 
-    bottom: 0;
+        .focus-ring {
+            position: absolute;
 
-    left: 0;
+            z-index: 20;
 
-    width: 100%;
+            width: 70px;
+            height: 70px;
 
+            display: none;
 
-    padding:
+            pointer-events: none;
 
-        25px
+            border:
+                1.5px solid rgba(255, 255, 255, .92);
 
-        24px
+            border-radius: 12px;
 
-        calc(
-            env(safe-area-inset-bottom)
-            + 18px
-        );
+            opacity: 0;
 
+            transform:
+                translate(-50%, -50%)
+                scale(1.35);
+        }
 
-    background:
+        .focus-ring::before,
+        .focus-ring::after,
+        .focus-ring span::before,
+        .focus-ring span::after {
+            content: "";
 
-        linear-gradient(
-            to top,
+            position: absolute;
 
-            rgba(5, 5, 7, .95),
+            background:
+                white;
+        }
 
-            rgba(5, 5, 7, .72) 55%,
+        .focus-ring::before {
+            width: 10px;
+            height: 1px;
 
-            transparent
-        );
+            left: -6px;
+            top: 50%;
+        }
 
-}
+        .focus-ring::after {
+            width: 10px;
+            height: 1px;
 
+            right: -6px;
+            top: 50%;
+        }
 
-/* =========================================================
-   LINHA DOS CONTROLES
-========================================================= */
+        .focus-ring span::before {
+            width: 1px;
+            height: 10px;
 
-.controls-row {
+            top: -6px;
+            left: 50%;
+        }
 
-    display: grid;
+        .focus-ring span::after {
+            width: 1px;
+            height: 10px;
 
-    grid-template-columns:
-        1fr
-        100px
-        1fr;
+            bottom: -6px;
+            left: 50%;
+        }
 
-    align-items: center;
+        .focus-ring.active {
+            display: block;
 
+            animation:
+                focusAnimation
+                .8s cubic-bezier(.22, 1, .36, 1)
+                forwards;
+        }
 
-    max-width: 440px;
+        @keyframes focusAnimation {
 
-    margin: 0 auto;
+            0% {
+                opacity: 0;
 
-}
+                transform:
+                    translate(-50%, -50%)
+                    scale(1.4);
+            }
 
+            25% {
+                opacity: 1;
+            }
 
-/* =========================================================
-   BOTÕES LATERAIS
-========================================================= */
+            55% {
+                transform:
+                    translate(-50%, -50%)
+                    scale(1);
+            }
 
-.side-control {
+            80% {
+                opacity: 1;
+            }
 
-    display: flex;
+            100% {
+                opacity: 0;
 
-    flex-direction: column;
+                transform:
+                    translate(-50%, -50%)
+                    scale(.96);
+            }
 
-    align-items: center;
+        }
 
-    justify-content: center;
+        /* =========================================================
+           PREVIEW
+        ========================================================= */
 
-    gap: 8px;
+        .preview-screen {
+            position: absolute;
 
+            z-index: 30;
 
-    background:
-        transparent;
+            inset: 0;
 
+            display: none;
 
-    font-size: 11px;
+            background:
+                #08080a;
+        }
 
-    font-weight: 500;
+        .preview-screen.active {
+            display: block;
 
-    color:
-        rgba(255, 255, 255, .76);
+            animation:
+                previewEntrance
+                .45s cubic-bezier(.22, 1, .36, 1);
+        }
 
-}
+        @keyframes previewEntrance {
 
+            from {
+                opacity: 0;
 
-.side-control:first-child {
+                transform:
+                    scale(1.045);
 
-    justify-self: start;
+                filter:
+                    blur(3px);
+            }
 
-}
+            to {
+                opacity: 1;
 
+                transform:
+                    scale(1);
 
-.side-control:last-child {
+                filter:
+                    blur(0);
+            }
 
-    justify-self: end;
+        }
 
-}
+        .preview-image {
+            position: absolute;
 
+            inset: 0;
 
-/* Ícone */
+            width: 100%;
+            height: 100%;
 
-.side-control-icon {
+            object-fit: cover;
 
-    width: 46px;
+            background:
+                radial-gradient(
+                    circle at 50% 30%,
+                    rgba(125, 83, 180, .25),
+                    transparent 35%
+                ),
+                linear-gradient(
+                    145deg,
+                    #312b3b,
+                    #111014
+                );
+        }
 
-    height: 46px;
+        .preview-overlay {
+            position: absolute;
 
+            inset: 0;
 
-    display: flex;
+            background:
+                linear-gradient(
+                    to bottom,
+                    rgba(0, 0, 0, .5),
+                    transparent 30%,
+                    transparent 45%,
+                    rgba(0, 0, 0, .9) 100%
+                );
+        }
 
-    align-items: center;
+        /* =========================================================
+           PREVIEW HEADER
+        ========================================================= */
 
-    justify-content: center;
+        .preview-header {
+            position: absolute;
 
+            z-index: 2;
 
-    border-radius: 15px;
+            top: 0;
+            left: 0;
 
+            width: 100%;
 
-    background:
-        rgba(255, 255, 255, .10);
+            padding:
+                calc(env(safe-area-inset-top) + 16px)
+                18px;
 
+            display: flex;
 
-    border:
-        1px solid
-        rgba(255, 255, 255, .10);
+            align-items: center;
+            justify-content: space-between;
+        }
 
+        .preview-title {
+            position: absolute;
 
-    backdrop-filter:
-        blur(12px);
+            left: 50%;
 
-    -webkit-backdrop-filter:
-        blur(12px);
+            transform:
+                translateX(-50%);
 
+            font-size: 14px;
+            font-weight: 600;
+        }
 
-    transition:
-        transform .18s ease;
+        /* =========================================================
+           PREVIEW BOTTOM
+        ========================================================= */
 
-}
+        .preview-bottom {
+            position: absolute;
 
+            z-index: 2;
 
-.side-control:active
-.side-control-icon {
+            left: 0;
+            bottom: 0;
 
-    transform:
-        scale(.9);
+            width: 100%;
 
-}
+            padding:
+                28px
+                20px
+                calc(env(safe-area-inset-bottom) + 24px);
 
+            animation:
+                previewControlsEntrance
+                .6s cubic-bezier(.22, 1, .36, 1)
+                .08s both;
+        }
 
-.side-control svg {
+        @keyframes previewControlsEntrance {
 
-    width: 21px;
+            from {
+                opacity: 0;
+                transform: translateY(25px);
+            }
 
-    height: 21px;
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
 
-    fill: none;
+        }
 
-    stroke: white;
+        /* =========================================================
+           NAME
+        ========================================================= */
 
-    stroke-width: 1.7;
+        .name-field {
+            max-width: 440px;
 
-}
+            margin:
+                0 auto 17px;
+        }
 
+        .name-field label {
+            display: block;
 
-/* =========================================================
-   BOTÃO PRINCIPAL DA CÂMERA
-========================================================= */
+            margin:
+                0 0 8px 4px;
 
-.shutter {
+            color:
+                rgba(255, 255, 255, .68);
 
-    width: 82px;
+            font-size: 11px;
+            font-weight: 500;
+        }
 
-    height: 82px;
+        .name-field input {
+            width: 100%;
+            height: 52px;
 
+            padding:
+                0 17px;
 
-    justify-self: center;
+            outline: none;
 
+            border:
+                1px solid rgba(255, 255, 255, .13);
 
-    position: relative;
+            border-radius: 16px;
 
+            background:
+                rgba(20, 20, 24, .72);
 
-    border-radius: 50%;
+            color:
+                white;
 
+            backdrop-filter:
+                blur(18px);
 
-    background:
-        rgba(255, 255, 255, .98);
+            -webkit-backdrop-filter:
+                blur(18px);
 
+            font-size: 14px;
 
-    box-shadow:
+            transition:
+                border .2s ease,
+                box-shadow .2s ease;
+        }
 
-        0 0 0 5px
-        rgba(255, 255, 255, .23),
+        .name-field input::placeholder {
+            color:
+                rgba(255, 255, 255, .38);
+        }
 
-        0 12px 35px
-        rgba(0, 0, 0, .38);
+        .name-field input:focus {
+            border-color:
+                rgba(171, 128, 255, .7);
 
+            box-shadow:
+                0 0 0 3px
+                rgba(155, 92, 255, .12);
+        }
 
-    transition:
+        /* =========================================================
+           PREVIEW ACTIONS
+        ========================================================= */
 
-        transform .14s ease,
+        .preview-actions {
+            max-width: 440px;
 
-        box-shadow .14s ease;
+            margin:
+                auto;
 
-}
+            display: grid;
 
+            grid-template-columns:
+                1fr
+                1.65fr;
 
-.shutter::after {
+            gap: 10px;
+        }
 
-    content: "";
+        .preview-button {
+            height: 54px;
 
-    position: absolute;
+            border-radius: 17px;
 
-    inset: 7px;
+            font-size: 13px;
+            font-weight: 650;
 
+            transition:
+                transform .15s ease;
+        }
 
-    border-radius: 50%;
+        .preview-button:active {
+            transform:
+                scale(.97);
+        }
 
+        .preview-button.secondary {
+            border:
+                1px solid rgba(255, 255, 255, .11);
 
-    border:
-        2px solid
-        rgba(20, 20, 24, .12);
+            background:
+                rgba(255, 255, 255, .11);
 
-}
+            backdrop-filter:
+                blur(15px);
 
+            -webkit-backdrop-filter:
+                blur(15px);
+        }
 
-.shutter:active {
+        .preview-button.primary {
+            position: relative;
 
-    transform:
-        scale(.88);
+            overflow: hidden;
 
+            background:
+                linear-gradient(
+                    135deg,
+                    #ffffff,
+                    #eeeaf5
+                );
 
-    box-shadow:
+            color:
+                #111114;
 
-        0 0 0 4px
-        rgba(255, 255, 255, .18),
+            box-shadow:
+                0 10px 35px rgba(0, 0, 0, .3),
+                0 0 30px rgba(155, 92, 255, .08);
+        }
 
-        0 6px 20px
-        rgba(0, 0, 0, .30);
+        .preview-button.primary::after {
+            content: "";
 
-}
+            position: absolute;
 
+            top: -50%;
+            left: -100%;
 
-/* =========================================================
-   BRANDING PLANNE
-========================================================= */
+            width: 55%;
+            height: 200%;
 
-.planne-brand {
+            transform:
+                rotate(20deg);
 
-    margin-top: 22px;
+            background:
+                linear-gradient(
+                    to right,
+                    transparent,
+                    rgba(255, 255, 255, .8),
+                    transparent
+                );
 
+            opacity: .45;
 
-    display: flex;
+            transition:
+                left .7s cubic-bezier(.22, 1, .36, 1);
+        }
 
-    align-items: center;
+        .preview-button.primary:hover::after {
+            left: 150%;
+        }
 
-    justify-content: center;
+        /* =========================================================
+           INTRO PLANNE
+        ========================================================= */
 
-    gap: 6px;
+        .camera-intro {
+            position: absolute;
 
+            z-index: 100;
 
-    color:
-        rgba(255, 255, 255, .38);
+            inset: 0;
 
+            display: flex;
 
-    font-size: 10px;
+            align-items: center;
+            justify-content: center;
 
-    letter-spacing: .1px;
+            background:
+                radial-gradient(
+                    circle at 50% 45%,
+                    #20162e,
+                    #09090b 55%
+                );
 
-}
+            animation:
+                introDisappear
+                .9s cubic-bezier(.22, 1, .36, 1)
+                1.25s forwards;
+        }
 
+        .intro-brand {
+            display: flex;
 
-.planne-brand strong {
+            flex-direction: column;
 
-    color:
-        rgba(255, 255, 255, .65);
+            align-items: center;
 
-    font-weight: 600;
+            animation:
+                introBrand
+                .9s cubic-bezier(.22, 1, .36, 1);
+        }
 
-}
+        .intro-logo {
+            width: 68px;
+            height: 68px;
 
+            display: flex;
 
-.planne-dot {
+            align-items: center;
+            justify-content: center;
 
-    width: 4px;
+            margin-bottom: 18px;
 
-    height: 4px;
+            border:
+                1px solid rgba(255, 255, 255, .09);
 
-    border-radius: 50%;
+            border-radius: 22px;
 
-    background:
-        var(--purple);
+            background:
+                rgba(255, 255, 255, .07);
 
-}
+            backdrop-filter:
+                blur(20px);
 
+            -webkit-backdrop-filter:
+                blur(20px);
 
-/* =========================================================
-   PREVIEW
-========================================================= */
+            box-shadow:
+                0 18px 50px rgba(0, 0, 0, .3),
+                0 0 40px rgba(155, 92, 255, .12);
+        }
 
-.preview-screen {
+        .intro-logo img {
+            width: 43px;
+            height: 43px;
 
-    position: absolute;
+            object-fit: contain;
+        }
 
-    z-index: 30;
+        .intro-brand span {
+            margin-bottom: 5px;
 
-    inset: 0;
+            color:
+                rgba(255, 255, 255, .45);
 
+            font-size: 11px;
+            font-weight: 500;
 
-    display: none;
+            letter-spacing: .8px;
 
+            text-transform: uppercase;
+        }
 
-    background:
-        #08080a;
+        .intro-brand strong {
+            font-size: 22px;
+            font-weight: 650;
 
-}
+            letter-spacing: -.5px;
+        }
 
+        @keyframes introBrand {
 
-.preview-screen.active {
+            from {
+                opacity: 0;
 
-    display: block;
+                transform:
+                    translateY(10px)
+                    scale(.94);
 
-}
+                filter:
+                    blur(8px);
+            }
 
+            to {
+                opacity: 1;
 
-/* =========================================================
-   IMAGEM DA PREVIEW
-========================================================= */
+                transform:
+                    translateY(0)
+                    scale(1);
 
-.preview-image {
+                filter:
+                    blur(0);
+            }
 
-    position: absolute;
+        }
 
-    inset: 0;
+        @keyframes introDisappear {
 
+            0% {
+                opacity: 1;
+                visibility: visible;
+            }
 
-    width: 100%;
+            100% {
+                opacity: 0;
+                visibility: hidden;
 
-    height: 100%;
+                pointer-events: none;
+            }
 
+        }
 
-    object-fit: cover;
+        /* =========================================================
+           DESKTOP
+        ========================================================= */
 
+        @media (min-width: 700px) {
 
-    background:
+            body {
+                display: flex;
 
-        linear-gradient(
-            145deg,
-            #312b3b,
-            #111014
-        );
+                align-items: center;
+                justify-content: center;
 
-}
+                padding:
+                    20px;
 
+                background:
+                    radial-gradient(
+                        circle at 50% 20%,
+                        #21192d,
+                        #09090b 55%
+                    );
+            }
 
-/* =========================================================
-   GRADIENTE DA PREVIEW
-========================================================= */
+            .camera-app {
+                width:
+                    min(430px, 100%);
 
-.preview-overlay {
+                height:
+                    min(
+                        880px,
+                        calc(100vh - 40px)
+                    );
 
-    position: absolute;
+                border-radius:
+                    34px;
 
-    inset: 0;
+                box-shadow:
+                    0 30px 100px rgba(0, 0, 0, .55),
+                    0 0 0 1px rgba(255, 255, 255, .08);
+            }
 
+        }
 
-    background:
+        /* =========================================================
+           MOBILE PEQUENO
+        ========================================================= */
 
-        linear-gradient(
-            to bottom,
+        @media (max-width: 360px) {
 
-            rgba(0, 0, 0, .48),
+            .camera-controls {
+                padding-left:
+                    18px;
 
-            transparent 30%,
+                padding-right:
+                    18px;
+            }
 
-            transparent 50%,
+            .controls-row {
+                grid-template-columns:
+                    1fr
+                    90px
+                    1fr;
+            }
 
-            rgba(0, 0, 0, .87) 100%
-        );
+            .shutter {
+                width: 74px;
+                height: 74px;
+            }
 
-}
+            .shutter-inner {
+                width: 59px;
+                height: 59px;
+            }
 
+            .side-control-icon {
+                width: 42px;
+                height: 42px;
+            }
 
-/* =========================================================
-   HEADER DA PREVIEW
-========================================================= */
+        }
 
-.preview-header {
+        /* =========================================================
+           MOBILE — REMOVE HOVER
+        ========================================================= */
 
-    position: absolute;
+        @media (hover: none) {
 
-    z-index: 2;
+            .shutter:hover
+            .shutter-inner {
+                transform:
+                    none;
+            }
 
+            .side-control:hover
+            .side-control-icon {
+                transform:
+                    none;
+            }
 
-    top: 0;
+        }
 
-    left: 0;
+        /* =========================================================
+           ACESSIBILIDADE
+        ========================================================= */
 
-    width: 100%;
+        @media (prefers-reduced-motion: reduce) {
 
+            *,
+            *::before,
+            *::after {
+                animation-duration:
+                    .01ms !important;
 
-    padding:
+                animation-iteration-count:
+                    1 !important;
 
-        calc(
-            env(safe-area-inset-top)
-            + 16px
-        )
+                transition-duration:
+                    .01ms !important;
+            }
 
-        18px;
+        }
 
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-}
-
-
-.preview-title {
-
-    position: absolute;
-
-    left: 50%;
-
-    transform:
-        translateX(-50%);
-
-
-    font-size: 14px;
-
-    font-weight: 600;
-
-}
-
-
-/* =========================================================
-   PARTE INFERIOR DA PREVIEW
-========================================================= */
-
-.preview-bottom {
-
-    position: absolute;
-
-    z-index: 2;
-
-
-    left: 0;
-
-    bottom: 0;
-
-
-    width: 100%;
-
-
-    padding:
-
-        28px
-
-        20px
-
-        calc(
-            env(safe-area-inset-bottom)
-            + 24px
-        );
-
-}
-
-
-/* =========================================================
-   CAMPO NOME
-========================================================= */
-
-.name-field {
-
-    max-width: 440px;
-
-    margin:
-        0 auto 17px;
-
-}
-
-
-.name-field label {
-
-    display: block;
-
-
-    margin:
-        0 0 8px 4px;
-
-
-    color:
-        rgba(255, 255, 255, .68);
-
-
-    font-size: 11px;
-
-    font-weight: 500;
-
-}
-
-
-.name-field input {
-
-    width: 100%;
-
-    height: 52px;
-
-
-    padding:
-        0 17px;
-
-
-    color: white;
-
-
-    outline: none;
-
-
-    border-radius: 16px;
-
-
-    border:
-
-        1px solid
-
-        rgba(255, 255, 255, .13);
-
-
-    background:
-        rgba(20, 20, 24, .72);
-
-
-    backdrop-filter:
-        blur(18px);
-
-    -webkit-backdrop-filter:
-        blur(18px);
-
-
-    font-size: 14px;
-
-}
-
-
-.name-field
-input::placeholder {
-
-    color:
-        rgba(255, 255, 255, .38);
-
-}
-
-
-.name-field
-input:focus {
-
-    border-color:
-        rgba(171, 128, 255, .7);
-
-
-    box-shadow:
-
-        0 0 0 3px
-
-        rgba(155, 92, 255, .12);
-
-}
-
-
-/* =========================================================
-   BOTÕES DA PREVIEW
-========================================================= */
-
-.preview-actions {
-
-    max-width: 440px;
-
-    margin: auto;
-
-
-    display: grid;
-
-    grid-template-columns:
-        1fr
-        1.65fr;
-
-    gap: 10px;
-
-}
-
-
-.preview-button {
-
-    height: 54px;
-
-
-    border-radius: 17px;
-
-
-    font-size: 13px;
-
-    font-weight: 650;
-
-
-    transition:
-        transform .15s ease;
-
-}
-
-
-.preview-button:active {
-
-    transform:
-        scale(.97);
-
-}
-
-
-/* Refazer */
-
-.preview-button.secondary {
-
-    background:
-        rgba(255, 255, 255, .11);
-
-
-    border:
-
-        1px solid
-
-        rgba(255, 255, 255, .11);
-
-
-    backdrop-filter:
-        blur(15px);
-
-    -webkit-backdrop-filter:
-        blur(15px);
-
-}
-
-
-/* Enviar */
-
-.preview-button.primary {
-
-    background:
-        white;
-
-
-    color:
-        #111114;
-
-
-    box-shadow:
-
-        0 10px 35px
-
-        rgba(0, 0, 0, .28);
-
-}
-
-
-/* =========================================================
-   DESKTOP
-
-   Como essa experiência foi criada para QR Code/mobile,
-   no computador ela aparece como uma câmera vertical.
-========================================================= */
-
-@media (min-width: 700px) {
-
-    body {
-
-        display: flex;
-
-        align-items: center;
-
-        justify-content: center;
-
-
-        padding: 20px;
-
-
-        background:
-
-            radial-gradient(
-                circle at 50% 20%,
-                #21192d,
-                #09090b 55%
-            );
-
-    }
-
-
-    .camera-app {
-
-        width:
-            min(430px, 100%);
-
-
-        height:
-            min(
-                880px,
-                calc(100vh - 40px)
-            );
-
-
-        border-radius: 34px;
-
-
-        box-shadow:
-
-            0 30px 100px
-            rgba(0, 0, 0, .55),
-
-            0 0 0 1px
-            rgba(255, 255, 255, .08);
-
-
-        overflow: hidden;
-
-    }
-
-}
-
-
-/* =========================================================
-   TELAS MUITO PEQUENAS
-========================================================= */
-
-@media (max-width: 360px) {
-
-    .camera-header {
-
-        padding-left: 14px;
-
-        padding-right: 14px;
-
-    }
-
-
-    .camera-controls {
-
-        padding-left: 18px;
-
-        padding-right: 18px;
-
-    }
-
-
-    .controls-row {
-
-        grid-template-columns:
-            1fr
-            90px
-            1fr;
-
-    }
-
-
-    .shutter {
-
-        width: 74px;
-
-        height: 74px;
-
-    }
-
-
-    .side-control-icon {
-
-        width: 42px;
-
-        height: 42px;
-
-    }
-
-}
-
-
-     </style>
+    </style>
 </head>
+
 
 <body>
 
-<div class="camera-app">
+<div
+    class="camera-app"
+    id="cameraApp"
+>
+
+    <!-- =====================================================
+         INTRO PLANNE
+    ====================================================== -->
+
+    <div
+        class="camera-intro"
+        id="cameraIntro"
+    >
+
+        <div class="intro-brand">
+
+            <div class="intro-logo">
+
+                <img
+                    src="/assets/brand/logo-64x64.png"
+                    alt="Planne"
+                >
+
+            </div>
+
+            <span>
+                Câmera do evento
+            </span>
+
+            <strong>
+                Planne
+            </strong>
+
+        </div>
+
+    </div>
+
 
     <!-- =====================================================
          CÂMERA
-         Depois esse elemento será substituído pelo <video>
-         com a câmera real.
+
+         Por enquanto fundo visual.
+
+         Depois será:
+
+         <video
+             class="camera-feed"
+             id="cameraVideo"
+             autoplay
+             playsinline
+             muted>
+         </video>
     ====================================================== -->
 
-    <div class="camera-feed" id="cameraFeed"></div>
-
-    <!--
-    <video
+    <div
         class="camera-feed"
-        id="cameraVideo"
-        autoplay
-        playsinline
-        muted>
-    </video>
-    -->
+        id="cameraFeed"
+    ></div>
+
+
+    <!-- EFEITOS -->
+
+    <div class="camera-vignette"></div>
+
+    <div class="camera-grain"></div>
+
+    <div
+        class="camera-flash"
+        id="cameraFlash"
+    ></div>
+
+
+    <!-- =====================================================
+         FOCO
+    ====================================================== -->
+
+    <div
+        class="focus-ring"
+        id="focusRing"
+    >
+        <span></span>
+    </div>
 
 
     <!-- =====================================================
@@ -1263,15 +1576,24 @@ input:focus {
             type="button"
             aria-label="Fechar"
         >
+
             <svg viewBox="0 0 24 24">
-                <path d="M18 6L6 18M6 6l12 12"/>
+
+                <path
+                    d="M18 6L6 18M6 6l12 12"
+                />
+
             </svg>
+
         </button>
 
 
         <div class="event-info">
 
-            <div class="event-name" id="eventName">
+            <div
+                class="event-name"
+                id="eventName"
+            >
                 Júlia & Marcos
             </div>
 
@@ -1288,7 +1610,9 @@ input:focus {
             type="button"
             aria-label="Abrir álbum"
         >
+
             <svg viewBox="0 0 24 24">
+
                 <rect
                     x="3"
                     y="3"
@@ -1303,30 +1627,38 @@ input:focus {
                     r="1.5"
                 />
 
-                <path d="M21 15l-5-5L5 21"/>
+                <path
+                    d="M21 15l-5-5L5 21"
+                />
+
             </svg>
+
         </button>
 
     </header>
 
 
     <!-- =====================================================
-         MENSAGEM
+         STATUS
     ====================================================== -->
 
     <div class="camera-message">
-        <span>●</span>
-        Compartilhe esse momento
+
+        <span class="live-dot"></span>
+
+        Pronto para registrar
+
     </div>
 
 
     <!-- =====================================================
-         CONTROLES DA CÂMERA
+         CONTROLES
     ====================================================== -->
 
     <div class="camera-controls">
 
         <div class="controls-row">
+
 
             <!-- GALERIA -->
 
@@ -1354,28 +1686,38 @@ input:focus {
                             r="1.5"
                         />
 
-                        <path d="M21 15l-5-5L5 21"/>
+                        <path
+                            d="M21 15l-5-5L5 21"
+                        />
 
                     </svg>
 
                 </div>
 
-                <span>Galeria</span>
+                <span>
+                    Galeria
+                </span>
 
             </button>
 
 
-            <!-- BOTÃO DA CÂMERA -->
+            <!-- SHUTTER -->
 
             <button
                 class="shutter"
                 id="captureBtn"
                 type="button"
                 aria-label="Tirar foto"
-            ></button>
+            >
+
+                <span
+                    class="shutter-inner"
+                ></span>
+
+            </button>
 
 
-            <!-- VIRAR CÂMERA -->
+            <!-- TROCAR CÂMERA -->
 
             <button
                 class="side-control"
@@ -1391,26 +1733,36 @@ input:focus {
                             d="M20 7h-3l-2-3H9L7 7H4a2 2 0 00-2 2v9a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"
                         />
 
-                        <path d="M16 12a4 4 0 01-7.5 2"/>
+                        <path
+                            d="M16 12a4 4 0 01-7.5 2"
+                        />
 
-                        <path d="M8 12a4 4 0 017.5-2"/>
+                        <path
+                            d="M8 12a4 4 0 017.5-2"
+                        />
 
-                        <path d="M15 7v3h3"/>
+                        <path
+                            d="M15 7v3h3"
+                        />
 
-                        <path d="M9 17v-3H6"/>
+                        <path
+                            d="M9 17v-3H6"
+                        />
 
                     </svg>
 
                 </div>
 
-                <span>Virar</span>
+                <span>
+                    Virar
+                </span>
 
             </button>
 
         </div>
 
 
-        <!-- BRANDING -->
+        <!-- PLANNE -->
 
         <div class="planne-brand">
 
@@ -1418,7 +1770,9 @@ input:focus {
 
             <span class="planne-dot"></span>
 
-            <strong>Planne</strong>
+            <strong>
+                Planne
+            </strong>
 
         </div>
 
@@ -1426,7 +1780,7 @@ input:focus {
 
 
     <!-- =====================================================
-         INPUT DA GALERIA
+         GALERIA NATIVA
     ====================================================== -->
 
     <input
@@ -1438,7 +1792,7 @@ input:focus {
 
 
     <!-- =====================================================
-         PREVIEW DA FOTO
+         PREVIEW
     ====================================================== -->
 
     <section
@@ -1454,7 +1808,7 @@ input:focus {
         <div class="preview-overlay"></div>
 
 
-        <!-- HEADER PREVIEW -->
+        <!-- HEADER -->
 
         <div class="preview-header">
 
@@ -1467,9 +1821,13 @@ input:focus {
 
                 <svg viewBox="0 0 24 24">
 
-                    <path d="M19 12H5"/>
+                    <path
+                        d="M19 12H5"
+                    />
 
-                    <path d="M12 19l-7-7 7-7"/>
+                    <path
+                        d="M12 19l-7-7 7-7"
+                    />
 
                 </svg>
 
@@ -1483,9 +1841,12 @@ input:focus {
         </div>
 
 
-        <!-- PARTE INFERIOR -->
+        <!-- BOTTOM -->
 
         <div class="preview-bottom">
+
+
+            <!-- NOME -->
 
             <div class="name-field">
 
@@ -1503,6 +1864,8 @@ input:focus {
 
             </div>
 
+
+            <!-- AÇÕES -->
 
             <div class="preview-actions">
 
@@ -1532,52 +1895,410 @@ input:focus {
 </div>
 
 
-<!-- =========================================================
-     JS TEMPORÁRIO SOMENTE PARA VISUALIZAÇÃO
-========================================================== -->
-
 <script>
+
+    /* =========================================================
+       ELEMENTOS
+    ========================================================= */
+
+    const cameraApp =
+        document.getElementById('cameraApp');
+
+    const cameraFeed =
+        document.getElementById('cameraFeed');
 
     const previewScreen =
         document.getElementById('previewScreen');
 
+    const flash =
+        document.getElementById('cameraFlash');
+
+    const focusRing =
+        document.getElementById('focusRing');
+
+    const captureBtn =
+        document.getElementById('captureBtn');
+
+    const switchCameraBtn =
+        document.getElementById('switchCameraBtn');
+
+    const galleryBtn =
+        document.getElementById('galleryBtn');
+
+    const fileInput =
+        document.getElementById('fileInput');
+
+    const closePreview =
+        document.getElementById('closePreview');
+
+    const retakeBtn =
+        document.getElementById('retakeBtn');
+
+    const previewImage =
+        document.getElementById('previewImage');
+
+
+    /* =========================================================
+       CAPTURA
+
+       Por enquanto é somente demonstração visual.
+    ========================================================= */
+
+    captureBtn.addEventListener(
+        'click',
+        () => {
+
+            /* vibração curta */
+
+            if ('vibrate' in navigator) {
+
+                navigator.vibrate(25);
+
+            }
+
+
+            /* flash */
+
+            flash.classList.remove(
+                'active'
+            );
+
+            void flash.offsetWidth;
+
+            flash.classList.add(
+                'active'
+            );
+
+
+            /* leve freeze visual */
+
+            cameraFeed.animate(
+
+                [
+                    {
+                        transform:
+                            'scale(1)'
+                    },
+
+                    {
+                        transform:
+                            'scale(1.015)'
+                    },
+
+                    {
+                        transform:
+                            'scale(1)'
+                    }
+                ],
+
+                {
+                    duration: 300,
+
+                    easing:
+                        'cubic-bezier(.22, 1, .36, 1)'
+                }
+
+            );
+
+
+            /* abre preview */
+
+            setTimeout(
+                () => {
+
+                    previewScreen
+                        .classList
+                        .add('active');
+
+                },
+                180
+            );
+
+        }
+    );
+
+
+    /* =========================================================
+       VOLTAR DA PREVIEW
+    ========================================================= */
+
+    closePreview.addEventListener(
+        'click',
+        () => {
+
+            previewScreen
+                .classList
+                .remove('active');
+
+        }
+    );
+
+
+    /* =========================================================
+       REFAZER FOTO
+    ========================================================= */
+
+    retakeBtn.addEventListener(
+        'click',
+        () => {
+
+            previewScreen
+                .classList
+                .remove('active');
+
+        }
+    );
+
+
+    /* =========================================================
+       GALERIA
+    ========================================================= */
+
+    galleryBtn.addEventListener(
+        'click',
+        () => {
+
+            fileInput.click();
+
+        }
+    );
+
+
+    /* =========================================================
+       MOSTRAR FOTO ESCOLHIDA DA GALERIA
+    ========================================================= */
+
+    fileInput.addEventListener(
+        'change',
+        () => {
+
+            const file =
+                fileInput.files?.[0];
+
+
+            if (!file) {
+                return;
+            }
+
+
+            const url =
+                URL.createObjectURL(file);
+
+
+            previewImage.style.backgroundImage =
+                `url("${url}")`;
+
+            previewImage.style.backgroundSize =
+                'cover';
+
+            previewImage.style.backgroundPosition =
+                'center';
+
+
+            previewScreen
+                .classList
+                .add('active');
+
+        }
+    );
+
+
+    /* =========================================================
+       FOCO AO TOCAR NA IMAGEM
+    ========================================================= */
+
+    cameraApp.addEventListener(
+        'pointerdown',
+        (event) => {
+
+            /*
+             * Ignora botões.
+             */
+
+            if (
+                event.target.closest('button')
+            ) {
+                return;
+            }
+
+
+            /*
+             * Não executa na preview.
+             */
+
+            if (
+                previewScreen
+                    .classList
+                    .contains('active')
+            ) {
+                return;
+            }
+
+
+            const rect =
+                cameraApp
+                    .getBoundingClientRect();
+
+
+            const x =
+                event.clientX
+                - rect.left;
+
+
+            const y =
+                event.clientY
+                - rect.top;
+
+
+            focusRing.style.left =
+                `${x}px`;
+
+            focusRing.style.top =
+                `${y}px`;
+
+
+            focusRing
+                .classList
+                .remove('active');
+
+
+            void focusRing.offsetWidth;
+
+
+            focusRing
+                .classList
+                .add('active');
+
+        }
+    );
+
+
+    /* =========================================================
+       TROCAR CÂMERA
+
+       Animação de demonstração.
+    ========================================================= */
+
+    switchCameraBtn.addEventListener(
+        'click',
+        () => {
+
+            if ('vibrate' in navigator) {
+
+                navigator.vibrate(15);
+
+            }
+
+
+            cameraFeed.animate(
+
+                [
+
+                    {
+                        opacity: 1,
+
+                        transform:
+                            'scale(1)'
+                    },
+
+                    {
+                        opacity: .15,
+
+                        transform:
+                            'scale(.96)'
+                    },
+
+                    {
+                        opacity: 1,
+
+                        transform:
+                            'scale(1)'
+                    }
+
+                ],
+
+                {
+
+                    duration: 450,
+
+                    easing:
+                        'cubic-bezier(.22, 1, .36, 1)'
+
+                }
+
+            );
+
+        }
+    );
+
+
+    /* =========================================================
+       BOTÃO ENVIAR — DEMONSTRAÇÃO
+
+       Ainda não está ligado ao Firebase.
+    ========================================================= */
 
     document
-        .getElementById('captureBtn')
-        .addEventListener('click', () => {
+        .getElementById('submitBtn')
+        .addEventListener(
+            'click',
+            function () {
 
-            previewScreen.classList.add('active');
-
-        });
-
-
-    document
-        .getElementById('closePreview')
-        .addEventListener('click', () => {
-
-            previewScreen.classList.remove('active');
-
-        });
+                const button =
+                    this;
 
 
-    document
-        .getElementById('retakeBtn')
-        .addEventListener('click', () => {
-
-            previewScreen.classList.remove('active');
-
-        });
+                button.disabled =
+                    true;
 
 
-    document
-        .getElementById('galleryBtn')
-        .addEventListener('click', () => {
+                button.textContent =
+                    'Enviando…';
 
-            document
-                .getElementById('fileInput')
-                .click();
 
-        });
+                if ('vibrate' in navigator) {
+
+                    navigator.vibrate(20);
+
+                }
+
+
+                setTimeout(
+                    () => {
+
+                        button.textContent =
+                            '✓ Foto enviada';
+
+
+                        setTimeout(
+                            () => {
+
+                                previewScreen
+                                    .classList
+                                    .remove('active');
+
+
+                                button.textContent =
+                                    'Enviar para o álbum';
+
+
+                                button.disabled =
+                                    false;
+
+
+                                fileInput.value =
+                                    '';
+
+                            },
+                            1000
+                        );
+
+                    },
+                    1000
+                );
+
+            }
+        );
 
 </script>
 
