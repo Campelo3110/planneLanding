@@ -1,0 +1,385 @@
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no"
+    >
+
+    <title>Planne — Câmera do evento</title>
+
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#09090b">
+
+    <link
+        rel="icon"
+        type="image/png"
+        sizes="32x32"
+        href="/assets/brand/favicon-32x32.png"
+    >
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/assets/css/gallery.css">
+</head>
+
+<body>
+
+<div class="camera-app">
+
+    <!-- =====================================================
+         CÂMERA
+         Depois esse elemento será substituído pelo <video>
+         com a câmera real.
+    ====================================================== -->
+
+    <div class="camera-feed" id="cameraFeed"></div>
+
+    <!--
+    <video
+        class="camera-feed"
+        id="cameraVideo"
+        autoplay
+        playsinline
+        muted>
+    </video>
+    -->
+
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header class="camera-header">
+
+        <button
+            class="round-action"
+            id="closeCameraBtn"
+            type="button"
+            aria-label="Fechar"
+        >
+            <svg viewBox="0 0 24 24">
+                <path d="M18 6L6 18M6 6l12 12"/>
+            </svg>
+        </button>
+
+
+        <div class="event-info">
+
+            <div class="event-name" id="eventName">
+                Júlia & Marcos
+            </div>
+
+            <div class="event-label">
+                Câmera do evento
+            </div>
+
+        </div>
+
+
+        <button
+            class="round-action"
+            id="openAlbumBtn"
+            type="button"
+            aria-label="Abrir álbum"
+        >
+            <svg viewBox="0 0 24 24">
+                <rect
+                    x="3"
+                    y="3"
+                    width="18"
+                    height="18"
+                    rx="4"
+                />
+
+                <circle
+                    cx="8.5"
+                    cy="8.5"
+                    r="1.5"
+                />
+
+                <path d="M21 15l-5-5L5 21"/>
+            </svg>
+        </button>
+
+    </header>
+
+
+    <!-- =====================================================
+         MENSAGEM
+    ====================================================== -->
+
+    <div class="camera-message">
+        <span>●</span>
+        Compartilhe esse momento
+    </div>
+
+
+    <!-- =====================================================
+         CONTROLES DA CÂMERA
+    ====================================================== -->
+
+    <div class="camera-controls">
+
+        <div class="controls-row">
+
+            <!-- GALERIA -->
+
+            <button
+                class="side-control"
+                id="galleryBtn"
+                type="button"
+            >
+
+                <div class="side-control-icon">
+
+                    <svg viewBox="0 0 24 24">
+
+                        <rect
+                            x="3"
+                            y="3"
+                            width="18"
+                            height="18"
+                            rx="4"
+                        />
+
+                        <circle
+                            cx="8.5"
+                            cy="8.5"
+                            r="1.5"
+                        />
+
+                        <path d="M21 15l-5-5L5 21"/>
+
+                    </svg>
+
+                </div>
+
+                <span>Galeria</span>
+
+            </button>
+
+
+            <!-- BOTÃO DA CÂMERA -->
+
+            <button
+                class="shutter"
+                id="captureBtn"
+                type="button"
+                aria-label="Tirar foto"
+            ></button>
+
+
+            <!-- VIRAR CÂMERA -->
+
+            <button
+                class="side-control"
+                id="switchCameraBtn"
+                type="button"
+            >
+
+                <div class="side-control-icon">
+
+                    <svg viewBox="0 0 24 24">
+
+                        <path
+                            d="M20 7h-3l-2-3H9L7 7H4a2 2 0 00-2 2v9a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"
+                        />
+
+                        <path d="M16 12a4 4 0 01-7.5 2"/>
+
+                        <path d="M8 12a4 4 0 017.5-2"/>
+
+                        <path d="M15 7v3h3"/>
+
+                        <path d="M9 17v-3H6"/>
+
+                    </svg>
+
+                </div>
+
+                <span>Virar</span>
+
+            </button>
+
+        </div>
+
+
+        <!-- BRANDING -->
+
+        <div class="planne-brand">
+
+            Feito com
+
+            <span class="planne-dot"></span>
+
+            <strong>Planne</strong>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         INPUT DA GALERIA
+    ====================================================== -->
+
+    <input
+        type="file"
+        id="fileInput"
+        accept="image/*"
+        hidden
+    >
+
+
+    <!-- =====================================================
+         PREVIEW DA FOTO
+    ====================================================== -->
+
+    <section
+        class="preview-screen"
+        id="previewScreen"
+    >
+
+        <div
+            class="preview-image"
+            id="previewImage"
+        ></div>
+
+        <div class="preview-overlay"></div>
+
+
+        <!-- HEADER PREVIEW -->
+
+        <div class="preview-header">
+
+            <button
+                class="round-action"
+                id="closePreview"
+                type="button"
+                aria-label="Voltar"
+            >
+
+                <svg viewBox="0 0 24 24">
+
+                    <path d="M19 12H5"/>
+
+                    <path d="M12 19l-7-7 7-7"/>
+
+                </svg>
+
+            </button>
+
+
+            <div class="preview-title">
+                Sua foto
+            </div>
+
+        </div>
+
+
+        <!-- PARTE INFERIOR -->
+
+        <div class="preview-bottom">
+
+            <div class="name-field">
+
+                <label for="uploaderName">
+                    Quem tirou essa foto?
+                </label>
+
+                <input
+                    id="uploaderName"
+                    type="text"
+                    maxlength="80"
+                    autocomplete="name"
+                    placeholder="Seu nome (opcional)"
+                >
+
+            </div>
+
+
+            <div class="preview-actions">
+
+                <button
+                    class="preview-button secondary"
+                    id="retakeBtn"
+                    type="button"
+                >
+                    Refazer
+                </button>
+
+
+                <button
+                    class="preview-button primary"
+                    id="submitBtn"
+                    type="button"
+                >
+                    Enviar para o álbum
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+<!-- =========================================================
+     JS TEMPORÁRIO SOMENTE PARA VISUALIZAÇÃO
+========================================================== -->
+
+<script>
+
+    const previewScreen =
+        document.getElementById('previewScreen');
+
+
+    document
+        .getElementById('captureBtn')
+        .addEventListener('click', () => {
+
+            previewScreen.classList.add('active');
+
+        });
+
+
+    document
+        .getElementById('closePreview')
+        .addEventListener('click', () => {
+
+            previewScreen.classList.remove('active');
+
+        });
+
+
+    document
+        .getElementById('retakeBtn')
+        .addEventListener('click', () => {
+
+            previewScreen.classList.remove('active');
+
+        });
+
+
+    document
+        .getElementById('galleryBtn')
+        .addEventListener('click', () => {
+
+            document
+                .getElementById('fileInput')
+                .click();
+
+        });
+
+</script>
+
+</body>
+
+</html>
+```

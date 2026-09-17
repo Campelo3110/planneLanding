@@ -1,0 +1,1201 @@
+/* =========================================================
+   PLANNE — CÂMERA DO EVENTO
+========================================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+
+    -webkit-tap-highlight-color: transparent;
+}
+
+
+/* =========================================================
+   VARIÁVEIS
+========================================================= */
+
+:root {
+
+    --bg: #09090b;
+
+    --surface:
+        rgba(18, 18, 22, .72);
+
+    --surface-strong:
+        rgba(18, 18, 22, .92);
+
+    --white: #ffffff;
+
+    --muted:
+        rgba(255, 255, 255, .65);
+
+    --soft:
+        rgba(255, 255, 255, .12);
+
+    --purple: #9b5cff;
+
+    --purple-light: #c6a7ff;
+
+}
+
+
+/* =========================================================
+   BASE
+========================================================= */
+
+html,
+body {
+
+    width: 100%;
+    height: 100%;
+
+    background: var(--bg);
+
+    color: var(--white);
+
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    overflow: hidden;
+
+}
+
+
+button,
+input {
+    font: inherit;
+}
+
+
+button {
+
+    border: 0;
+
+    color: inherit;
+
+    cursor: pointer;
+
+}
+
+
+/* =========================================================
+   APP
+========================================================= */
+
+.camera-app {
+
+    position: relative;
+
+    width: 100%;
+
+    height: 100dvh;
+
+    min-height: 100%;
+
+    overflow: hidden;
+
+    background: #08080a;
+
+}
+
+
+/* =========================================================
+   CAMERA BACKGROUND
+
+   Por enquanto é somente visual.
+
+   Depois pode ser substituído pelo <video>
+   usando exatamente a mesma classe.
+========================================================= */
+
+.camera-feed {
+
+    position: absolute;
+
+    inset: 0;
+
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+
+    background:
+
+        radial-gradient(
+            circle at 60% 30%,
+            rgba(125, 83, 180, .22),
+            transparent 34%
+        ),
+
+        linear-gradient(
+            145deg,
+            #25222b 0%,
+            #121116 45%,
+            #08080a 100%
+        );
+
+}
+
+
+/* Escurecimento para melhorar leitura */
+
+.camera-feed::after {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+
+        linear-gradient(
+            to bottom,
+
+            rgba(0, 0, 0, .52) 0%,
+
+            rgba(0, 0, 0, .05) 25%,
+
+            rgba(0, 0, 0, .03) 60%,
+
+            rgba(0, 0, 0, .65) 100%
+        );
+
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.camera-header {
+
+    position: absolute;
+
+    z-index: 10;
+
+    top: 0;
+
+    left: 0;
+
+    width: 100%;
+
+
+    padding:
+
+        calc(env(safe-area-inset-top) + 16px)
+
+        18px
+
+        18px;
+
+
+    display: grid;
+
+    grid-template-columns:
+        48px
+        1fr
+        48px;
+
+    align-items: center;
+
+}
+
+
+/* =========================================================
+   BOTÕES REDONDOS
+========================================================= */
+
+.round-action {
+
+    width: 44px;
+
+    height: 44px;
+
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+
+    border-radius: 50%;
+
+
+    background:
+        rgba(10, 10, 12, .42);
+
+
+    border:
+        1px solid
+        rgba(255, 255, 255, .13);
+
+
+    backdrop-filter:
+        blur(18px);
+
+    -webkit-backdrop-filter:
+        blur(18px);
+
+
+    transition:
+
+        transform .18s ease,
+
+        background .18s ease;
+
+}
+
+
+.round-action:active {
+
+    transform:
+        scale(.91);
+
+    background:
+        rgba(255, 255, 255, .18);
+
+}
+
+
+.round-action svg {
+
+    width: 21px;
+
+    height: 21px;
+
+    fill: none;
+
+    stroke: white;
+
+    stroke-width: 1.8;
+
+}
+
+
+/* =========================================================
+   EVENTO
+========================================================= */
+
+.event-info {
+
+    text-align: center;
+
+    min-width: 0;
+
+    padding:
+        0 10px;
+
+}
+
+
+.event-name {
+
+    font-size: 15px;
+
+    font-weight: 650;
+
+    letter-spacing: -.2px;
+
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+
+}
+
+
+.event-label {
+
+    margin-top: 3px;
+
+    font-size: 11px;
+
+    font-weight: 500;
+
+    color:
+        rgba(255, 255, 255, .62);
+
+}
+
+
+/* =========================================================
+   MENSAGEM SUPERIOR
+========================================================= */
+
+.camera-message {
+
+    position: absolute;
+
+    z-index: 5;
+
+
+    top:
+        calc(
+            env(safe-area-inset-top)
+            + 96px
+        );
+
+
+    left: 50%;
+
+    transform:
+        translateX(-50%);
+
+
+    max-width:
+        calc(100% - 48px);
+
+    width: max-content;
+
+
+    padding:
+        9px 14px;
+
+
+    border-radius:
+        999px;
+
+
+    border:
+        1px solid
+        rgba(255, 255, 255, .12);
+
+
+    background:
+        rgba(10, 10, 12, .38);
+
+
+    backdrop-filter:
+        blur(18px);
+
+    -webkit-backdrop-filter:
+        blur(18px);
+
+
+    color:
+        rgba(255, 255, 255, .86);
+
+
+    font-size: 12px;
+
+    font-weight: 500;
+
+    white-space: nowrap;
+
+}
+
+
+.camera-message span {
+
+    color:
+        var(--purple-light);
+
+}
+
+
+/* =========================================================
+   CONTROLES INFERIORES
+========================================================= */
+
+.camera-controls {
+
+    position: absolute;
+
+    z-index: 10;
+
+
+    bottom: 0;
+
+    left: 0;
+
+    width: 100%;
+
+
+    padding:
+
+        25px
+
+        24px
+
+        calc(
+            env(safe-area-inset-bottom)
+            + 18px
+        );
+
+
+    background:
+
+        linear-gradient(
+            to top,
+
+            rgba(5, 5, 7, .95),
+
+            rgba(5, 5, 7, .72) 55%,
+
+            transparent
+        );
+
+}
+
+
+/* =========================================================
+   LINHA DOS CONTROLES
+========================================================= */
+
+.controls-row {
+
+    display: grid;
+
+    grid-template-columns:
+        1fr
+        100px
+        1fr;
+
+    align-items: center;
+
+
+    max-width: 440px;
+
+    margin: 0 auto;
+
+}
+
+
+/* =========================================================
+   BOTÕES LATERAIS
+========================================================= */
+
+.side-control {
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+
+
+    background:
+        transparent;
+
+
+    font-size: 11px;
+
+    font-weight: 500;
+
+    color:
+        rgba(255, 255, 255, .76);
+
+}
+
+
+.side-control:first-child {
+
+    justify-self: start;
+
+}
+
+
+.side-control:last-child {
+
+    justify-self: end;
+
+}
+
+
+/* Ícone */
+
+.side-control-icon {
+
+    width: 46px;
+
+    height: 46px;
+
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+
+    border-radius: 15px;
+
+
+    background:
+        rgba(255, 255, 255, .10);
+
+
+    border:
+        1px solid
+        rgba(255, 255, 255, .10);
+
+
+    backdrop-filter:
+        blur(12px);
+
+    -webkit-backdrop-filter:
+        blur(12px);
+
+
+    transition:
+        transform .18s ease;
+
+}
+
+
+.side-control:active
+.side-control-icon {
+
+    transform:
+        scale(.9);
+
+}
+
+
+.side-control svg {
+
+    width: 21px;
+
+    height: 21px;
+
+    fill: none;
+
+    stroke: white;
+
+    stroke-width: 1.7;
+
+}
+
+
+/* =========================================================
+   BOTÃO PRINCIPAL DA CÂMERA
+========================================================= */
+
+.shutter {
+
+    width: 82px;
+
+    height: 82px;
+
+
+    justify-self: center;
+
+
+    position: relative;
+
+
+    border-radius: 50%;
+
+
+    background:
+        rgba(255, 255, 255, .98);
+
+
+    box-shadow:
+
+        0 0 0 5px
+        rgba(255, 255, 255, .23),
+
+        0 12px 35px
+        rgba(0, 0, 0, .38);
+
+
+    transition:
+
+        transform .14s ease,
+
+        box-shadow .14s ease;
+
+}
+
+
+.shutter::after {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 7px;
+
+
+    border-radius: 50%;
+
+
+    border:
+        2px solid
+        rgba(20, 20, 24, .12);
+
+}
+
+
+.shutter:active {
+
+    transform:
+        scale(.88);
+
+
+    box-shadow:
+
+        0 0 0 4px
+        rgba(255, 255, 255, .18),
+
+        0 6px 20px
+        rgba(0, 0, 0, .30);
+
+}
+
+
+/* =========================================================
+   BRANDING PLANNE
+========================================================= */
+
+.planne-brand {
+
+    margin-top: 22px;
+
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 6px;
+
+
+    color:
+        rgba(255, 255, 255, .38);
+
+
+    font-size: 10px;
+
+    letter-spacing: .1px;
+
+}
+
+
+.planne-brand strong {
+
+    color:
+        rgba(255, 255, 255, .65);
+
+    font-weight: 600;
+
+}
+
+
+.planne-dot {
+
+    width: 4px;
+
+    height: 4px;
+
+    border-radius: 50%;
+
+    background:
+        var(--purple);
+
+}
+
+
+/* =========================================================
+   PREVIEW
+========================================================= */
+
+.preview-screen {
+
+    position: absolute;
+
+    z-index: 30;
+
+    inset: 0;
+
+
+    display: none;
+
+
+    background:
+        #08080a;
+
+}
+
+
+.preview-screen.active {
+
+    display: block;
+
+}
+
+
+/* =========================================================
+   IMAGEM DA PREVIEW
+========================================================= */
+
+.preview-image {
+
+    position: absolute;
+
+    inset: 0;
+
+
+    width: 100%;
+
+    height: 100%;
+
+
+    object-fit: cover;
+
+
+    background:
+
+        linear-gradient(
+            145deg,
+            #312b3b,
+            #111014
+        );
+
+}
+
+
+/* =========================================================
+   GRADIENTE DA PREVIEW
+========================================================= */
+
+.preview-overlay {
+
+    position: absolute;
+
+    inset: 0;
+
+
+    background:
+
+        linear-gradient(
+            to bottom,
+
+            rgba(0, 0, 0, .48),
+
+            transparent 30%,
+
+            transparent 50%,
+
+            rgba(0, 0, 0, .87) 100%
+        );
+
+}
+
+
+/* =========================================================
+   HEADER DA PREVIEW
+========================================================= */
+
+.preview-header {
+
+    position: absolute;
+
+    z-index: 2;
+
+
+    top: 0;
+
+    left: 0;
+
+    width: 100%;
+
+
+    padding:
+
+        calc(
+            env(safe-area-inset-top)
+            + 16px
+        )
+
+        18px;
+
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+}
+
+
+.preview-title {
+
+    position: absolute;
+
+    left: 50%;
+
+    transform:
+        translateX(-50%);
+
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+}
+
+
+/* =========================================================
+   PARTE INFERIOR DA PREVIEW
+========================================================= */
+
+.preview-bottom {
+
+    position: absolute;
+
+    z-index: 2;
+
+
+    left: 0;
+
+    bottom: 0;
+
+
+    width: 100%;
+
+
+    padding:
+
+        28px
+
+        20px
+
+        calc(
+            env(safe-area-inset-bottom)
+            + 24px
+        );
+
+}
+
+
+/* =========================================================
+   CAMPO NOME
+========================================================= */
+
+.name-field {
+
+    max-width: 440px;
+
+    margin:
+        0 auto 17px;
+
+}
+
+
+.name-field label {
+
+    display: block;
+
+
+    margin:
+        0 0 8px 4px;
+
+
+    color:
+        rgba(255, 255, 255, .68);
+
+
+    font-size: 11px;
+
+    font-weight: 500;
+
+}
+
+
+.name-field input {
+
+    width: 100%;
+
+    height: 52px;
+
+
+    padding:
+        0 17px;
+
+
+    color: white;
+
+
+    outline: none;
+
+
+    border-radius: 16px;
+
+
+    border:
+
+        1px solid
+
+        rgba(255, 255, 255, .13);
+
+
+    background:
+        rgba(20, 20, 24, .72);
+
+
+    backdrop-filter:
+        blur(18px);
+
+    -webkit-backdrop-filter:
+        blur(18px);
+
+
+    font-size: 14px;
+
+}
+
+
+.name-field
+input::placeholder {
+
+    color:
+        rgba(255, 255, 255, .38);
+
+}
+
+
+.name-field
+input:focus {
+
+    border-color:
+        rgba(171, 128, 255, .7);
+
+
+    box-shadow:
+
+        0 0 0 3px
+
+        rgba(155, 92, 255, .12);
+
+}
+
+
+/* =========================================================
+   BOTÕES DA PREVIEW
+========================================================= */
+
+.preview-actions {
+
+    max-width: 440px;
+
+    margin: auto;
+
+
+    display: grid;
+
+    grid-template-columns:
+        1fr
+        1.65fr;
+
+    gap: 10px;
+
+}
+
+
+.preview-button {
+
+    height: 54px;
+
+
+    border-radius: 17px;
+
+
+    font-size: 13px;
+
+    font-weight: 650;
+
+
+    transition:
+        transform .15s ease;
+
+}
+
+
+.preview-button:active {
+
+    transform:
+        scale(.97);
+
+}
+
+
+/* Refazer */
+
+.preview-button.secondary {
+
+    background:
+        rgba(255, 255, 255, .11);
+
+
+    border:
+
+        1px solid
+
+        rgba(255, 255, 255, .11);
+
+
+    backdrop-filter:
+        blur(15px);
+
+    -webkit-backdrop-filter:
+        blur(15px);
+
+}
+
+
+/* Enviar */
+
+.preview-button.primary {
+
+    background:
+        white;
+
+
+    color:
+        #111114;
+
+
+    box-shadow:
+
+        0 10px 35px
+
+        rgba(0, 0, 0, .28);
+
+}
+
+
+/* =========================================================
+   DESKTOP
+
+   Como essa experiência foi criada para QR Code/mobile,
+   no computador ela aparece como uma câmera vertical.
+========================================================= */
+
+@media (min-width: 700px) {
+
+    body {
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+
+        padding: 20px;
+
+
+        background:
+
+            radial-gradient(
+                circle at 50% 20%,
+                #21192d,
+                #09090b 55%
+            );
+
+    }
+
+
+    .camera-app {
+
+        width:
+            min(430px, 100%);
+
+
+        height:
+            min(
+                880px,
+                calc(100vh - 40px)
+            );
+
+
+        border-radius: 34px;
+
+
+        box-shadow:
+
+            0 30px 100px
+            rgba(0, 0, 0, .55),
+
+            0 0 0 1px
+            rgba(255, 255, 255, .08);
+
+
+        overflow: hidden;
+
+    }
+
+}
+
+
+/* =========================================================
+   TELAS MUITO PEQUENAS
+========================================================= */
+
+@media (max-width: 360px) {
+
+    .camera-header {
+
+        padding-left: 14px;
+
+        padding-right: 14px;
+
+    }
+
+
+    .camera-controls {
+
+        padding-left: 18px;
+
+        padding-right: 18px;
+
+    }
+
+
+    .controls-row {
+
+        grid-template-columns:
+            1fr
+            90px
+            1fr;
+
+    }
+
+
+    .shutter {
+
+        width: 74px;
+
+        height: 74px;
+
+    }
+
+
+    .side-control-icon {
+
+        width: 42px;
+
+        height: 42px;
+
+    }
+
+}
+
