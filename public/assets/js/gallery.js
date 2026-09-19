@@ -7,7 +7,7 @@
   const startBtn = $('startCameraBtn'), captureBtn = $('captureBtn'), switchBtn = $('switchCameraBtn');
   const fileInput = $('fileInput'), review = $('review'), reviewImage = $('reviewImage');
   const formError = $('formError'), submitBtn = $('submitBtn'), result = $('resultCard');
-  let stream = null, facingMode = 'environment', selectedBlob = null, previewUrl = null, terminalError = false, filter = 'none', zoom = 1, flash = false, sticker = '';
+  let stream = null, facingMode = 'environment', selectedBlob = null, previewUrl = null, terminalError = false, filter = 'none', zoom = 1, flash = false, sticker = '', cameraCapabilities = {}, zoomApplying = false, queuedZoom = null;
   const filters = {
     none: 'none',
     golden: 'sepia(.24) saturate(1.22) brightness(1.05)',
@@ -37,17 +37,26 @@
     appcheck_failed: tr('Não foi possível validar o acesso. Recarregue a página.', 'We could not validate access. Reload the page.'),
   };
   const setCopy = (id, pt, en) => { const node = $(id); if (node) node.textContent = tr(pt, en); };
-  setCopy('albumLabel', 'ÁLBUM DO EVENTO', 'EVENT ALBUM'); setCopy('singlePhotoLabel', 'FOTO ÚNICA', 'ONE PHOTO');
+  setCopy('albumLabel', 'ÁLBUM DO EVENTO', 'EVENT ALBUM'); setCopy('eventName', 'Álbum do evento', 'Event album');
   setCopy('pageTitle', 'Guarde este instante', 'Keep this moment'); setCopy('cameraHint', 'Abra a câmera ou escolha uma foto para deixar no álbum.', 'Open the camera or choose a photo for the album.');
   setCopy('startCameraBtn', 'Ligar câmera', 'Turn on camera'); setCopy('cameraStatusText', 'CÂMERA PRONTA', 'CAMERA READY');
-  setCopy('chooseFileLabel', 'Rolo de fotos', 'Photo roll'); setCopy('captureLabel', 'Ligue a câmera', 'Turn on the camera'); setCopy('photoCountLabel', 'foto', 'photo');
+  setCopy('chooseFileLabel', 'Rolo de fotos', 'Photo roll'); setCopy('captureLabel', 'Ligue a câmera', 'Turn on the camera'); setCopy('bottomEffectsLabel', 'Efeitos', 'Effects');
   setCopy('cameraNote', 'As fotos ficam disponíveis somente para a organização no app Planne.', 'Photos are available only to the host in the Planne app.');
-  setCopy('reviewFilmLabel', 'FOTO 01', 'PHOTO 01'); setCopy('reviewTitle', 'Ficou boa?', 'Does it look good?'); setCopy('uploaderNameLabel', 'Seu nome', 'Your name'); setCopy('uploaderNameOptional', 'opcional', 'optional');
+  setCopy('reviewFilmLabel', 'SEU MOMENTO', 'YOUR MOMENT'); setCopy('reviewTitle', 'Ficou boa?', 'Does it look good?'); setCopy('uploaderNameLabel', 'Seu nome', 'Your name'); setCopy('uploaderNameOptional', 'opcional', 'optional');
   $('uploaderName').placeholder = tr('Para aparecer junto da foto', 'To appear with the photo'); setCopy('retakeBtn', 'Refazer', 'Retake'); setCopy('submitBtn', 'Revelar foto', 'Develop photo');
+  $('flashBtn').setAttribute('aria-label', tr('Lanterna', 'Torch')); $('stickerBtn').setAttribute('aria-label', tr('Emojis', 'Emojis')); $('switchCameraBtn').setAttribute('aria-label', tr('Trocar câmera', 'Switch camera')); $('captureBtn').setAttribute('aria-label', tr('Tirar foto', 'Take photo'));
   const filterLabels = { none: ['Natural', 'Natural'], golden: ['Luz dourada', 'Golden hour'], soft: ['Brilho suave', 'Soft glow'], garden: ['Jardim', 'Garden'], party: ['Flash de festa', 'Party flash'], film: ['Filme', 'Film'], mono: ['Monocromático', 'Mono'] };
   document.querySelectorAll('#effectOptions [data-filter]').forEach((button) => { const [pt, en] = filterLabels[button.dataset.filter]; button.textContent = tr(pt, en); });
   const setError = (message) => { formError.textContent = message || ''; formError.hidden = !message; };
-  const stopCamera = () => { stream?.getTracks().forEach((track) => track.stop()); stream = null; video.srcObject = null; status.hidden = true; switchBtn.hidden = true; captureBtn.disabled = true; };
+  const stopCamera = () => {
+    stream?.getTracks().forEach((track) => track.stop());
+    stream = null; cameraCapabilities = {}; flash = false; zoom = 1;
+    video.srcObject = null; status.hidden = true; switchBtn.hidden = true;
+    captureBtn.disabled = true; $('bottomEffectsBtn').disabled = true;
+    $('cameraTools').hidden = true; $('viewfinder').hidden = true; $('toolSheet').hidden = true;
+    $('bottomEffectsBtn').setAttribute('aria-expanded', 'false'); $('stickerBtn').setAttribute('aria-expanded', 'false');
+    $('flashBtn').classList.remove('is-active'); $('zoomRange').value = '1'; $('zoomValue').textContent = '1×';
+  };
   const revokePreview = () => { if (previewUrl) URL.revokeObjectURL(previewUrl); previewUrl = null; };
   const showResult = (title, message, error = false, terminal = false) => { terminalError = terminal; result.classList.toggle('is-error', error); $('resultTitle').textContent = title; $('resultText').textContent = message; $('resultAction').textContent = terminal ? tr('Fechar', 'Close') : error ? tr('Tentar novamente', 'Try again') : tr('Enviar outra foto', 'Send another photo'); result.hidden = false; };
   async function requestCamera() {
@@ -68,7 +77,29 @@
     stopCamera(); placeholder.hidden = false; $('cameraHint').textContent = tr('Pedindo acesso à câmera…', 'Requesting camera access…'); startBtn.disabled = true; startBtn.textContent = tr('Abrindo câmera…', 'Opening camera…');
     try {
       stream = await requestCamera();
-      video.srcObject = stream; await video.play(); placeholder.hidden = true; status.hidden = false; captureBtn.disabled = false; switchBtn.hidden = stream.getVideoTracks().length < 1; $('captureLabel').textContent = tr('Aperte para fotografar', 'Press to take a photo');
+      video.srcObject = stream; await video.play(); placeholder.hidden = true; status.hidden = false;
+      captureBtn.disabled = false; $('bottomEffectsBtn').disabled = false;
+      // Uma track representa a stream atual, não a quantidade de lentes.
+      // Só oferecemos trocar câmera quando há ao menos duas entradas reais.
+      try {
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        switchBtn.hidden = devices.filter((device) => device.kind === 'videoinput').length < 2;
+      } catch (_) { switchBtn.hidden = true; }
+      $('cameraTools').hidden = false;
+      $('viewfinder').hidden = false; $('captureLabel').textContent = tr('Aperte para fotografar', 'Press to take a photo');
+      cameraCapabilities = stream.getVideoTracks()[0]?.getCapabilities?.() || {};
+      // Lanterna e zoom são recursos físicos e não existem em toda câmera.
+      // Não simulamos ambos: o botão só aparece quando a track os anuncia.
+      $('flashBtn').hidden = !cameraCapabilities.torch;
+      $('zoomRange').disabled = !cameraCapabilities.zoom;
+      $('zoomRange').closest('.zoom-control').hidden = !cameraCapabilities.zoom;
+      if (cameraCapabilities.zoom) {
+        const min = Number(cameraCapabilities.zoom.min) || 1;
+        const max = Number(cameraCapabilities.zoom.max) || min;
+        $('zoomRange').min = String(min); $('zoomRange').max = String(max);
+        $('zoomRange').value = String(min); zoom = min;
+        $('zoomValue').textContent = `${zoom.toFixed(1).replace('.0', '')}×`;
+      }
     } catch (error) {
       $('cameraHint').textContent = error?.name === 'NotAllowedError' ? tr('A câmera foi bloqueada. Libere a permissão ou escolha uma foto.', 'Camera access was blocked. Allow it or choose a photo.') : tr('Não foi possível abrir a câmera. Escolha uma foto para continuar.', 'We could not open the camera. Choose a photo to continue.');
     } finally { startBtn.disabled = false; startBtn.textContent = tr('Ligar câmera', 'Turn on camera'); }
@@ -84,20 +115,20 @@
       return await new Promise((resolve, reject) => canvas.toBlob((blob) => blob ? resolve(blob) : reject(new Error('compress_failed')), 'image/jpeg', .84));
     } finally { URL.revokeObjectURL(url); }
   }
-  async function openReview(blob) { selectedBlob = blob; revokePreview(); previewUrl = URL.createObjectURL(blob); reviewImage.src = previewUrl; setError(''); review.hidden = false; stopCamera(); }
+  async function openReview(blob) { selectedBlob = blob; revokePreview(); previewUrl = URL.createObjectURL(blob); reviewImage.src = previewUrl; setError(''); review.hidden = false; stopCamera(); requestAnimationFrame(() => $('uploaderName').focus()); }
   async function takePicture() {
     if (!stream || !video.videoWidth) return; navigator.vibrate?.(20);
     const canvas = $('captureCanvas'); canvas.width = video.videoWidth; canvas.height = video.videoHeight;
     const context = canvas.getContext('2d', { alpha: false }); context.filter = filters[filter];
-    const sourceWidth = video.videoWidth / zoom, sourceHeight = video.videoHeight / zoom;
-    context.drawImage(video, (video.videoWidth - sourceWidth) / 2, (video.videoHeight - sourceHeight) / 2, sourceWidth, sourceHeight, 0, 0, canvas.width, canvas.height);
-    if (flash) { context.fillStyle = 'rgba(255,255,245,.22)'; context.fillRect(0, 0, canvas.width, canvas.height); }
+    // O zoom é aplicado na MediaStreamTrack. Desenhar um crop aqui causaria
+    // zoom duplo e faria o preview divergir da foto enviada.
+    context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight, 0, 0, canvas.width, canvas.height);
     if (sticker) { context.filter = 'none'; context.font = `${Math.round(canvas.width * .14)}px sans-serif`; context.textAlign = 'center'; context.fillText(sticker, canvas.width * .5, canvas.height * .58); }
     const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/jpeg', .84)); if (blob) openReview(blob);
   }
   const toBase64 = (blob) => new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(String(reader.result).split(',')[1] || ''); reader.onerror = reject; reader.readAsDataURL(blob); });
   async function upload() {
-    if (!selectedBlob) return; setError(''); submitBtn.disabled = true; submitBtn.textContent = 'Enviando…';
+    if (!selectedBlob) return; setError(''); submitBtn.disabled = true; submitBtn.textContent = tr('Enviando…', 'Sending…');
     try {
       const appCheckToken = await window.__getAppCheckToken?.(); const headers = { 'Content-Type': 'application/json' }; if (appCheckToken) headers['X-Firebase-AppCheck'] = appCheckToken;
       const response = await fetch(endpoint, { method: 'POST', headers, body: JSON.stringify({ publicToken: token, imageBase64: await toBase64(selectedBlob), contentType: 'image/jpeg', uploaderName: $('uploaderName').value.trim() }) });
@@ -108,16 +139,84 @@
   }
   function resetToCamera() { result.hidden = true; review.hidden = true; selectedBlob = null; revokePreview(); fileInput.value = ''; startCamera(); }
   startBtn.addEventListener('click', startCamera); captureBtn.addEventListener('click', takePicture); $('chooseFileBtn').addEventListener('click', () => fileInput.click());
-  $('effectsBtn').addEventListener('click', () => { $('toolSheet').hidden = !$('toolSheet').hidden; $('stickerOptions').hidden = true; });
-  $('stickerBtn').addEventListener('click', () => { $('toolSheet').hidden = false; $('stickerOptions').hidden = false; });
-  $('effectOptions').addEventListener('click', (event) => { const next = event.target.dataset.filter; if (!next) return; filter = next; video.style.filter = filters[filter]; });
-  $('stickerOptions').addEventListener('click', (event) => { const next = event.target.dataset.sticker; if (!next) return; sticker = next; $('stickerLayer').textContent = sticker; });
-  $('zoomRange').addEventListener('input', async (event) => { zoom = Number(event.target.value); $('zoomValue').textContent = `${zoom.toFixed(1).replace('.0', '')}×`; video.style.transform = `scale(${zoom})`; const track = stream?.getVideoTracks?.()[0]; try { if (track?.getCapabilities?.().zoom) await track.applyConstraints({advanced:[{zoom}]}); } catch (_) {} });
-  $('flashBtn').addEventListener('click', async () => { flash = !flash; $('flashBtn').classList.toggle('is-active', flash); const track = stream?.getVideoTracks?.()[0]; try { if (track?.getCapabilities?.().torch) await track.applyConstraints({advanced:[{torch:flash}]}); } catch (_) {} });
-  $('cameraStage').addEventListener('pointerdown', (event) => { if (!stream) return; const ring = $('focusRing'), box = event.currentTarget.getBoundingClientRect(); ring.style.left = `${event.clientX - box.left}px`; ring.style.top = `${event.clientY - box.top}px`; ring.hidden = false; setTimeout(() => ring.hidden = true, 650); });
+  const toggleEffects = (open, stickers = false) => { $('toolSheet').hidden = !open; $('stickerOptions').hidden = !stickers; $('bottomEffectsBtn').setAttribute('aria-expanded', String(open)); $('stickerBtn').setAttribute('aria-expanded', String(open && stickers)); };
+  $('bottomEffectsBtn').addEventListener('click', () => { if (stream) toggleEffects($('toolSheet').hidden); });
+  $('stickerBtn').addEventListener('click', () => { if (stream) toggleEffects(true, true); });
+  $('effectOptions').addEventListener('click', (event) => {
+    const next = event.target.dataset.filter; if (!next) return;
+    filter = next; video.style.filter = filters[filter];
+    document.querySelectorAll('#effectOptions button').forEach((button) => { const selected = button.dataset.filter === filter; button.classList.toggle('is-selected', selected); button.setAttribute('aria-pressed', String(selected)); });
+  });
+  $('stickerOptions').addEventListener('click', (event) => {
+    const next = event.target.dataset.sticker; if (!next) return;
+    sticker = sticker === next ? '' : next; $('stickerLayer').textContent = sticker;
+    document.querySelectorAll('#stickerOptions button').forEach((button) => { const selected = button.dataset.sticker === sticker; button.classList.toggle('is-selected', selected); button.setAttribute('aria-pressed', String(selected)); });
+  });
+  async function applyHardwareZoom(next) {
+    const track = stream?.getVideoTracks?.()[0]; if (!track || !cameraCapabilities.zoom) return;
+    const range = cameraCapabilities.zoom;
+    zoom = Math.min(Number(range.max), Math.max(Number(range.min), next));
+    $('zoomRange').value = String(zoom); $('zoomValue').textContent = `${zoom.toFixed(1).replace('.0', '')}×`;
+    if (zoomApplying) { queuedZoom = zoom; return; }
+    zoomApplying = true;
+    try { await track.applyConstraints({ advanced: [{ zoom }] }); }
+    catch (_) { zoom = Number(range.min) || 1; $('zoomRange').value = String(zoom); $('zoomValue').textContent = `${zoom.toFixed(1).replace('.0', '')}×`; }
+    finally { zoomApplying = false; if (queuedZoom !== null) { const queued = queuedZoom; queuedZoom = null; applyHardwareZoom(queued); } }
+  }
+  $('zoomRange').addEventListener('input', async (event) => {
+    if (cameraCapabilities.zoom) applyHardwareZoom(Number(event.target.value));
+  });
+  $('flashBtn').addEventListener('click', async () => {
+    const track = stream?.getVideoTracks?.()[0]; if (!track || !cameraCapabilities.torch) return;
+    const next = !flash;
+    try { await track.applyConstraints({ advanced: [{ torch: next }] }); flash = next; $('flashBtn').classList.toggle('is-active', flash); $('flashBtn').setAttribute('aria-pressed', String(flash)); }
+    catch (_) { flash = false; $('flashBtn').classList.remove('is-active'); $('flashBtn').setAttribute('aria-pressed', 'false'); }
+  });
+  const activePointers = new Map(); let pinchDistance = null;
+  $('cameraStage').addEventListener('pointerdown', (event) => {
+    if (!stream || event.target.closest('button, input, label')) return;
+    event.currentTarget.setPointerCapture?.(event.pointerId); activePointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+    if (activePointers.size === 2 && cameraCapabilities.zoom) { const [a, b] = [...activePointers.values()]; pinchDistance = Math.hypot(a.x - b.x, a.y - b.y); return; }
+    const ring = $('focusRing'), box = event.currentTarget.getBoundingClientRect();
+    ring.style.left = `${event.clientX - box.left}px`; ring.style.top = `${event.clientY - box.top}px`; ring.hidden = false;
+    clearTimeout($('focusRing')._hideTimer); ring._hideTimer = setTimeout(() => ring.hidden = true, 1200);
+  });
+  $('cameraStage').addEventListener('pointermove', (event) => {
+    if (!activePointers.has(event.pointerId) || !cameraCapabilities.zoom || activePointers.size !== 2) return;
+    activePointers.set(event.pointerId, { x: event.clientX, y: event.clientY }); const [a, b] = [...activePointers.values()];
+    const distance = Math.hypot(a.x - b.x, a.y - b.y); if (!pinchDistance) { pinchDistance = distance; return; }
+    const span = Number(cameraCapabilities.zoom.max) - Number(cameraCapabilities.zoom.min);
+    applyHardwareZoom(zoom + ((distance - pinchDistance) / event.currentTarget.clientWidth) * span * 1.6); pinchDistance = distance;
+  });
+  const releasePointer = (event) => { activePointers.delete(event.pointerId); if (activePointers.size < 2) pinchDistance = null; };
+  $('cameraStage').addEventListener('pointerup', releasePointer); $('cameraStage').addEventListener('pointercancel', releasePointer);
   switchBtn.addEventListener('click', () => { facingMode = facingMode === 'environment' ? 'user' : 'environment'; startCamera(); });
   fileInput.addEventListener('change', async () => { const file = fileInput.files?.[0]; if (!file) return; try { await openReview(await compressImage(file)); } catch (_) { showResult(tr('Não foi possível abrir a foto', 'We could not open this photo'), tr('Escolha outro arquivo ou tente usar a câmera.', 'Choose another file or try using the camera.'), true); } });
   $('retakeBtn').addEventListener('click', resetToCamera); submitBtn.addEventListener('click', upload); $('resultAction').addEventListener('click', () => terminalError ? result.hidden = true : resetToCamera());
   addEventListener('pagehide', stopCamera); document.addEventListener('visibilitychange', () => { if (document.hidden && review.hidden) stopCamera(); });
+  async function loadGalleryInfo() {
+    if (!token) return;
+    try {
+      const cacheKey = `planne-gallery-info:${token}`;
+      let cached = null; try { cached = JSON.parse(sessionStorage.getItem(cacheKey) || 'null'); } catch (_) { /* Cache corrompido é descartável. */ }
+      if (cached?.expiresAt > Date.now() && typeof cached.eventName === 'string') {
+        $('eventName').textContent = cached.eventName;
+        document.title = `Planne · ${cached.eventName}`;
+        return;
+      }
+      const appCheckToken = await window.__getAppCheckToken?.();
+      const headers = { 'Content-Type': 'application/json' }; if (appCheckToken) headers['X-Firebase-AppCheck'] = appCheckToken;
+      const response = await fetch(endpoint, { method: 'POST', headers, body: JSON.stringify({ action: 'getGalleryInfo', publicToken: token }) });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) return;
+      if (typeof data.eventName === 'string' && data.eventName.trim()) {
+        const eventName = data.eventName.trim();
+        $('eventName').textContent = eventName;
+        document.title = `Planne · ${eventName}`;
+        try { sessionStorage.setItem(cacheKey, JSON.stringify({ eventName, expiresAt: Date.now() + 15 * 60 * 1000 })); } catch (_) { /* Cache é opcional. */ }
+      }
+    } catch (_) { /* O upload continua sendo a fonte de erro apropriada. */ }
+  }
   if (!token) { placeholder.hidden = true; showResult(tr('Não foi possível abrir a câmera', 'We could not open the camera'), text.missing_token, true, true); }
+  else { loadGalleryInfo(); }
 })();
