@@ -7,7 +7,7 @@
   const startBtn = $('startCameraBtn'), captureBtn = $('captureBtn'), switchBtn = $('switchCameraBtn');
   const fileInput = $('fileInput'), review = $('review'), reviewImage = $('reviewImage');
   const formError = $('formError'), submitBtn = $('submitBtn'), result = $('resultCard');
-  let stream = null, facingMode = 'environment', selectedBlob = null, previewUrl = null, terminalError = false, filter = 'none', zoom = 1, flash = false, sticker = '', cameraCapabilities = {}, zoomApplying = false, queuedZoom = null;
+  let stream = null, facingMode = 'environment', selectedBlob = null, previewUrl = null, terminalError = false, filter = 'none', zoom = 1, flash = false, sticker = '', cameraCapabilities = {}, zoomApplying = false, queuedZoom = null, softwareZoom = false;
   const filters = {
     none: 'none',
     golden: 'sepia(.24) saturate(1.22) brightness(1.05)',
@@ -17,15 +17,21 @@
     film: 'sepia(.16) saturate(.78) contrast(1.12) brightness(.96)',
     mono: 'grayscale(1) contrast(1.22) brightness(1.04)',
   };
-  const language = (() => {
+  const requestedLanguage = new URLSearchParams(location.search).get('lang')?.toLowerCase();
+  const storedLanguage = (() => {
     try {
       const saved = localStorage.getItem('planne-language')?.toLowerCase();
-      if (saved?.startsWith('pt')) return 'pt';
-      if (saved?.startsWith('en')) return 'en';
+      if (saved?.startsWith('pt') || saved?.startsWith('en')) return saved;
     } catch (_) { /* Local storage is optional. */ }
-    return navigator.language?.toLowerCase().startsWith('pt') ? 'pt' : 'en';
+    return null;
   })();
-  document.documentElement.lang = language === 'pt' ? 'pt-BR' : 'en';
+  // O link pertence ao evento, não ao idioma do navegador do convidado.
+  // Enquanto os metadados chegam, PT-BR evita cair em inglês em WebViews que
+  // não compartilham o localStorage do app.
+  let language = requestedLanguage?.startsWith('en') ? 'en' : requestedLanguage?.startsWith('pt') ? 'pt' : storedLanguage?.startsWith('en') ? 'en' : 'pt';
+  const hasExplicitLanguage = Boolean(requestedLanguage || storedLanguage);
+  const updateDocumentLanguage = () => { document.documentElement.lang = language === 'pt' ? 'pt-BR' : 'en'; };
+  updateDocumentLanguage();
   const tr = (pt, en) => language === 'pt' ? pt : en;
   const text = {
     missing_token: tr('Este link está incompleto. Peça um novo link à organização.', 'This link is incomplete. Ask the host for a new link.'),
@@ -37,22 +43,27 @@
     appcheck_failed: tr('Não foi possível validar o acesso. Recarregue a página.', 'We could not validate access. Reload the page.'),
   };
   const setCopy = (id, pt, en) => { const node = $(id); if (node) node.textContent = tr(pt, en); };
-  setCopy('albumLabel', 'ÁLBUM DO EVENTO', 'EVENT ALBUM'); setCopy('eventName', 'Álbum do evento', 'Event album');
-  setCopy('pageTitle', 'Guarde este instante', 'Keep this moment'); setCopy('cameraHint', 'Abra a câmera ou escolha uma foto para deixar no álbum.', 'Open the camera or choose a photo for the album.');
-  setCopy('startCameraBtn', 'Ligar câmera', 'Turn on camera'); setCopy('cameraStatusText', 'CÂMERA PRONTA', 'CAMERA READY');
-  setCopy('chooseFileLabel', 'Rolo de fotos', 'Photo roll'); setCopy('captureLabel', 'Ligue a câmera', 'Turn on the camera'); setCopy('bottomEffectsLabel', 'Efeitos', 'Effects');
-  setCopy('cameraNote', 'As fotos ficam disponíveis somente para a organização no app Planne.', 'Photos are available only to the host in the Planne app.');
-  setCopy('reviewFilmLabel', 'SEU MOMENTO', 'YOUR MOMENT'); setCopy('reviewTitle', 'Ficou boa?', 'Does it look good?'); setCopy('uploaderNameLabel', 'Seu nome', 'Your name'); setCopy('uploaderNameOptional', 'opcional', 'optional');
-  $('uploaderName').placeholder = tr('Para aparecer junto da foto', 'To appear with the photo'); setCopy('retakeBtn', 'Refazer', 'Retake'); setCopy('submitBtn', 'Revelar foto', 'Develop photo');
-  $('flashBtn').setAttribute('aria-label', tr('Lanterna', 'Torch')); $('stickerBtn').setAttribute('aria-label', tr('Emojis', 'Emojis')); $('switchCameraBtn').setAttribute('aria-label', tr('Trocar câmera', 'Switch camera')); $('captureBtn').setAttribute('aria-label', tr('Tirar foto', 'Take photo'));
   const filterLabels = { none: ['Natural', 'Natural'], golden: ['Luz dourada', 'Golden hour'], soft: ['Brilho suave', 'Soft glow'], garden: ['Jardim', 'Garden'], party: ['Flash de festa', 'Party flash'], film: ['Filme', 'Film'], mono: ['Monocromático', 'Mono'] };
-  document.querySelectorAll('#effectOptions [data-filter]').forEach((button) => { const [pt, en] = filterLabels[button.dataset.filter]; button.textContent = tr(pt, en); });
+  function applyTranslations() {
+    setCopy('albumLabel', 'ÁLBUM DO EVENTO', 'EVENT ALBUM');
+    if (!$('eventName').dataset.eventName) setCopy('eventName', 'Álbum do evento', 'Event album');
+    setCopy('pageTitle', 'Guarde este instante', 'Keep this moment'); setCopy('cameraHint', 'Abra a câmera ou escolha uma foto para deixar no álbum.', 'Open the camera or choose a photo for the album.');
+    setCopy('startCameraBtn', 'Ligar câmera', 'Turn on camera'); setCopy('cameraStatusText', 'CÂMERA PRONTA', 'CAMERA READY');
+    setCopy('chooseFileLabel', 'Rolo de fotos', 'Photo roll'); setCopy('captureLabel', 'Ligue a câmera', 'Turn on the camera'); setCopy('bottomEffectsLabel', 'Efeitos', 'Effects');
+    setCopy('cameraNote', 'As fotos ficam disponíveis somente para a organização no app Planne.', 'Photos are available only to the host in the Planne app.');
+    setCopy('reviewFilmLabel', 'SEU MOMENTO', 'YOUR MOMENT'); setCopy('reviewTitle', 'Ficou boa?', 'Does it look good?'); setCopy('uploaderNameLabel', 'Seu nome', 'Your name'); setCopy('uploaderNameOptional', 'opcional', 'optional');
+    $('uploaderName').placeholder = tr('Para aparecer junto da foto', 'To appear with the photo'); setCopy('retakeBtn', 'Refazer', 'Retake'); setCopy('submitBtn', 'Revelar foto', 'Develop photo');
+    $('flashBtn').setAttribute('aria-label', tr('Lanterna', 'Torch')); $('stickerBtn').setAttribute('aria-label', tr('Emojis', 'Emojis')); $('switchCameraBtn').setAttribute('aria-label', tr('Trocar câmera', 'Switch camera')); $('captureBtn').setAttribute('aria-label', tr('Tirar foto', 'Take photo'));
+    document.querySelectorAll('#effectOptions [data-filter]').forEach((button) => { const [pt, en] = filterLabels[button.dataset.filter]; button.textContent = tr(pt, en); });
+  }
+  applyTranslations();
   const setError = (message) => { formError.textContent = message || ''; formError.hidden = !message; };
   const stopCamera = () => {
     stream?.getTracks().forEach((track) => track.stop());
-    stream = null; cameraCapabilities = {}; flash = false; zoom = 1;
+    stream = null; cameraCapabilities = {}; flash = false; zoom = 1; softwareZoom = false;
     video.srcObject = null; status.hidden = true; switchBtn.hidden = true;
-    captureBtn.disabled = true; $('bottomEffectsBtn').disabled = true;
+    video.style.transform = '';
+    captureBtn.disabled = true;
     $('cameraTools').hidden = true; $('viewfinder').hidden = true; $('toolSheet').hidden = true;
     $('bottomEffectsBtn').setAttribute('aria-expanded', 'false'); $('stickerBtn').setAttribute('aria-expanded', 'false');
     $('flashBtn').classList.remove('is-active'); $('zoomRange').value = '1'; $('zoomValue').textContent = '1×';
@@ -78,7 +89,7 @@
     try {
       stream = await requestCamera();
       video.srcObject = stream; await video.play(); placeholder.hidden = true; status.hidden = false;
-      captureBtn.disabled = false; $('bottomEffectsBtn').disabled = false;
+      captureBtn.disabled = false;
       // Uma track representa a stream atual, não a quantidade de lentes.
       // Só oferecemos trocar câmera quando há ao menos duas entradas reais.
       try {
@@ -88,18 +99,16 @@
       $('cameraTools').hidden = false;
       $('viewfinder').hidden = false; $('captureLabel').textContent = tr('Aperte para fotografar', 'Press to take a photo');
       cameraCapabilities = stream.getVideoTracks()[0]?.getCapabilities?.() || {};
-      // Lanterna e zoom são recursos físicos e não existem em toda câmera.
-      // Não simulamos ambos: o botão só aparece quando a track os anuncia.
+      // Lanterna só existe em parte do hardware. Já o zoom ganha fallback
+      // visual, para a pinça funcionar também em navegadores que não expõem
+      // MediaStreamTrack.getCapabilities().zoom.
       $('flashBtn').hidden = !cameraCapabilities.torch;
-      $('zoomRange').disabled = !cameraCapabilities.zoom;
-      $('zoomRange').closest('.zoom-control').hidden = !cameraCapabilities.zoom;
-      if (cameraCapabilities.zoom) {
-        const min = Number(cameraCapabilities.zoom.min) || 1;
-        const max = Number(cameraCapabilities.zoom.max) || min;
-        $('zoomRange').min = String(min); $('zoomRange').max = String(max);
-        $('zoomRange').value = String(min); zoom = min;
-        $('zoomValue').textContent = `${zoom.toFixed(1).replace('.0', '')}×`;
-      }
+      const min = Number(cameraCapabilities.zoom?.min) || 1;
+      const max = Number(cameraCapabilities.zoom?.max) || 3;
+      $('zoomRange').disabled = false; $('zoomRange').closest('.zoom-control').hidden = false;
+      $('zoomRange').min = String(min); $('zoomRange').max = String(Math.max(min, max));
+      $('zoomRange').value = String(min); zoom = min; softwareZoom = !cameraCapabilities.zoom;
+      $('zoomValue').textContent = `${zoom.toFixed(1).replace('.0', '')}×`;
     } catch (error) {
       $('cameraHint').textContent = error?.name === 'NotAllowedError' ? tr('A câmera foi bloqueada. Libere a permissão ou escolha uma foto.', 'Camera access was blocked. Allow it or choose a photo.') : tr('Não foi possível abrir a câmera. Escolha uma foto para continuar.', 'We could not open the camera. Choose a photo to continue.');
     } finally { startBtn.disabled = false; startBtn.textContent = tr('Ligar câmera', 'Turn on camera'); }
@@ -120,9 +129,13 @@
     if (!stream || !video.videoWidth) return; navigator.vibrate?.(20);
     const canvas = $('captureCanvas'); canvas.width = video.videoWidth; canvas.height = video.videoHeight;
     const context = canvas.getContext('2d', { alpha: false }); context.filter = filters[filter];
-    // O zoom é aplicado na MediaStreamTrack. Desenhar um crop aqui causaria
-    // zoom duplo e faria o preview divergir da foto enviada.
-    context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight, 0, 0, canvas.width, canvas.height);
+    // No fallback visual, recortamos a mesma área ampliada no preview para
+    // que a foto confirmada seja exatamente a que a pessoa enquadrou.
+    const sourceWidth = softwareZoom ? video.videoWidth / zoom : video.videoWidth;
+    const sourceHeight = softwareZoom ? video.videoHeight / zoom : video.videoHeight;
+    const sourceX = (video.videoWidth - sourceWidth) / 2;
+    const sourceY = (video.videoHeight - sourceHeight) / 2;
+    context.drawImage(video, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, canvas.width, canvas.height);
     if (sticker) { context.filter = 'none'; context.font = `${Math.round(canvas.width * .14)}px sans-serif`; context.textAlign = 'center'; context.fillText(sticker, canvas.width * .5, canvas.height * .58); }
     const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/jpeg', .84)); if (blob) openReview(blob);
   }
@@ -140,7 +153,7 @@
   function resetToCamera() { result.hidden = true; review.hidden = true; selectedBlob = null; revokePreview(); fileInput.value = ''; startCamera(); }
   startBtn.addEventListener('click', startCamera); captureBtn.addEventListener('click', takePicture); $('chooseFileBtn').addEventListener('click', () => fileInput.click());
   const toggleEffects = (open, stickers = false) => { $('toolSheet').hidden = !open; $('stickerOptions').hidden = !stickers; $('bottomEffectsBtn').setAttribute('aria-expanded', String(open)); $('stickerBtn').setAttribute('aria-expanded', String(open && stickers)); };
-  $('bottomEffectsBtn').addEventListener('click', () => { if (stream) toggleEffects($('toolSheet').hidden); });
+  $('bottomEffectsBtn').addEventListener('click', () => toggleEffects($('toolSheet').hidden));
   $('stickerBtn').addEventListener('click', () => { if (stream) toggleEffects(true, true); });
   $('effectOptions').addEventListener('click', (event) => {
     const next = event.target.dataset.filter; if (!next) return;
@@ -153,7 +166,14 @@
     document.querySelectorAll('#stickerOptions button').forEach((button) => { const selected = button.dataset.sticker === sticker; button.classList.toggle('is-selected', selected); button.setAttribute('aria-pressed', String(selected)); });
   });
   async function applyHardwareZoom(next) {
-    const track = stream?.getVideoTracks?.()[0]; if (!track || !cameraCapabilities.zoom) return;
+    const track = stream?.getVideoTracks?.()[0]; if (!track) return;
+    const min = Number($('zoomRange').min) || 1, max = Number($('zoomRange').max) || 3;
+    if (!cameraCapabilities.zoom) {
+      softwareZoom = true; zoom = Math.min(max, Math.max(min, next));
+      $('zoomRange').value = String(zoom); $('zoomValue').textContent = `${zoom.toFixed(1).replace('.0', '')}×`;
+      video.style.transform = zoom > 1 ? `scale(${zoom})` : '';
+      return;
+    }
     const range = cameraCapabilities.zoom;
     zoom = Math.min(Number(range.max), Math.max(Number(range.min), next));
     $('zoomRange').value = String(zoom); $('zoomValue').textContent = `${zoom.toFixed(1).replace('.0', '')}×`;
@@ -164,7 +184,7 @@
     finally { zoomApplying = false; if (queuedZoom !== null) { const queued = queuedZoom; queuedZoom = null; applyHardwareZoom(queued); } }
   }
   $('zoomRange').addEventListener('input', async (event) => {
-    if (cameraCapabilities.zoom) applyHardwareZoom(Number(event.target.value));
+    applyHardwareZoom(Number(event.target.value));
   });
   $('flashBtn').addEventListener('click', async () => {
     const track = stream?.getVideoTracks?.()[0]; if (!track || !cameraCapabilities.torch) return;
@@ -176,16 +196,16 @@
   $('cameraStage').addEventListener('pointerdown', (event) => {
     if (!stream || event.target.closest('button, input, label')) return;
     event.currentTarget.setPointerCapture?.(event.pointerId); activePointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
-    if (activePointers.size === 2 && cameraCapabilities.zoom) { const [a, b] = [...activePointers.values()]; pinchDistance = Math.hypot(a.x - b.x, a.y - b.y); return; }
+    if (activePointers.size === 2) { const [a, b] = [...activePointers.values()]; pinchDistance = Math.hypot(a.x - b.x, a.y - b.y); return; }
     const ring = $('focusRing'), box = event.currentTarget.getBoundingClientRect();
     ring.style.left = `${event.clientX - box.left}px`; ring.style.top = `${event.clientY - box.top}px`; ring.hidden = false;
     clearTimeout($('focusRing')._hideTimer); ring._hideTimer = setTimeout(() => ring.hidden = true, 1200);
   });
   $('cameraStage').addEventListener('pointermove', (event) => {
-    if (!activePointers.has(event.pointerId) || !cameraCapabilities.zoom || activePointers.size !== 2) return;
+    if (!activePointers.has(event.pointerId) || activePointers.size !== 2) return;
     activePointers.set(event.pointerId, { x: event.clientX, y: event.clientY }); const [a, b] = [...activePointers.values()];
     const distance = Math.hypot(a.x - b.x, a.y - b.y); if (!pinchDistance) { pinchDistance = distance; return; }
-    const span = Number(cameraCapabilities.zoom.max) - Number(cameraCapabilities.zoom.min);
+    const span = Number($('zoomRange').max) - Number($('zoomRange').min);
     applyHardwareZoom(zoom + ((distance - pinchDistance) / event.currentTarget.clientWidth) * span * 1.6); pinchDistance = distance;
   });
   const releasePointer = (event) => { activePointers.delete(event.pointerId); if (activePointers.size < 2) pinchDistance = null; };
@@ -201,6 +221,7 @@
       let cached = null; try { cached = JSON.parse(sessionStorage.getItem(cacheKey) || 'null'); } catch (_) { /* Cache corrompido é descartável. */ }
       if (cached?.expiresAt > Date.now() && typeof cached.eventName === 'string') {
         $('eventName').textContent = cached.eventName;
+        $('eventName').dataset.eventName = cached.eventName;
         document.title = `Planne · ${cached.eventName}`;
         return;
       }
@@ -212,8 +233,14 @@
       if (typeof data.eventName === 'string' && data.eventName.trim()) {
         const eventName = data.eventName.trim();
         $('eventName').textContent = eventName;
+        $('eventName').dataset.eventName = eventName;
         document.title = `Planne · ${eventName}`;
         try { sessionStorage.setItem(cacheKey, JSON.stringify({ eventName, expiresAt: Date.now() + 15 * 60 * 1000 })); } catch (_) { /* Cache é opcional. */ }
+      }
+      if (!hasExplicitLanguage && (data.language === 'pt' || data.language === 'en')) {
+        language = data.language;
+        updateDocumentLanguage();
+        applyTranslations();
       }
     } catch (_) { /* O upload continua sendo a fonte de erro apropriada. */ }
   }
