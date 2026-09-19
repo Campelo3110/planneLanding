@@ -7,7 +7,16 @@
   const startBtn = $('startCameraBtn'), captureBtn = $('captureBtn'), switchBtn = $('switchCameraBtn');
   const fileInput = $('fileInput'), review = $('review'), reviewImage = $('reviewImage');
   const formError = $('formError'), submitBtn = $('submitBtn'), result = $('resultCard');
-  let stream = null, facingMode = 'environment', selectedBlob = null, previewUrl = null, terminalError = false;
+  let stream = null, facingMode = 'environment', selectedBlob = null, previewUrl = null, terminalError = false, filter = 'none', zoom = 1, flash = false, sticker = '';
+  const filters = {
+    none: 'none',
+    golden: 'sepia(.24) saturate(1.22) brightness(1.05)',
+    soft: 'brightness(1.08) saturate(.88) contrast(.9)',
+    garden: 'saturate(1.18) hue-rotate(7deg) brightness(1.03)',
+    party: 'saturate(1.42) contrast(1.12) brightness(1.06)',
+    film: 'sepia(.16) saturate(.78) contrast(1.12) brightness(.96)',
+    mono: 'grayscale(1) contrast(1.22) brightness(1.04)',
+  };
   const language = (() => {
     try {
       const saved = localStorage.getItem('planne-language')?.toLowerCase();
@@ -35,6 +44,8 @@
   setCopy('cameraNote', 'As fotos ficam disponíveis somente para a organização no app Planne.', 'Photos are available only to the host in the Planne app.');
   setCopy('reviewFilmLabel', 'FOTO 01', 'PHOTO 01'); setCopy('reviewTitle', 'Ficou boa?', 'Does it look good?'); setCopy('uploaderNameLabel', 'Seu nome', 'Your name'); setCopy('uploaderNameOptional', 'opcional', 'optional');
   $('uploaderName').placeholder = tr('Para aparecer junto da foto', 'To appear with the photo'); setCopy('retakeBtn', 'Refazer', 'Retake'); setCopy('submitBtn', 'Revelar foto', 'Develop photo');
+  const filterLabels = { none: ['Natural', 'Natural'], golden: ['Luz dourada', 'Golden hour'], soft: ['Brilho suave', 'Soft glow'], garden: ['Jardim', 'Garden'], party: ['Flash de festa', 'Party flash'], film: ['Filme', 'Film'], mono: ['Monocromático', 'Mono'] };
+  document.querySelectorAll('#effectOptions [data-filter]').forEach((button) => { const [pt, en] = filterLabels[button.dataset.filter]; button.textContent = tr(pt, en); });
   const setError = (message) => { formError.textContent = message || ''; formError.hidden = !message; };
   const stopCamera = () => { stream?.getTracks().forEach((track) => track.stop()); stream = null; video.srcObject = null; status.hidden = true; switchBtn.hidden = true; captureBtn.disabled = true; };
   const revokePreview = () => { if (previewUrl) URL.revokeObjectURL(previewUrl); previewUrl = null; };
@@ -77,7 +88,11 @@
   async function takePicture() {
     if (!stream || !video.videoWidth) return; navigator.vibrate?.(20);
     const canvas = $('captureCanvas'); canvas.width = video.videoWidth; canvas.height = video.videoHeight;
-    const context = canvas.getContext('2d', { alpha: false }); context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    const context = canvas.getContext('2d', { alpha: false }); context.filter = filters[filter];
+    const sourceWidth = video.videoWidth / zoom, sourceHeight = video.videoHeight / zoom;
+    context.drawImage(video, (video.videoWidth - sourceWidth) / 2, (video.videoHeight - sourceHeight) / 2, sourceWidth, sourceHeight, 0, 0, canvas.width, canvas.height);
+    if (flash) { context.fillStyle = 'rgba(255,255,245,.22)'; context.fillRect(0, 0, canvas.width, canvas.height); }
+    if (sticker) { context.filter = 'none'; context.font = `${Math.round(canvas.width * .14)}px sans-serif`; context.textAlign = 'center'; context.fillText(sticker, canvas.width * .5, canvas.height * .58); }
     const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/jpeg', .84)); if (blob) openReview(blob);
   }
   const toBase64 = (blob) => new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(String(reader.result).split(',')[1] || ''); reader.onerror = reject; reader.readAsDataURL(blob); });
@@ -93,6 +108,13 @@
   }
   function resetToCamera() { result.hidden = true; review.hidden = true; selectedBlob = null; revokePreview(); fileInput.value = ''; startCamera(); }
   startBtn.addEventListener('click', startCamera); captureBtn.addEventListener('click', takePicture); $('chooseFileBtn').addEventListener('click', () => fileInput.click());
+  $('effectsBtn').addEventListener('click', () => { $('toolSheet').hidden = !$('toolSheet').hidden; $('stickerOptions').hidden = true; });
+  $('stickerBtn').addEventListener('click', () => { $('toolSheet').hidden = false; $('stickerOptions').hidden = false; });
+  $('effectOptions').addEventListener('click', (event) => { const next = event.target.dataset.filter; if (!next) return; filter = next; video.style.filter = filters[filter]; });
+  $('stickerOptions').addEventListener('click', (event) => { const next = event.target.dataset.sticker; if (!next) return; sticker = next; $('stickerLayer').textContent = sticker; });
+  $('zoomRange').addEventListener('input', async (event) => { zoom = Number(event.target.value); $('zoomValue').textContent = `${zoom.toFixed(1).replace('.0', '')}×`; video.style.transform = `scale(${zoom})`; const track = stream?.getVideoTracks?.()[0]; try { if (track?.getCapabilities?.().zoom) await track.applyConstraints({advanced:[{zoom}]}); } catch (_) {} });
+  $('flashBtn').addEventListener('click', async () => { flash = !flash; $('flashBtn').classList.toggle('is-active', flash); const track = stream?.getVideoTracks?.()[0]; try { if (track?.getCapabilities?.().torch) await track.applyConstraints({advanced:[{torch:flash}]}); } catch (_) {} });
+  $('cameraStage').addEventListener('pointerdown', (event) => { if (!stream) return; const ring = $('focusRing'), box = event.currentTarget.getBoundingClientRect(); ring.style.left = `${event.clientX - box.left}px`; ring.style.top = `${event.clientY - box.top}px`; ring.hidden = false; setTimeout(() => ring.hidden = true, 650); });
   switchBtn.addEventListener('click', () => { facingMode = facingMode === 'environment' ? 'user' : 'environment'; startCamera(); });
   fileInput.addEventListener('change', async () => { const file = fileInput.files?.[0]; if (!file) return; try { await openReview(await compressImage(file)); } catch (_) { showResult(tr('Não foi possível abrir a foto', 'We could not open this photo'), tr('Escolha outro arquivo ou tente usar a câmera.', 'Choose another file or try using the camera.'), true); } });
   $('retakeBtn').addEventListener('click', resetToCamera); submitBtn.addEventListener('click', upload); $('resultAction').addEventListener('click', () => terminalError ? result.hidden = true : resetToCamera());
