@@ -6,7 +6,7 @@ window.__rsvpSlug = /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(pathSlug) ? pathSlug : '';
 window.__getAppCheckToken = async () => null;
 let currentEvent = {};
 const byId = id => document.getElementById(id);
-const tr = (pt, en) => (currentEvent.language || (navigator.language.startsWith('en') ? 'en' : 'pt')) === 'en' ? en : pt;
+const tr = (pt, en) => (currentEvent.language || (navigator.language?.toLowerCase().startsWith('pt') ? 'pt' : 'en')) === 'en' ? en : pt;
 byId('inviteStatus').querySelector('.loading-copy').textContent = tr('Preparando seu convite','Preparing your invitation');
 async function callRsvpApi(payload) {
   const token = await window.__getAppCheckToken();
