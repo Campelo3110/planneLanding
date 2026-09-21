@@ -43,6 +43,24 @@
     appcheck_failed: tr('Não foi possível validar o acesso. Recarregue a página.', 'We could not validate access. Reload the page.'),
   };
   const setCopy = (id, pt, en) => { const node = $(id); if (node) node.textContent = tr(pt, en); };
+  // App Check melhora a proteção quando o reCAPTCHA está disponível, mas não
+  // pode bloquear um convidado numa tela de "Enviando". A Function aceita o
+  // fluxo público sem esse header enquanto GALLERY_APPCHECK_ENFORCE estiver
+  // desligado, portanto após um limite curto seguimos sem o token.
+  async function getAppCheckTokenForGallery() {
+    if (typeof window.__getAppCheckToken !== 'function') return null;
+    let timeoutId;
+    try {
+      return await Promise.race([
+        window.__getAppCheckToken(),
+        new Promise((resolve) => {
+          timeoutId = setTimeout(() => resolve(null), 5000);
+        }),
+      ]);
+    } finally {
+      if (timeoutId) clearTimeout(timeoutId);
+    }
+  }
   const filterLabels = { none: ['Natural', 'Natural'], golden: ['Luz dourada', 'Golden hour'], soft: ['Brilho suave', 'Soft glow'], garden: ['Jardim', 'Garden'], party: ['Flash de festa', 'Party flash'], film: ['Filme', 'Film'], mono: ['Monocromático', 'Mono'] };
   function applyTranslations() {
     setCopy('albumLabel', 'ÁLBUM DO EVENTO', 'EVENT ALBUM');
@@ -143,11 +161,30 @@
   async function upload() {
     if (!selectedBlob) return; setError(''); submitBtn.disabled = true; submitBtn.textContent = tr('Enviando…', 'Sending…');
     try {
-      const appCheckToken = await window.__getAppCheckToken?.(); const headers = { 'Content-Type': 'application/json' }; if (appCheckToken) headers['X-Firebase-AppCheck'] = appCheckToken;
-      const response = await fetch(endpoint, { method: 'POST', headers, body: JSON.stringify({ publicToken: token, imageBase64: await toBase64(selectedBlob), contentType: 'image/jpeg', uploaderName: $('uploaderName').value.trim() }) });
-      const data = await response.json().catch(() => ({})); if (!response.ok) { const error = new Error(data.error || 'request_failed'); error.code = data.error; throw error; }
+      const appCheckToken = await getAppCheckTokenForGallery();
+      if (!appCheckToken) console.warn('Planne gallery: App Check indisponível ou excedeu 5 segundos; enviando pelo fluxo público.');
+      const headers = { 'Content-Type': 'application/json' }; if (appCheckToken) headers['X-Firebase-AppCheck'] = appCheckToken;
+      const abortController = new AbortController();
+      const requestTimeout = setTimeout(() => abortController.abort(), 35000);
+      let response;
+      try {
+        response = await fetch(endpoint, { method: 'POST', headers, signal: abortController.signal, body: JSON.stringify({ publicToken: token, imageBase64: await toBase64(selectedBlob), contentType: 'image/jpeg', uploaderName: $('uploaderName').value.trim() }) });
+      } finally {
+        clearTimeout(requestTimeout);
+      }
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        // Não registrar token, foto nem nome: o status e o código bastam
+        // para diagnosticar a Function sem expor a capability do álbum.
+        console.error('Planne gallery: envio da foto falhou', { status: response.status, code: data.error || 'request_failed' });
+        const error = new Error(data.error || 'request_failed'); error.code = data.error; throw error;
+      }
       review.hidden = true; revokePreview(); selectedBlob = null; $('uploaderName').value = ''; showResult(tr('Foto enviada!', 'Photo sent!'), tr('Ela já está disponível para a organização no app Planne.', 'It is now available to the host in the Planne app.'));
-    } catch (error) { setError(text[error.code] || tr('Não foi possível enviar sua foto. Tente novamente.', 'We could not send your photo. Try again.')); }
+    } catch (error) {
+      if (error?.name === 'AbortError') error.code = 'request_timeout';
+      console.error('Planne gallery: erro ao enviar foto', { name: error?.name, code: error?.code, message: error?.message });
+      setError(text[error.code] || tr('Não foi possível enviar sua foto. Tente novamente.', 'We could not send your photo. Try again.'));
+    }
     finally { submitBtn.disabled = false; submitBtn.textContent = tr('Revelar foto', 'Develop photo'); }
   }
   function resetToCamera() { result.hidden = true; review.hidden = true; selectedBlob = null; revokePreview(); fileInput.value = ''; startCamera(); }
@@ -225,7 +262,7 @@
         document.title = `Planne · ${cached.eventName}`;
         return;
       }
-      const appCheckToken = await window.__getAppCheckToken?.();
+      const appCheckToken = await getAppCheckTokenForGallery();
       const headers = { 'Content-Type': 'application/json' }; if (appCheckToken) headers['X-Firebase-AppCheck'] = appCheckToken;
       const response = await fetch(endpoint, { method: 'POST', headers, body: JSON.stringify({ action: 'getGalleryInfo', publicToken: token }) });
       const data = await response.json().catch(() => ({}));
@@ -242,7 +279,10 @@
         updateDocumentLanguage();
         applyTranslations();
       }
-    } catch (_) { /* O upload continua sendo a fonte de erro apropriada. */ }
+    } catch (error) {
+      console.warn('Planne gallery: não foi possível carregar os metadados do álbum', { name: error?.name, message: error?.message });
+      /* O upload continua sendo a fonte de erro apropriada. */
+    }
   }
   if (!token) { placeholder.hidden = true; showResult(tr('Não foi possível abrir a câmera', 'We could not open the camera'), text.missing_token, true, true); }
   else { loadGalleryInfo(); }

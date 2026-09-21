@@ -1,179 +1,360 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Planne - Wedding Planner & Digital Invitations: RSVP</title>
-  <meta name="description" content="Plan your wedding with a guest list, per-vendor budget, tasks and a digital invitation with RSVP confirmations. Free for Android.">
-  <meta name="robots" content="index, follow">
-  <meta name="theme-color" content="#f8fafc">
-  <script>try{document.documentElement.dataset.theme=localStorage.getItem('planne-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
-  <link rel="canonical" href="https://planneapp.com/wedding">
-  <link rel="alternate" hreflang="en" href="https://planneapp.com/wedding">
-  <link rel="alternate" hreflang="pt-BR" href="https://planneapp.com/pt-br/casamento">
-  <link rel="alternate" hreflang="x-default" href="https://planneapp.com/wedding">
-  <link rel="icon" type="image/png" sizes="32x32" href="/assets/brand/favicon-32x32.png">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://planneapp.com/wedding">
-  <meta property="og:locale" content="en_US">
-  <meta property="og:title" content="Planne - Wedding Planner & Digital Invitations">
-  <meta property="og:description" content="Guests, per-vendor budget and an invitation with RSVP confirmations in one clear plan.">
-  <meta property="og:image" content="https://planneapp.com/assets/brand/graphic_feature.png">
-  <meta name="twitter:card" content="summary_large_image">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="/assets/css/landing-premium.css">
-  <link rel="stylesheet" href="/assets/css/event-pages.css">
-  <link rel="stylesheet" href="/assets/css/invite-showcase.css">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&display=swap">
-  <script src="https://unpkg.com/lucide@latest" defer></script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Planne","operatingSystem":"Android","applicationCategory":"LifestyleApplication","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"An app for organizing weddings: guests, budget, tasks and a digital invitation with RSVP confirmations.","url":"https://planneapp.com/wedding","downloadUrl":"https://play.google.com/store/apps/details?id=com.planne.planne"}</script>
-</head>
-<body class="event-theme-wedding">
-  <a class="skip-link" href="#content">Skip to content</a>
-  <div class="event-tabs" aria-label="Event types">
-    <div class="event-tabs-inner">
-      <span class="event-tab is-active" aria-current="page">Wedding</span>
-      <a class="event-tab" href="/baby-shower">Baby shower</a>
-      <a class="event-tab" href="/birthday">Birthday</a>
-      <a class="event-tab" href="/quinceanera">Quinceañera</a>
-      <a class="event-tab" href="/graduation">Graduation</a>
-    </div>
-  </div>
-  <header class="site-header"><nav class="nav" aria-label="Main navigation">
-    <a class="brand" href="/" aria-label="Planne - home"><img src="/assets/brand/logo-64x64.png" alt="" width="36" height="36"><span>Planne</span></a>
-    <div class="nav-links" id="nav-links"><a href="#features">What it organizes</a><a href="#how-it-works">How it works</a><a href="#faq">Questions</a></div>
-    <div class="nav-actions"><a class="language" href="/pt-br/casamento" data-language="pt-BR">PT</a><a class="language" href="/wedding" data-language="en" aria-current="page">EN</a><button class="theme-toggle" type="button" aria-label="Use dark theme"><i data-lucide="moon"></i></button><a class="button button-small" data-cta-location="header" href="https://play.google.com/store/apps/details?id=com.planne.planne" target="_blank" rel="noopener noreferrer">Start free</a><button class="menu-button" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav-links"><i data-lucide="menu"></i></button></div>
-  </nav></header>
+<!DOCTYPE html>
+<!-- saved from url=(0029)/wedding -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
- <main id="content">
-    <section class="event-cover" aria-labelledby="hero-title">
-      <video class="event-cover-video" muted loop playsinline preload="none" poster="/assets/video/wedding-poster.webp" aria-hidden="true">
-        <source data-src="/assets/video/wedding.webm" type="video/webm">
-        <source data-src="/assets/video/wedding.mp4" type="video/mp4">
-      </video>
-      <div class="event-cover-bg" aria-hidden="true"></div>
-      <div class="event-cover-inner">
-        <p class="event-cover-eyebrow">Sarah &amp; James's Wedding</p>
-        <h1 id="hero-title" class="event-cover-title">Your wedding planner for the most important day,<br>without the chaos behind it.</h1>
-        <p class="event-cover-sub">Planne is the wedding organizer that keeps guests, budget and vendors in one clear plan, and sends an invitation with RSVP confirmations instead of chasing replies in a group chat.</p>
-        <div class="event-cover-actions">
-          <a class="button button-dark" data-cta-location="hero" href="https://play.google.com/store/apps/details?id=com.planne.planne" target="_blank" rel="noopener noreferrer">
-            <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M3 20.5v-17c0-.59.34-1.11.84-1.35L13.69 12l-9.85 9.85A1.5 1.5 0 0 1 3 20.5Zm13.81-5.38L6.05 21.34l8.49-8.49 2.27 2.27Zm3.35-4.31c.34.27.59.69.59 1.19 0 .5-.22.9-.57 1.18l-2.29 1.32-2.5-2.5 2.5-2.5 2.27 1.31ZM6.05 2.66l10.76 6.22-2.27 2.27-8.49-8.49Z"/></svg>
-            Organize my wedding free
-          </a>
-          <span class="event-cover-date">11 · 18 · 2026</span>
-          <small class="event-cover-note">Opens Google Play · No credit card required</small>
-        </div>
-      </div>
-    </section>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wedding website with RSVP & planning app | Planne</title><meta name="description" content="Create your wedding website and digital invitation with RSVP. Plan guests, seating, vendors and your wedding budget in Planne."><meta name="robots" content="index, follow, max-image-preview:large"><link rel="canonical" href="https://planneapp.com/wedding"><link rel="alternate" hreflang="en" href="https://planneapp.com/wedding"><link rel="alternate" hreflang="pt-BR" href="https://planneapp.com/pt-br/casamento"><link rel="alternate" hreflang="x-default" href="https://planneapp.com/wedding"><meta property="og:type" content="website"><meta property="og:site_name" content="Planne"><meta property="og:locale" content="en_US"><meta property="og:locale:alternate" content="pt_BR"><meta property="og:url" content="https://planneapp.com/wedding"><meta property="og:title" content="Wedding website with RSVP & planning app | Planne"><meta property="og:description" content="Create your wedding website and digital invitation with RSVP. Plan guests, seating, vendors and your wedding budget in Planne."><meta property="og:image" content="https://planneapp.com/assets/brand/graphic_feature.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Wedding website with RSVP & planning app | Planne"><meta name="twitter:description" content="Create your wedding website and digital invitation with RSVP. Plan guests, seating, vendors and your wedding budget in Planne."><meta name="twitter:image" content="https://planneapp.com/assets/brand/graphic_feature.png"><script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://planneapp.com/#organization", "name": "Planne", "url": "https://planneapp.com/", "logo": "https://planneapp.com/assets/brand/logo-128x128.png", "sameAs": ["https://play.google.com/store/apps/details?id=com.planne.planne"]}, {"@type": "WebSite", "@id": "https://planneapp.com/#website", "url": "https://planneapp.com/", "name": "Planne", "inLanguage": ["en", "pt-BR"]}, {"@type": "MobileApplication", "@id": "https://planneapp.com/#app", "name": "Planne", "operatingSystem": "Android", "applicationCategory": "LifestyleApplication", "downloadUrl": "https://play.google.com/store/apps/details?id=com.planne.planne"}, {"@type": "WebPage", "@id": "https://planneapp.com/wedding#webpage", "url": "https://planneapp.com/wedding", "name": "Wedding website with RSVP & planning app | Planne", "description": "Create your wedding website and digital invitation with RSVP. Plan guests, seating, vendors and your wedding budget in Planne.", "inLanguage": "en", "isPartOf": {"@id": "https://planneapp.com/#website"}}]}</script></head>
+<body class="planne-institutional m-wedding m-enhanced">
+<a class="m-skip" href="/wedding#content">Skip to content</a>
+<nav class="m-event-top" aria-label="Event types">
+<div class="m-event-top-inner">
+<a href="/wedding" aria-current="page">
+<span>Weddings</span>
+<span aria-hidden="true">↗</span>
+</a>
+<a href="/birthday">
+<span>Birthdays</span>
+<span aria-hidden="true">↗</span>
+</a>
+<a href="/baby-shower">
+<span>Baby showers</span>
+<span aria-hidden="true">↗</span>
+</a>
+<a href="/quinceanera">
+<span>Quinceañeras</span>
+<span aria-hidden="true">↗</span>
+</a>
+<a href="/graduation">
+<span>Graduations</span>
+<span aria-hidden="true">↗</span>
+</a>
+</div>
+</nav>
+<header class="m-header m-wrap">
+<a class="m-brand" href="/" aria-label="Planne">
+<img src="/assets/brand/logo-64x64.png" width="36" height="36" alt="">
+<span>Planne</span>
+</a>
+<button class="m-menu" aria-expanded="false" aria-controls="navigation" hidden="">Menu <span aria-hidden="true">+</span>
+</button>
+<nav id="navigation" aria-label="Main navigation">
+<a href="/#experience">The experience</a>
+<a href="/wedding#occasions">Occasions</a>
+<a href="/wedding#premium">Premium</a>
+<a class="m-language" href="/pt-br/casamento" lang="pt-BR" hreflang="pt-BR" aria-label="Ler esta página em português">PT</a>
+</nav>
+</header>
+<main id="content">
+<section class="m-film-hero">
+<img class="m-film-poster" src="/assets/video/wedding-poster.webp" alt="" aria-hidden="true" width="1600" height="900" fetchpriority="high">
+<video class="m-film is-playing" muted="" loop="" playsinline="" preload="none" poster="/assets/video/wedding-poster.webp" data-video-src="/assets/video/wedding.webm" aria-hidden="true" src="/assets/video/wedding.webm">
+</video>
+<div class="m-film-shade" aria-hidden="true">
+</div>
+<div class="m-wrap m-film-inner">
+<div class="m-hero-copy">
+<p class="m-eyebrow">WEDDINGS WITH PLANNE</p>
+<h1>One yes.<br>
+<em>Every detail, yours.</em>
+</h1>
+<p class="m-lead">Your wedding website welcomes your guests. Planne helps you look after everything leading up to it: RSVPs, seating, tasks and your budget, together in the app.</p>
+<a class="m-button" data-cta-location="hero" href="https://play.google.com/store/apps/details?id=com.planne.planne">Start planning our wedding<span aria-hidden="true">↗</span>
+</a>
+<p class="m-small">Start for free on Android. Premium features in the app.</p>
+</div>
+<a class="m-film-cue" href="/wedding#experience">Be there for the moment. We’ll help with the plan.<span aria-hidden="true">↓</span>
+</a>
+</div>
+<button class="m-film-control" type="button" aria-label="Pause video">
+<span aria-hidden="true">Ⅱ</span>
+<span data-film-label="">Pause video</span>
+</button>
+</section>
+<section class="m-statement m-wrap" id="experience">
+<p class="m-eyebrow">WHAT MATTERS, TOGETHER</p>
+<h2>For the people you invite.<br>
+<em>For the day you imagine.</em>
+</h2>
+<p>From choosing a venue to the final RSVP, give each decision a place. Your guest list helps you plan the reception, while your budget keeps track of the commitments you have made.</p>
+</section>
+<section class="m-invitation" id="invitation">
+<div class="m-wrap m-invitation-inner">
+<div class="m-invitation-copy">
+<p class="m-eyebrow">DIGITAL INVITATION + RSVP</p>
+<h2>Your wedding website is the first welcome.</h2>
+<p>Send a digital invitation with the date, address and online RSVP. With Premium, customise photos, colours, fonts and messages to reflect your celebration. Private invitations are also a Premium option.</p>
+<p class="m-note">Free basic public invitation. Customisation and private invitations with Premium.</p>
+</div>
+<div class="m-invitation-editorial">
+<div>
+<span class="m-editorial-n">01</span>
+<h3>For your guests</h3>
+<p>Date, location and online RSVP on the website.</p>
+</div>
+<div>
+<span class="m-editorial-n">02</span>
+<h3>For the two of you</h3>
+<p>Decisions, guests and budget in the app.</p>
+</div>
+</div>
+</div>
+</section>
+<section class="m-invite-showcase m-wrap" id="invitation-examples">
+<div class="m-photo-heading">
+<div>
+<p class="m-eyebrow">YOUR EVENT WEBSITE, YOUR WAY</p>
+<h2>The first chapter<br>of your wedding.</h2>
+</div>
+<p>One celebration, three ways to welcome. See Planne’s actual styles with a photo and the details of this example event.</p>
+</div>
+<p class="m-swipe-hint">Swipe to compare the three styles.</p>
+<div class="m-invite-shots" tabindex="0" role="region" aria-label="Previews of the three invitation styles">
+<figure>
+<div class="m-invite-frame">
+<img src="/assets/marketing/invitations/en-wedding-foto-editorial.webp" alt="Example weddings invitation in the Editorial style, rendered by Planne" width="420" height="1040" loading="lazy" decoding="async">
+</div>
+<figcaption>
+<h3>Editorial</h3>
+<span>Premium customisation</span>
+</figcaption>
+</figure>
+<figure>
+<div class="m-invite-frame">
+<img src="/assets/marketing/invitations/en-wedding-ilustrado.webp" alt="Example weddings invitation in the Illustrated style, rendered by Planne" width="420" height="1040" loading="lazy" decoding="async">
+</div>
+<figcaption>
+<h3>Illustrated</h3>
+<span>Premium customisation</span>
+</figcaption>
+</figure>
+<figure>
+<div class="m-invite-frame">
+<img src="/assets/marketing/invitations/en-wedding-gravado.webp" alt="Example weddings invitation in the Engraved style, rendered by Planne" width="420" height="1040" loading="lazy" decoding="async">
+</div>
+<figcaption>
+<h3>Engraved</h3>
+<span>Premium customisation</span>
+</figcaption>
+</figure>
+</div>
+<div class="m-preview-bottom">
+<p class="m-showcase-note">Previews produced by the app’s own renderer with fictional data. Photos, styles and customisation are Premium. The basic public invitation with RSVP is free.</p>
+<a class="m-preview-open" href="/assets/marketing/invitations/en-wedding-foto-editorial.webp" target="_blank" rel="noopener">Open invitation preview (new tab) <span aria-hidden="true">↗</span>
+</a>
+</div>
+</section>
+<section class="m-app-showcase m-wrap" id="app">
+<div class="m-photo-heading">
+<div>
+<p class="m-eyebrow">THE PLANNE APP</p>
+<h2>Take a look.<br>
+<em>Inside Planne.</em>
+</h2>
+</div>
+<p>Actual app screens. Explore the overview, guest list, budget and tasks that keep your preparations together.</p>
+</div>
+<div class="m-app-shots">
+<figure>
+<figcaption>
+<span>01</span>
+<h3>Your whole event</h3>
+</figcaption>
+<a href="/assets/screenshots/en/planne-home-light.webp" target="_blank" rel="noopener" aria-label="Enlarge: Your whole event (opens a new tab)">
+<div class="m-app-shot">
+<img src="/assets/screenshots/en/planne-home-light.webp" alt="Planne home screen with tasks, guests, calendar and budget" width="1080" height="2400" loading="lazy" decoding="async">
+</div>
+<span class="m-enlarge">Enlarge screen <span aria-hidden="true">↗</span>
+</span>
+</a>
+</figure>
+<figure>
+<figcaption>
+<span>02</span>
+<h3>Every person in the plan</h3>
+</figcaption>
+<a href="/assets/screenshots/en/planne-guests-light.webp" target="_blank" rel="noopener" aria-label="Enlarge: Every person in the plan (opens a new tab)">
+<div class="m-app-shot">
+<img src="/assets/screenshots/en/planne-guests-light.webp" alt="Planne guest list with groups and RSVP status" width="1080" height="2400" loading="lazy" decoding="async">
+</div>
+<span class="m-enlarge">Enlarge screen <span aria-hidden="true">↗</span>
+</span>
+</a>
+</figure>
+<figure>
+<figcaption>
+<span>03</span>
+<h3>Every choice in the budget</h3>
+</figcaption>
+<a href="/assets/screenshots/en/planne-budget-light.webp" target="_blank" rel="noopener" aria-label="Enlarge: Every choice in the budget (opens a new tab)">
+<div class="m-app-shot">
+<img src="/assets/screenshots/en/planne-budget-light.webp" alt="Planne budget screen with expenses and payments" width="1080" height="2400" loading="lazy" decoding="async">
+</div>
+<span class="m-enlarge">Enlarge screen <span aria-hidden="true">↗</span>
+</span>
+</a>
+</figure>
+<figure>
+<figcaption>
+<span>04</span>
+<h3>A clear next step</h3>
+</figcaption>
+<a href="/assets/screenshots/en/planne-tasks-light.webp" target="_blank" rel="noopener" aria-label="Enlarge: A clear next step (opens a new tab)">
+<div class="m-app-shot">
+<img src="/assets/screenshots/en/planne-tasks-light.webp" alt="Planne tasks with deadlines and status" width="1080" height="2400" loading="lazy" decoding="async">
+</div>
+<span class="m-enlarge">Enlarge screen <span aria-hidden="true">↗</span>
+</span>
+</a>
+</figure>
+</div>
+<p class="m-showcase-note">App screenshots with example data. Select a screen to see the details.</p>
+</section>
+<section class="m-planning m-wrap">
+<div class="m-planning-heading">
+<p class="m-eyebrow">BEHIND THE CELEBRATION</p>
+<h2>A reception planned<br>person by person.</h2>
+</div>
+<div class="m-planning-layout">
+<div class="m-feature-list">
+<article>
+<span class="m-feature-number">01</span>
+<div>
+<h3>A place for every person</h3>
+<p>Organise guests and plus-ones in groups. Build your seating plan and share table lookup through a QR code when enabled for your event.</p>
+</div>
+</article>
+<article>
+<span class="m-feature-number">02</span>
+<div>
+<h3>A budget that follows your choices</h3>
+<p>Record your venue, catering, photography and other vendors. Track installments, due dates and payments so deposits and outstanding balances stay clear.</p>
+</div>
+</article>
+<article>
+<span class="m-feature-number">03</span>
+<div>
+<h3>The day through other eyes</h3>
+<p>Alongside professional photography, collect guest photos with the Premium album. A QR code opens the upload page; the full album is viewed in your app.</p>
+</div>
+</article>
+</div>
+</div>
+</section>
+<section class="m-guide m-wrap">
+<div>
+<p class="m-eyebrow">A THOUGHTFUL START</p>
+<h2>Before you send the invitations</h2>
+</div>
+<ol>
+<li>
+<span class="m-step-number">01</span>
+<h3>Agree on the essentials</h3>
+<p>Check the date, time and address guests should use. Reviewing the details together helps prevent questions after sharing.</p>
+</li>
+<li>
+<span class="m-step-number">02</span>
+<h3>Plan around real people</h3>
+<p>Add plus-ones and children to estimate your reception. If responses should be restricted to your guest list, choose Premium private invitations.</p>
+</li>
+<li>
+<span class="m-step-number">03</span>
+<h3>Bring the reception together</h3>
+<p>Follow RSVPs and review your seating chart, tasks and financial commitments. Share planning with collaborators through Planne’s event access options.</p>
+</li>
+</ol>
+</section>
+<section class="m-premium m-wrap" id="premium">
+<div class="m-premium-intro">
+<p class="m-eyebrow">PLANNE PREMIUM</p>
+<h2>Start with the essentials.<br>Make room for more.</h2>
+<p>Choose the features that make sense for your celebration. Current plans and prices are available in the app.</p>
+</div>
+<div class="m-plan-comparison">
+<div>
+<h3>To get started, free</h3>
+<p>Local planning on your device and a basic public invitation with the name, date, location and RSVP.</p>
+</div>
+<div>
+<h3>To go further, Premium</h3>
+<p>Content sync, invitation customisation, private invitations and a guest photo album with QR uploads, plus the features and limits shown in the app.</p>
+</div>
+</div>
+</section>
+<section class="m-faq m-wrap">
+<div>
+<p class="m-eyebrow">GOOD TO KNOW</p>
+<h2>Before you begin.</h2>
+</div>
+<div>
+<details>
+<summary>Does the wedding website include online RSVP?<span aria-hidden="true">+</span>
+</summary>
+<p>Yes. The basic public invitation includes the event name, date, location and online RSVP. Guests respond in their browser and you follow responses in the app.</p>
+</details>
+<details>
+<summary>Can we personalise our wedding invitation?<span aria-hidden="true">+</span>
+</summary>
+<p>Yes, with Premium. Photos, styles, colours, fonts and messages help your invitation reflect the celebration. The free public invitation uses the standard design.</p>
+</details>
+<details>
+<summary>Can we organise wedding seating?<span aria-hidden="true">+</span>
+</summary>
+<p>Yes. Seating lives alongside your guest list in the app. Assign guests to tables and share table lookup by link or QR code according to your event access.</p>
+</details>
+</div>
+</section>
+<section class="m-occasions m-wrap" id="occasions">
+<div>
+<p class="m-eyebrow">EVERY OCCASION, A STORY</p>
+<h2>Your own way<br>to celebrate.</h2>
+</div>
+<nav aria-label="Types of celebration">
+<a href="/wedding" aria-current="page">
+<span>Weddings</span>
+<span aria-hidden="true">↗</span>
+</a>
+<a href="/birthday">
+<span>Birthdays</span>
+<span aria-hidden="true">↗</span>
+</a>
+<a href="/baby-shower">
+<span>Baby showers</span>
+<span aria-hidden="true">↗</span>
+</a>
+<a href="/quinceanera">
+<span>Quinceañeras</span>
+<span aria-hidden="true">↗</span>
+</a>
+<a href="/graduation">
+<span>Graduations</span>
+<span aria-hidden="true">↗</span>
+</a>
+</nav>
+</section>
+<section class="m-close">
+<div class="m-wrap">
+<p class="m-eyebrow">PLAN. INVITE. BE THERE.</p>
+<h2>Be there for your yes.<br>With the details in place.</h2>
+<a class="m-button" data-cta-location="footer" href="https://play.google.com/store/apps/details?id=com.planne.planne">Start planning our wedding<span aria-hidden="true">↗</span>
+</a>
+<p class="m-small">Available for Android on Google Play.</p>
+</div>
+</section>
+</main>
+<footer class="m-footer m-wrap">
+<div>
+<a class="m-brand" href="/" aria-label="Planne">
+<img src="/assets/brand/logo-64x64.png" width="36" height="36" alt="">
+<span>Planne</span>
+</a>
+<p>The care behind every celebration.</p>
+</div>
+<nav aria-label="Support and legal information">
+<a href="mailto:spestech01@gmail.com">Contact Planne</a>
+<a href="/privacy">Privacy</a>
+<a href="/terms">Terms</a>
+</nav>
+<p class="m-copyright">© 2026 Planne</p>
+</footer>
 
-    <section class="problem-section" id="problem" aria-labelledby="problem-title">
-      <div class="problem-inner">
-        <header class="problem-intro">
-          <p class="problem-context"><i data-lucide="circle-alert" aria-hidden="true"></i>Before the guest list settles</p>
-          <h2 id="problem-title">Planning a wedding should not feel like <em>spreadsheet chaos.</em></h2>
-          <p>You want to live the ceremony, not manage dozens of vendor messages and a guest list that changes every week.</p>
-        </header>
-        <div class="problem-list">
-          <article class="problem-item">
-            <i data-lucide="brain" aria-hidden="true"></i>
-            <div><h3>Too many vendors to track</h3><p>Catering, decor, photography, coordinator, music, each with its own deadline, deposit and outstanding balance.</p></div>
-          </article>
-          <article class="problem-item">
-            <i data-lucide="users" aria-hidden="true"></i>
-            <div><h3>Confirmations scattered everywhere</h3><p>A text here, a call there, a note from a relative, until the guest list no longer matches the seating chart.</p></div>
-          </article>
-          <article class="problem-item">
-            <i data-lucide="clock-3" aria-hidden="true"></i>
-            <div><h3>A countdown that keeps tightening</h3><p>Between the dress fitting, the tasting and the vendor meeting, every decision seems to compete for the same weekend.</p></div>
-          </article>
-          <p class="problem-bridge">The wedding can stay full of people. Organizing it does not have to be.</p>
-        </div>
-      </div>
-    </section>
-
-    <p class="event-note-strip">Free to start · <strong>invitation with RSVP</strong> · guests, vendors and deadlines in one place.</p>
-
-    <section class="section" id="features"><div class="section-inner">
-      <header class="section-heading"><p class="kicker">A real wedding, being organized right now</p><h2>See how Planne organizes Sarah and James's wedding.</h2><p>From the first guest list to the booked caterer. This is the same path Sarah and James follow to their big day.</p></header>
-      <figure class="event-photo"><img src="/assets/images/event-wedding.webp" alt="" loading="lazy"><figcaption>Every toast starts with a plan already in place.</figcaption></figure>
-      <div class="chapters">
-        <article class="chapter"><div class="chapter-copy"><p class="story-number">One · Guests</p><h3>Every guest, with a real answer.</h3><p>Sarah and James started with the list: 45 names, split by group, with who's already confirmed and who still needs to reply.</p></div>
-          <div class="story-list">
-            <div class="story-row"><span class="story-row-name">Emily Carter<em>Maid of honor · 1 plus-one</em></span><span class="story-status">confirmed</span></div>
-            <div class="story-row"><span class="story-row-name">Marcus Bennett<em>Best man</em></span><span class="story-status">confirmed</span></div>
-            <div class="story-row"><span class="story-row-name">Priya Anand<em>Bride's friend</em></span><span class="story-status is-waiting">waiting</span></div>
-          </div>
-        </article>
-
-        <article class="chapter"><div class="chapter-copy"><p class="story-number">Two · Invitation with RSVP</p><h3>The invite went out, and confirmations roll in on their own.</h3><p>The wedding's digital invitation has a cover photo, countdown and dress code, and every reply updates the guest list instantly, no crowded group chat needed.</p></div>
-          <div>
-            <svg class="story-motif" viewBox="0 0 72 72" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="27" cy="42" r="13"/><circle cx="45" cy="42" r="13"/><path d="M36 24c0-8 4-14 4-14s4 6 4 14"/><path d="M36 24c-3-5-3-10-1-13" stroke-linecap="round"/><path d="M36 24c3-5 3-10 1-13" stroke-linecap="round"/></svg>
-          <div class="story-highlight"><strong>38 of 45</strong><span>guests have already confirmed</span></div>
-            <p class="story-aside">"Priya Anand confirmed", just now, straight from the invite link.</p>
-          </div>
-        </article>
-
-        <article class="chapter"><div class="chapter-copy"><p class="story-number">Three · Budget</p><h3>Every vendor, with the right number at the right time.</h3><p>From catering to photography, Sarah and James see what's paid, what has a deposit down, and what's still open, without mixing it all into one spreadsheet.</p></div>
-          <div class="story-list">
-            <div class="story-row"><span class="story-row-name">Harborview Catering Co.<em>$28,000</em></span><span class="story-status">paid</span></div>
-            <div class="story-row"><span class="story-row-name">Flair Florals<em>$14,500</em></span><span class="story-status">deposit paid</span></div>
-            <div class="story-row"><span class="story-row-name">Bright Frame Photography<em>$9,000</em></span><span class="story-status is-waiting">open</span></div>
-          </div>
-        </article>
-
-        <article class="chapter"><div class="chapter-copy"><p class="story-number">Four · Tasks</p><h3>Always clear what's next before the dress fitting.</h3><p>Wedding tasks are ordered by deadline (from signing a contract to the ceremony rehearsal) so no decision catches Sarah and James off guard.</p></div>
-          <div class="story-list">
-            <div class="story-row"><span class="story-row-name">Stationery - invites and menus<em>June 19</em></span><span class="story-status is-waiting">overdue</span></div>
-            <div class="story-row"><span class="story-row-name">Bridal gown - second fitting<em>October 6</em></span><span class="story-status">in progress</span></div>
-            <div class="story-row"><span class="story-row-name">Civil ceremony - registry office<em>November 18</em></span><span class="story-status">in progress</span></div>
-          </div>
-        </article>
-      </div>
-    </div></section>
-
-    <section class="invite-showcase" id="invite" aria-labelledby="invite-title">
-      <div class="invite-showcase-wrap">
-        <header class="invite-showcase-intro">
-          <p class="invite-showcase-kicker">Digital invitation</p>
-          <h2 id="invite-title">One invitation, three ways to open it.</h2>
-          <p>Every Planne invitation carries the same date, venue and RSVP link, styled to match the wedding. Pick the mood that feels like Sarah and James, or find the one that feels like yours.</p>
-        </header>
-        <div class="invite-showcase-grid">
-          <article class="invite-mini">
-            <div class="invite-peek invite-peek-editorial">
-              <iframe src="/assets/invite-previews/foto-editorial.html?eyebrow=You%27re%20invited&amp;title=Sarah%20%26%20James&amp;date=Nov%2018%2C%202026&amp;venue=The%20Harborview%20Estate&amp;lang=en&amp;accent=b8895a&amp;photo=/assets/video/wedding-poster.webp" title="Prévia do convite digital: estilo Foto Editorial" loading="lazy" tabindex="-1" aria-hidden="true"></iframe>
-            </div>
-            <p class="invite-mini-label"><strong>Foto Editorial</strong><span>A full-bleed photo cover and magazine-style type, for couples who want the invite to feel like their engagement shoot.</span></p>
-          </article>
-          <article class="invite-mini">
-            <div class="invite-peek invite-peek-ilustrado">
-              <iframe src="/assets/invite-previews/ilustrado.html?eyebrow=You%27re%20invited&amp;title=Sarah%20%26%20James&amp;date=Nov%2018%2C%202026&amp;lang=en&amp;accent=b8895a&amp;photo=/assets/video/wedding-poster.webp" title="Prévia do convite digital: estilo Convite Ilustrado" loading="lazy" tabindex="-1" aria-hidden="true"></iframe>
-            </div>
-            <p class="invite-mini-label"><strong>Convite Ilustrado</strong><span>Soft watercolor and a hand-lettered name, with the date, venue and RSVP one tap away.</span></p>
-          </article>
-          <article class="invite-mini">
-            <div class="invite-peek invite-peek-gravado">
-              <iframe src="/assets/invite-previews/gravado.html?eyebrow=You%27re%20invited&amp;title=Sarah%20%26%20James&amp;date=Nov%2018%2C%202026&amp;venue=The%20Harborview%20Estate&amp;lang=en&amp;accent=b8895a&amp;photo=/assets/video/wedding-poster.webp" title="Prévia do convite digital: estilo Cartão Gravado" loading="lazy" tabindex="-1" aria-hidden="true"></iframe>
-            </div>
-            <p class="invite-mini-label"><strong>Cartão Gravado</strong><span>Deep emerald and gold foil, framed like an engraved card, for a wedding that leans formal.</span></p>
-          </article>
-        </div>
-        <p class="invite-showcase-note">Whichever style you pick, guests confirm through the same link, and every reply updates your Planne guest list instantly.</p>
-      </div>
-    </section>
-
-    <section class="section process" id="how-it-works"><div class="section-inner process-inner"><div class="process-intro"><p class="kicker">From the engagement to the "I do"</p><h2>Your wedding moves forward one decision at a time.</h2><p>You do not need to set everything up at once. Start with the essentials and complete the plan at your pace.</p></div><div class="steps"><article class="step"><span class="step-number">01</span><div><h3>Create the wedding</h3><p>Set the date, record your initial budget and invite whoever is helping you plan.</p></div></article><article class="step"><span class="step-number">02</span><div><h3>Add what you already know</h3><p>Include guests, booked vendors and tasks as decisions happen.</p></div></article><article class="step"><span class="step-number">03</span><div><h3>Send the invite and track it</h3><p>Share the RSVP invitation link and watch confirmations arrive in real time.</p></div></article></div></div></section>
-
-    <section class="section"><div class="section-inner privacy-grid"><div class="privacy-copy"><p class="kicker">Clarity in the details too</p><h2>Your wedding stays yours.</h2><p>Practical information should explain how the product works instead of becoming vague trust badges.</p></div><div class="privacy-list"><div class="privacy-item"><i data-lucide="wifi-off"></i><div><strong>Access everything offline</strong><span>Review saved guests and budget even without a connection, at a fitting or vendor visit.</span></div></div><div class="privacy-item"><i data-lucide="refresh-cw"></i><div><strong>Automatic synchronization</strong><span>Changes resume syncing when a connection is available.</span></div></div><div class="privacy-item"><i data-lucide="shield-check"></i><div><strong>Privacy explained</strong><span>Read how guest and vendor data is handled in the privacy policy.</span></div></div></div></div></section>
-
-    <section class="section" id="faq"><div class="section-inner faq-grid"><div><p class="kicker">Questions before planning your wedding</p><h2>Direct answers.</h2></div><div class="faq-list"><div class="faq-item"><button class="faq-question" type="button" aria-expanded="false">Can I send a wedding invitation with RSVP confirmations?<i data-lucide="plus"></i></button><p class="faq-answer">Yes. Create a digital invitation with a cover photo, countdown and RSVP, guests confirm through a link, and you track it all in the app.</p></div><div class="faq-item"><button class="faq-question" type="button" aria-expanded="false">Can I track the budget per vendor?<i data-lucide="plus"></i></button><p class="faq-answer">Yes. Record planned, booked and paid amounts separately per vendor, with the wedding total always visible.</p></div><div class="faq-item"><button class="faq-question" type="button" aria-expanded="false">Is Planne free for planning a wedding?<i data-lucide="plus"></i></button><p class="faq-answer">Yes. Planne is available to download free from Google Play, no subscription.</p></div><div class="faq-item"><button class="faq-question" type="button" aria-expanded="false">Is the app available for iPhone?<i data-lucide="plus"></i></button><p class="faq-answer">Planne is currently available for Android devices.</p></div></div></div></section>
-
-    <section class="final-cta"><div class="cta-inner"><p class="kicker">Your next decision can be simpler</p><h2>Start with what you already know about your wedding.</h2><p>Create the wedding, record the first details, and send the RSVP invitation as soon as you have a date.</p><a class="button button-dark" data-cta-location="final" href="https://play.google.com/store/apps/details?id=com.planne.planne" target="_blank" rel="noopener noreferrer">Organize my wedding free</a><small class="cta-reassurance">Free for Android · No credit card required</small><div class="cta-line"><span class="cta-dot"></span>Planning in progress</div></div></section>
-  </main>
-
-  <footer class="site-footer"><div class="footer-inner"><div><a class="brand" href="/"><img src="/assets/brand/logo-64x64.png" alt="" width="36" height="36"><span>Planne</span></a><p class="footer-copy">© 2026 Planne. Organize every wedding decision.</p></div><nav class="footer-links" aria-label="Footer links"><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a><a href="/">Every event</a><a href="/pt-br/casamento" data-language="pt-BR">Português</a><a href="https://www.linkedin.com/company/planneapp/" target="_blank" rel="noopener noreferrer" aria-label="Planne on LinkedIn" class="footer-social"><i data-lucide="linkedin"></i></a></nav></div></footer>
-  <script src="/assets/js/site-preferences.js"></script>
-</body>
-</html>
+</body></html>
