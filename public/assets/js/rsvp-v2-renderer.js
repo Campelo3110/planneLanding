@@ -119,7 +119,7 @@
     }
   }
   function setCover(url) {
-    const safe = typeof url === 'string' && /^(https:\/\/|data:image\/)/i.test(url) ? url : '';
+    const safe = typeof url === 'string' && /^(https:\/\/|data:image\/|\/assets\/)/i.test(url) ? url : '';
     const hero = sectionNodes.hero, frame = document.querySelector('.hero-photo'), img = frame.querySelector('img');
     hero.classList.toggle('no-cover', !safe); frame.hidden = !safe;
     if (lastCover !== safe) { lastCover = safe; if (safe) img.src = safe; else img.removeAttribute('src'); }

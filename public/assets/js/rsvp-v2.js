@@ -1,10 +1,42 @@
+const query = new URLSearchParams(window.location.search);
+const landingPreview = query.get('landing-preview');
 const runtimeScript = document.currentScript;
 window.__RSVP_ENDPOINT = runtimeScript?.dataset.endpoint || '';
-window.__rsvpToken = new URLSearchParams(window.location.search).get('token');
+window.__rsvpToken = query.get('token');
 const pathSlug = decodeURIComponent(location.pathname).replace(/^\/+|\/+$/g, '');
 window.__rsvpSlug = /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(pathSlug) ? pathSlug : '';
 window.__getAppCheckToken = async () => null;
 let currentEvent = {};
+const landingPreviewEvents = {
+  wedding: { palette: 'dourado', photo: '/assets/video/wedding-poster.webp', pt: { title: 'Camila & Rafael', location: 'Casa das Palmeiras, São Paulo' }, en: { title: 'Olivia & Noah', location: 'The Garden House, New York' } },
+  birthday: { palette: 'coral-tropical', photo: '/assets/video/birthday-poster.webp', pt: { title: '30 anos da Marina', location: 'Casa Aurora, Rio de Janeiro' }, en: { title: "Ethan's 30th", location: 'The Green Room, Austin' } },
+  'baby-shower': { palette: 'indigo', photo: '/assets/video/baby-shower-poster.webp', pt: { title: 'Chá da Sofia', location: 'Jardim Botânico, Curitiba' }, en: { title: 'Baby Sofia', location: 'The Conservatory, Seattle' } },
+  quinceanera: { palette: 'framboesa', photo: '/assets/video/quinceanera-poster.jpg', pt: { title: '15 anos da Laura', location: 'Casa Rosé, São Paulo' }, en: { title: "Sofia's quinceañera", location: 'Rose Hall, Miami' } },
+  graduation: { palette: 'grafite', photo: '/assets/video/graduation-poster.jpg', pt: { title: 'Formatura da Beatriz', location: 'Auditório Central, Belo Horizonte' }, en: { title: 'Class of 2026', location: 'The Assembly Hall, Boston' } },
+};
+function landingPreviewEvent() {
+  const model = landingPreviewEvents[landingPreview];
+  if (!model) return null;
+  const language = query.get('lang') === 'en' ? 'en' : 'pt';
+  const copy = model[language];
+  const style = ['foto-editorial', 'ilustrado', 'gravado'].includes(query.get('style')) ? query.get('style') : 'foto-editorial';
+  return {
+    eventTitle: copy.title,
+    eventDate: '2026-11-21T18:00:00',
+    language,
+    rsvpEnabled: true,
+    rsvpMode: 'publico',
+    rsvpAllowCompanions: true,
+    rsvpMaxCompanions: 2,
+    rsvpDefaultCountry: language === 'pt' ? 'BR' : 'US',
+    rsvpTemplateId: style,
+    rsvpPaletteId: model.palette,
+    rsvpCoverImageUrl: model.photo,
+    rsvpLocationInfo: copy.location,
+    rsvpOrganizerMessage: language === 'pt' ? 'Esperamos você para celebrar este momento especial.' : 'We hope you can join us for this special celebration.',
+    previewThumbnail: true,
+  };
+}
 const byId = id => document.getElementById(id);
 const tr = (pt, en) => (currentEvent.language || (navigator.language?.toLowerCase().startsWith('pt') ? 'pt' : 'en')) === 'en' ? en : pt;
 byId('inviteStatus').querySelector('.loading-copy').textContent = tr('Preparando seu convite','Preparing your invitation');
@@ -214,6 +246,16 @@ function loadingError(message) {
   retry.textContent = tr('Tentar novamente','Try again'); retry.onclick = () => location.reload(); status.append(retry);
 }
 (async () => {
+  const previewEvent = landingPreviewEvent();
+  if (previewEvent) {
+    currentEvent = previewEvent;
+    window.PlanneInvite.render(currentEvent, {preview: true, loadMap: false, animateEntrance: false});
+    byId('inviteStatus').hidden = true;
+    document.body.classList.remove('invite-loading');
+    document.querySelectorAll('[data-loading-inert]').forEach(element => { element.inert = false; element.removeAttribute('data-loading-inert'); });
+    form.querySelectorAll('input,select,button').forEach(control => { control.disabled = true; });
+    return;
+  }
   if (!window.__rsvpToken && !window.__rsvpSlug) { loadingError(tr('Convite não encontrado','Invitation not found')); return; }
   try {
     currentEvent = await callRsvpApi({action:'resolveEvent'});

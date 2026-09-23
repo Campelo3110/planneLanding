@@ -12,42 +12,6 @@ const events = [
   ['graduation', 'formatura', 'm-graduation', 'graduation', 'Formaturas', 'Graduations', 'graduation', 'graduation-poster.jpg'],
 ];
 
-// Cada exemplo reproduz um convite da própria ocasião. A cor vem de uma
-// paleta disponível no editor da Planne e a foto é o poster daquela celebração.
-// Assim, nenhuma rota acaba exibindo uma captura genérica ou só uma imagem.
-const invitationThemes = {
-  wedding: {
-    accent: '#B08D3E',
-    photo: '/assets/video/wedding-poster.webp',
-    ptTitle: 'Camila & Rafael',
-    enTitle: 'Olivia & Noah',
-  },
-  birthday: {
-    accent: '#E8623A',
-    photo: '/assets/video/birthday-poster.webp',
-    ptTitle: '30 anos da Marina',
-    enTitle: "Ethan's 30th",
-  },
-  'baby-shower': {
-    accent: '#2E3B52',
-    photo: '/assets/video/baby-shower-poster.webp',
-    ptTitle: 'Chá da Sofia',
-    enTitle: 'Baby Sofia',
-  },
-  quinceanera: {
-    accent: '#E23D5B',
-    photo: '/assets/video/quinceanera-poster.jpg',
-    ptTitle: '15 anos da Laura',
-    enTitle: "Sofia's quinceañera",
-  },
-  graduation: {
-    accent: '#2B2F36',
-    photo: '/assets/video/graduation-poster.jpg',
-    ptTitle: 'Formatura da Beatriz',
-    enTitle: 'Class of 2026',
-  },
-};
-
 const en = {
   wedding: ['Wedding website with RSVP & planning app | Planne', 'Create your wedding website and digital invitation with RSVP. Plan guests, seating, vendors and your wedding budget in Planne.', 'WEDDINGS WITH PLANNE', 'One yes.', 'Every detail, yours.', 'Your wedding website welcomes your guests. Planne helps you look after everything leading up to it: RSVPs, seating, tasks and your budget, together in the app.', 'Start planning our wedding', 'For the people you invite.', 'For the day you imagine.', 'From choosing a venue to the final RSVP, give each decision a place. Your guest list helps you plan the reception, while your budget keeps track of the commitments you have made.', 'Your wedding website is the first welcome.', 'For the two of you', 'Decisions, guests and budget in the app.', 'The first chapter of your wedding.', 'A reception planned person by person.', 'A place for every person', 'Organise guests and plus-ones in groups. Build your seating plan and follow every reply in one place.', 'Before you send the invitations', 'Agree on the essentials', 'Check the date, time and address guests should use.', 'Does the wedding website include online RSVP?', 'Yes. Guests respond in their browser and you follow responses in the app.', 'Can we personalise our wedding invitation?', 'Yes. Premium lets you customise photos, colours, fonts and messages.', 'Be there for your yes.'],
   birthday: ['Birthday invitations with RSVP & planning app | Planne', 'Create birthday invitations with RSVP and organise guests, tasks and budget in Planne.', 'BIRTHDAYS WITH PLANNE', 'Another year.', 'A celebration that feels like you.', 'Share a birthday invitation with RSVP, then keep guests, tasks and your budget clear in Planne.', 'Plan my birthday', 'For the people you gather.', 'For the birthday you want to enjoy.', 'Keep the details together before the music starts: who is coming, what is needed and what has already been arranged.', 'An invitation that sets the tone.', 'For the birthday host', 'Guests, tasks and budget in the app.', 'The party starts with the invitation.', 'A party with room for everyone.', 'Know who is joining', 'Organise guests and responses so the celebration feels considered from the first message.', 'Before you share the date', 'Set the essentials', 'Make the date, time and location easy for guests to find.', 'Does the birthday invitation include RSVP?', 'Yes. Guests can respond online without downloading the app.', 'Can I personalise my birthday invitation?', 'Yes. Premium includes photos, colours, fonts and messages.', 'Make this year memorable.'],
@@ -84,23 +48,20 @@ function page(event, locale) {
     return `<a href="${href}"${current}><span>${locale === 'pt' ? ptLabel : enLabel}</span><span aria-hidden="true">↗</span></a>`;
   }).join('\n');
   const screenshots = ['home', 'guests', 'budget', 'tasks'].map((name, index) => `<figure><figcaption><span>0${index + 1}</span><h3>${l.screen[index]}</h3></figcaption><a href="/assets/screenshots/${locale}/planne-${name}-light.webp" target="_blank" rel="noopener" aria-label="${l.enlarge}: ${l.screen[index]} (${locale === 'pt' ? 'abre em nova aba' : 'opens a new tab'})"><div class="m-app-shot"><img src="/assets/screenshots/${locale}/planne-${name}-light.webp" alt="${l.screen[index]}" width="1080" height="2400" loading="lazy" decoding="async"></div><span class="m-enlarge">${l.enlarge} <span aria-hidden="true">↗</span></span></a></figure>`).join('\n');
-  const invitationTheme = invitationThemes[key];
   const invitationImages = ['foto-editorial', 'ilustrado', 'gravado'].map((style) => {
     const styleName = style === 'foto-editorial' ? 'Editorial' : style === 'ilustrado' ? (locale === 'pt' ? 'Ilustrado' : 'Illustrated') : (locale === 'pt' ? 'Gravado' : 'Engraved');
     const previewParams = new URLSearchParams({
+      'landing-preview': key,
       lang: locale,
-      photo: invitationTheme.photo,
-      accent: invitationTheme.accent,
-      title: locale === 'pt' ? invitationTheme.ptTitle : invitationTheme.enTitle,
+      style,
     });
-    const preview = `<iframe src="/assets/invite-previews/${style}.html?${previewParams.toString().replaceAll('&', '&amp;')}" title="${locale === 'pt' ? `Exemplo de convite de ${ptName.toLowerCase()} no estilo ${styleName}` : `Example ${key} invitation in the ${styleName} style`}" loading="lazy"></iframe>`;
+    const preview = `<iframe src="/rsvp-v2?${previewParams.toString().replaceAll('&', '&amp;')}" title="${locale === 'pt' ? `Exemplo de convite de ${ptName.toLowerCase()} no estilo ${styleName}` : `Example ${key} invitation in the ${styleName} style`}" loading="lazy"></iframe>`;
     return `<figure><div class="m-invite-frame">${preview}</div><figcaption><h3>${styleName}</h3><span>${l.premium}</span></figcaption></figure>`;
   }).join('\n');
   const invitationPreviewParams = new URLSearchParams({
+    'landing-preview': key,
     lang: locale,
-    photo: invitationTheme.photo,
-    accent: invitationTheme.accent,
-    title: locale === 'pt' ? invitationTheme.ptTitle : invitationTheme.enTitle,
+    style: 'foto-editorial',
   });
   const video = key === 'baby-shower' ? '/assets/video/baby-shower.webm' : `/assets/video/${asset}.webm`;
   return `<!DOCTYPE html>
@@ -117,7 +78,7 @@ function page(event, locale) {
 <main id="content"><section class="m-film-hero"><img class="m-film-poster" src="/assets/video/${poster}" alt="" aria-hidden="true" width="1600" height="900" fetchpriority="high"><video class="m-film" muted loop playsinline preload="none" poster="/assets/video/${poster}" data-video-src="${video}" aria-hidden="true"></video><div class="m-film-shade" aria-hidden="true"></div><div class="m-wrap m-film-inner"><div class="m-hero-copy"><p class="m-eyebrow">${copy[2]}</p><h1>${copy[3]}<br><em>${copy[4]}</em></h1><p class="m-lead">${copy[5]}</p><a class="m-button" data-cta-location="hero" href="https://play.google.com/store/apps/details?id=com.planne.planne">${copy[6]}<span aria-hidden="true">↗</span></a><p class="m-small">${locale === 'pt' ? 'Comece gratuitamente no Android. Recursos Premium no app.' : 'Start for free on Android. Premium features in the app.'}</p></div><a class="m-film-cue" href="${slug}#experience">${l.cue}<span aria-hidden="true">↓</span></a></div><button class="m-film-control" type="button" aria-label="${l.video}"><span aria-hidden="true">Ⅱ</span><span data-film-label>${l.video}</span></button></section>
 <section class="m-statement m-wrap" id="experience"><p class="m-eyebrow">${locale === 'pt' ? 'O QUE IMPORTA, JUNTO' : 'WHAT MATTERS, TOGETHER'}</p><h2>${copy[7]}<br><em>${copy[8]}</em></h2><p>${copy[9]}</p></section>
 <section class="m-invitation" id="invitation"><div class="m-wrap m-invitation-inner"><div class="m-invitation-copy"><p class="m-eyebrow">${locale === 'pt' ? 'CONVITE DIGITAL + RSVP' : 'DIGITAL INVITATION + RSVP'}</p><h2>${copy[10]}</h2><p>${locale === 'pt' ? 'Compartilhe data, endereço e RSVP online em um link. Com o Premium, fotos, cores, fontes, mensagens e convites privados acompanham o estilo da sua celebração.' : 'Share the date, address and online RSVP in one link. With Premium, photos, colours, fonts, messages and private invitations reflect your celebration.'}</p><p class="m-note">${l.note}</p></div><div class="m-invitation-editorial"><div><span class="m-editorial-n">01</span><h3>${l.guest}</h3><p>${l.guestText}</p></div><div><span class="m-editorial-n">02</span><h3>${copy[11]}</h3><p>${copy[12]}</p></div></div></div></section>
-<section class="m-invite-showcase m-wrap" id="invitation-examples"><div class="m-photo-heading"><div><p class="m-eyebrow">${l.examples}</p><h2>${copy[13]}</h2></div><p>${locale === 'pt' ? 'Três estilos reais da Planne para uma celebração que tem o seu jeito.' : 'Three real Planne styles for a celebration that feels like yours.'}</p></div><p class="m-swipe-hint">${l.swipe}</p><div class="m-invite-shots" tabindex="0" role="region" aria-label="${l.styles}">${invitationImages}</div><div class="m-preview-bottom"><p class="m-showcase-note">${l.note}</p><a class="m-preview-open" href="/assets/invite-previews/foto-editorial.html?${invitationPreviewParams.toString().replaceAll('&', '&amp;')}" target="_blank" rel="noopener">${locale === 'pt' ? 'Abrir prévia do convite (nova aba)' : 'Open invitation preview (new tab)'} <span aria-hidden="true">↗</span></a></div></section>
+<section class="m-invite-showcase m-wrap" id="invitation-examples"><div class="m-photo-heading"><div><p class="m-eyebrow">${l.examples}</p><h2>${copy[13]}</h2></div><p>${locale === 'pt' ? 'Três estilos reais da Planne para uma celebração que tem o seu jeito.' : 'Three real Planne styles for a celebration that feels like yours.'}</p></div><p class="m-swipe-hint">${l.swipe}</p><div class="m-invite-shots" tabindex="0" role="region" aria-label="${l.styles}">${invitationImages}</div><div class="m-preview-bottom"><p class="m-showcase-note">${l.note}</p><a class="m-preview-open" href="/rsvp-v2?${invitationPreviewParams.toString().replaceAll('&', '&amp;')}" target="_blank" rel="noopener">${locale === 'pt' ? 'Abrir prévia do convite (nova aba)' : 'Open invitation preview (new tab)'} <span aria-hidden="true">↗</span></a></div></section>
 <section class="m-app-showcase m-wrap" id="app"><div class="m-photo-heading"><div><p class="m-eyebrow">${l.app}</p><h2>${br(l.inside)}</h2></div><p>${l.appText}</p></div><div class="m-app-shots">${screenshots}</div></section>
 <section class="m-planning m-wrap"><div class="m-planning-heading"><p class="m-eyebrow">${l.behind}</p><h2>${copy[14]}</h2></div><div class="m-planning-layout"><div class="m-feature-list"><article><span class="m-feature-number">01</span><div><h3>${copy[15]}</h3><p>${copy[16]}</p></div></article><article><span class="m-feature-number">02</span><div><h3>${locale === 'pt' ? 'Escolhas e pagamentos' : 'Choices and payments'}</h3><p>${locale === 'pt' ? 'Mantenha tarefas, fornecedores e orçamento juntos para decidir com clareza.' : 'Keep tasks, vendors and budget together to make each decision clearly.'}</p></div></article><article><span class="m-feature-number">03</span><div><h3>${locale === 'pt' ? 'Memórias compartilhadas' : 'Shared memories'}</h3><p>${locale === 'pt' ? 'O álbum Premium reúne fotos enviadas pelos convidados por QR code.' : 'The Premium album gathers guest photo uploads through a QR code.'}</p></div></article></div></div></section>
 <section class="m-guide m-wrap"><div><p class="m-eyebrow">${l.guide}</p><h2>${copy[17]}</h2></div><ol><li><span class="m-step-number">01</span><h3>${copy[18]}</h3><p>${copy[19]}</p></li><li><span class="m-step-number">02</span><h3>${locale === 'pt' ? 'Organize as pessoas' : 'Organise the people'}</h3><p>${locale === 'pt' ? 'Inclua convidados e acompanhantes para planejar a celebração com mais segurança.' : 'Add guests and plus-ones so the celebration is planned around real people.'}</p></li><li><span class="m-step-number">03</span><h3>${locale === 'pt' ? 'Acompanhe os RSVPs' : 'Follow the RSVPs'}</h3><p>${locale === 'pt' ? 'As respostas ajudam a confirmar os próximos detalhes.' : 'Responses help you confirm the next details.'}</p></li></ol></section>
