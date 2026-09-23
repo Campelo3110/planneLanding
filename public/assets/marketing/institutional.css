@@ -294,6 +294,7 @@
 .m-invite-shots>figure:nth-child(2){margin-top:36px}
 .m-invite-frame{border:1px solid #e1dcd1;overflow:hidden;border-radius:16px;background:#f6f0e8;box-shadow:0 16px 45px -32px #47352566}
 .m-invite-frame img{width:100%;height:auto}
+.m-invite-frame iframe{display:block;width:100%;aspect-ratio:420/1040;border:0;background:#f8fafc}
 .m-invite-shots figcaption{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-top:19px}
 .m-invite-shots figcaption h3{font-size:1.05rem;color:var(--ink)}
 .m-invite-shots figcaption>span{font-size:.63rem}
