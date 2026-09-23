@@ -51,7 +51,6 @@
     html { scroll-behavior: smooth; }
     body {
       margin: 0;
-      min-width: 320px;
       background: var(--paper);
       color: var(--ink);
       font: 400 1rem/1.55 var(--body);
@@ -315,6 +314,23 @@
       .summary-grid { margin-inline: 1.5rem; padding-inline: 0; }
       .summary-item { padding-block: .75rem; }
       .mobile-rsvp { left: 1rem; right: 1rem; text-align: center; bottom: 0; border-radius: 4px 4px 0 0; padding-bottom: env(safe-area-inset-bottom); }
+    }
+    /* Previews incorporados podem ser mais estreitos que um celular. O convite
+       continua legível e rola apenas na vertical, sem cortar ações ou endereços. */
+    @media (max-width: 319px) {
+      :root { --space-4: .875rem; --space-5: 1rem; --space-6: 1.25rem; }
+      html, body { width: 100%; max-width: 100%; overflow-x: clip; }
+      .site-header { padding-inline: var(--space-4); }
+      .site-nav { font-size: .72rem; }
+      .site-nav a { min-height: 38px; }
+      .hero, .section, .practical-inner, .rsvp-wrap { padding-inline: var(--space-4); }
+      .hero-actions { display: grid; grid-template-columns: 1fr; }
+      .hero-actions .button { width: 100%; padding-inline: var(--space-3); }
+      .hero-meta, .summary-item dd, .venue-copy address, .detail p, .faq-answer { overflow-wrap: anywhere; }
+      .summary-grid { margin-inline: var(--space-4); }
+      .timeline-item { grid-template-columns: 1fr; gap: var(--space-2); }
+      .attendance-options { grid-template-columns: 1fr; }
+      .section-divider { gap: 10px; }
     }
     /* Ornamentos vetoriais locais: acompanham a cor e o modelo do convite. */
     .ornament-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
