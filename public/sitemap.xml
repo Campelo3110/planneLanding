@@ -10,9 +10,9 @@
   </url>
 
   <url>
-    <loc>https://planneapp.com/pt-br</loc>
+    <loc>https://planneapp.com/pt-br/</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://planneapp.com/" />
-    <xhtml:link rel="alternate" hreflang="pt-br" href="https://planneapp.com/pt-br" />
+    <xhtml:link rel="alternate" hreflang="pt-br" href="https://planneapp.com/pt-br/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://planneapp.com/" />
   </url>
 

@@ -1,6 +1,6 @@
-@font-face{font-family:Planne Display;src:url('/assets/marketing/poppins-medium.ttf') format('truetype');font-weight:500;font-display:swap}
-@font-face{font-family:Planne Text;src:url('/assets/marketing/poppins-regular.ttf') format('truetype');font-weight:400;font-display:swap}
-@font-face{font-family:Planne Signature;src:url('/assets/fonts/PatuaOne-Regular.ttf') format('truetype');font-weight:400;font-display:swap}
+@font-face{font-family:Planne Display;src:url('/assets/marketing/poppins-medium.woff2') format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:Planne Text;src:url('/assets/marketing/poppins-regular.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:Planne Signature;src:url('/assets/fonts/PatuaOne-Regular.woff2') format('woff2');font-weight:400;font-display:swap}
 /* This sheet is loaded only by the acquisition-page allowlist. No functional imports. */
 .planne-institutional{--paper:#f8fafc;--ink:#111827;--muted:#53636a;--brand:#13b8a7;--deep:#075e57;--mist:#f0fdfa;--line:#ccdcd9;margin:0;color:var(--ink);background:var(--paper);font-family:Planne Text,sans-serif;font-size:16px;line-height:1.75;-webkit-font-smoothing:antialiased}
 .planne-institutional *{box-sizing:border-box}
@@ -34,6 +34,10 @@
 .m-button:hover{background:#034a44;text-decoration:none!important;transform:translateY(-2px)}
 .m-button span{font-size:1.25rem}
 .m-hero-copy .m-button{margin-top:32px}
+.m-hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
+.m-hero-copy .m-hero-actions .m-button{margin-top:0}
+.m-button-secondary{background:transparent!important;color:var(--deep)!important;border-color:currentColor!important}
+.m-button-secondary:hover{background:#e7f3f0!important}
 .m-small{font-size:.66rem;color:var(--muted);margin-top:14px!important;max-width:48ch;line-height:1.7}
 .m-product-stage{position:relative;background:#e2f2ef;padding:24px 36px 20px;min-width:0}
 .m-stage-top{display:flex;justify-content:space-between;align-items:center;font-family:Planne Display,sans-serif;font-size:.53rem;letter-spacing:.08em;color:var(--deep);margin-bottom:20px}
@@ -46,6 +50,14 @@
 .m-statement{padding-block:76px 92px;border-top:1px solid var(--line);display:grid;grid-template-columns:1.65fr 1fr;column-gap:80px}
 .m-statement>.m-eyebrow{grid-column:1/-1;margin-bottom:28px}
 .m-statement>p:last-child{max-width:48ch;color:var(--muted);font-size:.9rem;align-self:end}
+.m-occasion-focus{padding-block:72px 86px;border-top:1px solid var(--line);display:grid;grid-template-columns:1fr 1.5fr;gap:80px}
+.m-occasion-focus-heading .m-eyebrow{margin-bottom:24px}
+.m-occasion-focus-heading h2{max-width:15ch}
+.m-occasion-focus-heading>p:last-child{max-width:48ch;color:var(--muted);font-size:.9rem;margin-top:24px!important}
+.m-occasion-focus dl{margin:0;border-top:1px solid var(--line)}
+.m-occasion-focus dl>div{display:grid;grid-template-columns:minmax(116px,.45fr) 1fr;gap:30px;padding:25px 0;border-bottom:1px solid var(--line)}
+.m-occasion-focus dt{font-family:Planne Display,sans-serif;font-size:1.05rem;letter-spacing:-.02em}
+.m-occasion-focus dd{margin:0;color:var(--muted);font-size:.84rem;line-height:1.8}
 .m-invitation{background:var(--deep);color:var(--paper)}
 .m-invitation-inner{display:grid;grid-template-columns:1.1fr 1fr;gap:110px;padding-block:96px}
 .m-invitation .m-eyebrow{color:#8be5d9;margin-bottom:25px}
@@ -241,6 +253,8 @@
 .m-film-hero .m-lead{color:#fff;font-size:1rem;line-height:1.8;max-width:48ch;margin-top:28px!important}
 .m-film-hero .m-button{background:#f6faf7;color:#0c3c32!important;margin-top:30px;border:1px solid #fff;box-shadow:none}
 .m-film-hero .m-button:hover{background:#d3f4e7}
+.m-film-hero .m-button-secondary{background:transparent!important;color:#fff!important;border-color:#fff!important}
+.m-film-hero .m-button-secondary:hover{background:#ffffff1c!important}
 .m-film-hero .m-small{color:#fff;max-width:47ch;font-size:.68rem}
 .m-film-control{position:absolute;right:40px;bottom:30px;display:inline-flex;gap:10px;align-items:center;min-height:44px;border:1px solid #fff9;background:#10271fd9;color:white!important;border-radius:30px;padding:8px 18px;font-size:.67rem;z-index:2}
 .m-film-control[hidden]{display:none}
@@ -256,6 +270,7 @@
 .m-wedding .m-film-hero .m-button{background:#f6e9d8;border-color:#f6e9d8;color:#39291c!important}
 .m-quince .m-film-hero .m-button{background:#f4e1e8;border-color:#f4e1e8;color:#39222d!important}
 .m-birthday .m-film-hero .m-button{background:#ffecdf;border-color:#ffecdf;color:#442919!important}
+.m-wedding .m-film-hero .m-button-secondary,.m-birthday .m-film-hero .m-button-secondary,.m-quince .m-film-hero .m-button-secondary,.m-graduation .m-film-hero .m-button-secondary,.m-baby .m-film-hero .m-button-secondary{background:transparent!important;color:#fff!important;border-color:#fff!important}
 .m-birthday .m-film-hero h1{font-family:Planne Display,sans-serif;font-size:clamp(3.8rem,5.9vw,6rem);line-height:1.06;letter-spacing:-.055em}
 .m-birthday .m-film-hero h1 em{font-family:Planne Display,sans-serif;font-style:normal}
 .m-baby .m-film-hero h1{max-width:14ch}
@@ -287,6 +302,7 @@
 .m-close h2{font-family:Planne Editorial,serif;font-size:clamp(3.3rem,5.2vw,5.5rem);line-height:1.06;letter-spacing:-.025em}
 @media(max-width:1050px){.m-event-top a{padding-inline:17px}.m-living-hero{gap:36px;min-height:640px}.m-living-stage{min-height:470px}.m-living-phone{width:180px}.m-living-phone .m-screen{height:350px}.m-living-photo{right:20px}.m-living-stage figcaption{max-width:8ch;left:0}.m-film-cue{left:32px}.m-film-inner{padding-block:60px 100px}.m-film-hero .m-hero-copy{max-width:650px}.m-film-hero h1{font-size:6rem}.m-photo-heading{gap:50px}.m-photo-link{min-height:220px}.m-photo-link strong{font-size:1.1rem}}
 @media(max-width:760px){.m-event-top-inner{justify-content:flex-start;gap:4px;padding:7px 12px}.m-event-top a{min-height:36px;font-size:.66rem;padding:7px 14px}.m-header{min-height:78px}.m-living-hero{display:grid;grid-template-columns:1fr;gap:36px;padding-block:40px 48px;min-height:0}.m-living-hero h1{font-size:clamp(2.8rem,10.5vw,4.4rem)}.m-living-stage{min-height:440px;margin-inline:8px!important}.m-living-photo{inset:0 22px 75px 0;border-radius:140px 140px 22px 22px}.m-living-phone{width:175px;right:0;bottom:0;transform:rotate(4deg);padding:5px;border-radius:25px}.m-living-phone .m-screen{height:338px;border-radius:20px}.m-living-stage figcaption{font-size:1.45rem;bottom:14px;max-width:9ch;left:0}.m-photo-occasions{padding-block:12px 45px}.m-photo-heading{display:block;margin-bottom:28px}.m-photo-heading>p{font-size:.85rem;margin-top:20px;max-width:none}.m-photo-heading h2{font-size:2.5rem}.m-photo-links{grid-template-columns:1fr 1fr;gap:12px}.m-photo-link,.m-photo-link:nth-child(n+4){grid-column:auto;min-height:195px;border-radius:14px}.m-photo-link:first-child{grid-column:1/-1;min-height:240px}.m-photo-link>span{inset:auto 14px 14px;gap:5px}.m-photo-link strong{font-size:.87rem}.m-photo-link>span>span{width:26px;height:26px;font-size:1rem;flex-shrink:0}.m-film-hero{min-height:700px;max-height:none;min-height:max(690px,calc(100svh - 130px));align-items:flex-start}.m-film-poster,.m-film{object-position:60% center}.m-film-shade{background:linear-gradient(90deg,#091b15cc,#091b1599),linear-gradient(0deg,#091b1544,transparent 40%)}.m-film-inner{padding-block:58px 120px}.m-film-hero .m-hero-copy{max-width:100%}.m-film-hero .m-eyebrow{font-size:.61rem;letter-spacing:.13em;margin-bottom:26px}.m-film-hero h1,.m-graduation .m-film-hero h1{font-size:clamp(3.7rem,13vw,5.5rem);letter-spacing:-.04em;line-height:1.01}.m-film-hero .m-lead{font-size:.91rem;line-height:1.75;max-width:44ch;margin-top:24px!important}.m-film-hero .m-small{font-size:.65rem;max-width:42ch}.m-film-hero .m-button{margin-top:27px}.m-film-control{right:20px;bottom:22px;padding:7px 13px;font-size:.63rem}.m-film-cue{left:20px;bottom:30px;font-size:.6rem;line-height:1.6;max-width:42%;gap:10px}.m-birthday .m-film-hero h1{font-size:clamp(3.1rem,10vw,4.4rem)}.m-baby .m-film-hero h1{max-width:12ch}.m-statement{padding-block:46px 50px}.planne-institutional:not(.m-home) .m-statement h2{font-size:2.8rem}.m-close h2{font-size:3.4rem}.m-premium{border-radius:18px}.m-app-figure{border-radius:18px}}
+@media(max-width:760px){.m-hero-actions{margin-top:27px;gap:10px}.m-occasion-focus{grid-template-columns:1fr;gap:32px;padding-block:50px 58px}.m-occasion-focus-heading>p:last-child{font-size:.85rem;max-width:65ch}.m-occasion-focus dl>div{grid-template-columns:1fr;gap:8px;padding-block:20px}}
 @media(max-width:359px){.m-living-stage{min-height:405px}.m-living-phone{width:155px}.m-living-phone .m-screen{height:310px}.m-living-stage figcaption{font-size:1.3rem;max-width:8ch}.m-film-hero h1,.m-graduation .m-film-hero h1{font-size:3.6rem}.m-birthday .m-film-hero h1{font-size:2.85rem}.m-film-hero .m-lead{font-size:.86rem}.m-film-inner{padding-top:44px}.m-photo-link strong{font-size:.75rem}.m-photo-link>span>span{display:none}.m-photo-link,.m-photo-link:nth-child(n+4){min-height:180px}}
 @media(prefers-reduced-motion:no-preference){.m-living-phone{animation:planne-phone-enter .9s ease-out both}@keyframes planne-phone-enter{from{opacity:.5;translate:0 20px}to{opacity:1;translate:0 0}}}
 .m-invite-showcase,.m-app-showcase{padding-block:80px 85px}
@@ -341,3 +357,36 @@
 @media(max-width:760px){.m-invite-showcase,.m-app-showcase{padding-block:48px}.m-invite-shots{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:18px;padding:0 3px 18px;scrollbar-width:thin;scrollbar-color:#8bbbac transparent}.m-invite-shots>figure{flex:0 0 82%;min-width:0;scroll-snap-align:center}.m-invite-shots>figure:nth-child(2){margin-top:0}.m-invite-shots figcaption{display:flex;margin-top:14px}.m-invite-shots figcaption>span{font-size:.57rem}.m-invite-frame{border-radius:12px}.m-preview-bottom{display:block;margin-top:22px}.m-showcase-note{font-size:.7rem}.m-preview-open{margin-top:20px;width:fit-content;font-size:.77rem}.m-example-more{font-size:.78rem}.m-example-links{gap:10px}.m-example-links a{font-size:.7rem;padding:10px 13px}.m-app-shots{grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 16px}.m-app-shots figure:nth-child(n){padding-top:0}.m-app-shots h3{font-size:.75rem}.m-app-shots figcaption{align-items:flex-start;margin-bottom:14px;gap:7px}.m-app-shot{border-width:3px;border-radius:15px}.m-enlarge{font-size:.64rem}.m-feature-list{grid-template-columns:1fr;gap:28px}.m-feature-list article,.m-feature-list article:first-child,.m-feature-list article:last-child{padding-top:22px}.m-feature-number{margin-bottom:10px}.m-planning{padding-block:10px 50px}.m-feature-list article p{font-size:.85rem}}
 .m-swipe-hint{display:none}
 @media(max-width:760px){.m-swipe-hint{display:block;font-size:.7rem;color:var(--muted);margin-bottom:16px!important}}
+/* Primary actions use the same Planne green and high-contrast white label as the app. */
+.planne-institutional .m-button:not(.m-button-secondary){background:#13b8a7;color:#fff!important;border-color:#13b8a7;box-shadow:0 8px 24px -18px #075e57}
+.planne-institutional .m-button:not(.m-button-secondary):hover{background:#0aa696;color:#fff!important}
+.m-invite-open{display:inline-flex;align-items:center;justify-content:space-between;gap:12px;min-height:44px;margin-top:12px;color:#075e57!important;font-family:Planne Display,sans-serif;font-size:.72rem;line-height:1.35;border-bottom:1px solid #9ccfc1}
+.m-invite-open:hover{color:#034a44!important;text-decoration:none!important;border-bottom-color:currentColor}
+.m-invite-open span{font-size:1rem;line-height:1}
+.m-invite-controls{display:none}
+@media(max-width:760px){.m-invite-shots{scrollbar-width:none;-ms-overflow-style:none}.m-invite-shots::-webkit-scrollbar{display:none}.m-invite-controls{display:flex;align-items:center;justify-content:space-between;max-width:840px;margin:14px auto 0;gap:12px}.m-invite-controls button{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-width:44px;min-height:44px;padding:10px 14px;border:1px solid #b8d8d1;border-radius:12px;background:#f8fafc;color:#075e57;font:500 .7rem/1.2 Planne Display,sans-serif;transition:background .2s,border-color .2s,color .2s}.m-invite-controls button:hover:not(:disabled){background:#e2f3ef;border-color:#13b8a7;text-decoration:none}.m-invite-controls button:disabled{opacity:.42;cursor:not-allowed}.m-invite-position{min-width:52px;text-align:center;color:var(--muted);font-size:.69rem;font-variant-numeric:tabular-nums}.m-invite-open{margin-top:10px}}
+
+/* The public site shares the dark surfaces and text contrast used by the Planne app. */
+.m-theme-toggle{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-width:44px;min-height:44px;padding:9px 12px;border:1px solid var(--line);border-radius:12px;background:transparent;color:var(--ink);font:500 .68rem/1.2 Planne Display,sans-serif}
+.m-theme-toggle svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.m-theme-toggle:hover{background:var(--mist)}
+.m-dark{--paper:#101826;--ink:#e6eaf0;--muted:#9aa4b2;--deep:#13b8a7;--mist:#162033;--line:#233044;background:#101826;color:#e6eaf0}
+.m-dark .m-event-top{background:#162033;border-color:#233044}
+.m-dark .m-event-top a{color:#b9e7df}
+.m-dark .m-event-top a:hover,.m-dark .m-event-top a[aria-current]{background:#13b8a7;color:#101826}
+.m-dark .m-product-stage,.m-dark .m-living-phone,.m-dark .m-app-figure,.m-dark .m-premium,.m-dark .m-event-art,.m-dark .m-baby .m-event-art,.m-dark .m-graduation .m-event-art{background:#162033}
+.m-dark .m-screen,.m-dark .m-invite-frame{border-color:#314258;background:#162033;box-shadow:none}
+.m-dark .m-invite-frame iframe{background:#162033}
+.m-dark .m-invitation,.m-dark.m-wedding .m-invitation,.m-dark.m-birthday .m-invitation,.m-dark.m-baby .m-invitation,.m-dark.m-quince .m-invitation,.m-dark.m-graduation .m-invitation{background:#162033;color:#e6eaf0}
+.m-dark .m-invitation .m-eyebrow,.m-dark .m-invitation .m-editorial-n,.m-dark .m-invitation-copy>p:not(.m-eyebrow),.m-dark .m-invitation-editorial p{color:#b9e7df}
+.m-dark .m-invitation .m-note,.m-dark .m-invitation-editorial>div{border-color:#314258}
+.m-dark .m-close{background:#162033}
+.m-dark .m-app-shot{border-color:#233044;box-shadow:none}
+.m-dark .m-invite-open,.m-dark .m-preview-open,.m-dark .m-example-links a,.m-dark .m-enlarge{color:#7ee2d5!important}
+.m-dark .m-invite-open{border-bottom-color:#456274}
+.m-dark .m-invite-controls button{background:#162033;color:#b9e7df;border-color:#314258}
+.m-dark .m-invite-controls button:hover:not(:disabled){background:#233044;border-color:#13b8a7}
+.m-dark .m-button-secondary{color:#7ee2d5!important;border-color:#7ee2d5!important}
+.m-dark .m-button-secondary:hover,.m-dark .m-theme-toggle:hover{background:#233044!important}
+.m-dark .m-theme-toggle{border-color:#314258;color:#e6eaf0}
+@media(max-width:760px){.m-theme-toggle{padding:9px;min-width:44px}.m-theme-toggle [data-theme-label]{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}}

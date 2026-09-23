@@ -1,0 +1,22 @@
+# Planne
+> Planne is an Android event-planning app that pairs a shareable event website and browser-based RSVP with planning tools for the event host.
+
+## Public pages
+- [Planne home](https://planneapp.com/): Event websites, digital invitations, RSVP, guest planning, tasks and budgets.
+- [Planne em português](https://planneapp.com/pt-br/): Página principal em português do Brasil.
+- [Wedding planning](https://planneapp.com/wedding): Wedding website, invitation and RSVP with planning tools.
+- [Casamento](https://planneapp.com/pt-br/casamento): Site de casamento, convite e RSVP em português.
+- [Birthday invitations](https://planneapp.com/birthday): Birthday invitation and RSVP planning.
+- [Baby shower invitations](https://planneapp.com/baby-shower): Baby shower invitation and RSVP planning.
+- [Quinceañera invitations](https://planneapp.com/quinceanera): Quinceañera invitation and RSVP planning.
+- [Graduation invitations](https://planneapp.com/graduation): Graduation invitation and RSVP planning.
+
+## Key facts
+- Guests can view an invitation and respond through their browser; they do not need the app.
+- A basic public invitation with RSVP is available. Premium features are managed in the Android app.
+- Premium features include visual customisation, private invitations, content sync and guest photo uploads by QR code.
+
+## Official product
+- [Google Play listing](https://play.google.com/store/apps/details?id=com.planne.planne): Planne for Android.
+- [Privacy policy](https://planneapp.com/privacy): Privacy information.
+- [Terms](https://planneapp.com/terms): Terms of use.

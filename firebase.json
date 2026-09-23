@@ -78,7 +78,7 @@
       }
     ],
     "rewrites": [
-      { "source": "**", "destination": "/rsvp-v2.html" }
+      { "source": "/*", "destination": "/rsvp-v2.html" }
     ]
   }
 }

@@ -4,15 +4,18 @@ const runtimeScript = document.currentScript;
 window.__RSVP_ENDPOINT = runtimeScript?.dataset.endpoint || '';
 window.__rsvpToken = query.get('token');
 const pathSlug = decodeURIComponent(location.pathname).replace(/^\/+|\/+$/g, '');
-window.__rsvpSlug = /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(pathSlug) ? pathSlug : '';
+// The renderer itself lives at /rsvp-v2.  A token URL must never send that
+// technical route as a custom invitation slug, otherwise the API resolves the
+// slug first and reports a valid token as not found.
+window.__rsvpSlug = !window.__rsvpToken && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(pathSlug) && pathSlug !== 'rsvp-v2' ? pathSlug : '';
 window.__getAppCheckToken = async () => null;
 let currentEvent = {};
 const landingPreviewEvents = {
-  wedding: { palette: 'dourado', photo: '/assets/video/wedding-poster.webp', pt: { title: 'Camila & Rafael', location: 'Casa das Palmeiras, São Paulo' }, en: { title: 'Olivia & Noah', location: 'The Garden House, New York' } },
-  birthday: { palette: 'coral-tropical', photo: '/assets/video/birthday-poster.webp', pt: { title: '30 anos da Marina', location: 'Casa Aurora, Rio de Janeiro' }, en: { title: "Ethan's 30th", location: 'The Green Room, Austin' } },
-  'baby-shower': { palette: 'indigo', photo: '/assets/video/baby-shower-poster.webp', pt: { title: 'Chá da Sofia', location: 'Jardim Botânico, Curitiba' }, en: { title: 'Baby Sofia', location: 'The Conservatory, Seattle' } },
-  quinceanera: { palette: 'framboesa', photo: '/assets/video/quinceanera-poster.jpg', pt: { title: '15 anos da Laura', location: 'Casa Rosé, São Paulo' }, en: { title: "Sofia's quinceañera", location: 'Rose Hall, Miami' } },
-  graduation: { palette: 'grafite', photo: '/assets/video/graduation-poster.jpg', pt: { title: 'Formatura da Beatriz', location: 'Auditório Central, Belo Horizonte' }, en: { title: 'Class of 2026', location: 'The Assembly Hall, Boston' } },
+  wedding: { palette: 'dourado', photo: '/assets/video/wedding-poster.webp', pt: { title: 'Camila & Rafael', location: 'Casa das Caldeiras, Av. Francisco Matarazzo, 2000, Água Branca, São Paulo - SP, 05001-400' }, en: { title: 'Olivia & Noah', location: 'The Foundry, 42-38 9th Street, Long Island City, NY 11101' } },
+  birthday: { palette: 'coral-tropical', photo: '/assets/video/birthday-poster.webp', pt: { title: '30 anos da Marina', location: 'Museu do Amanhã, Praça Mauá, 1, Centro, Rio de Janeiro - RJ, 20081-240' }, en: { title: "Ethan's 30th", location: 'Lady Bird Johnson Wildflower Center, 4801 La Crosse Avenue, Austin, TX 78739' } },
+  'baby-shower': { palette: 'indigo', photo: '/assets/video/baby-shower-poster.webp', pt: { title: 'Chá da Sofia', location: 'Jardim Botânico de Curitiba, Rua Engenheiro Ostoja Roguski, s/n, Jardim Botânico, Curitiba - PR, 80210-390' }, en: { title: 'Baby Sofia', location: 'The Conservatory at Waterworks, 250 North 24th Street, Philadelphia, PA 19103' } },
+  quinceanera: { palette: 'framboesa', photo: '/assets/video/quinceanera-poster.jpg', pt: { title: '15 anos da Laura', location: 'Theatro Municipal de São Paulo, Praça Ramos de Azevedo, s/n, República, São Paulo - SP, 01037-010' }, en: { title: "Sofia's quinceañera", location: 'Vizcaya Museum and Gardens, 3251 South Miami Avenue, Miami, FL 33129' } },
+  graduation: { palette: 'grafite', photo: '/assets/video/graduation-poster.jpg', pt: { title: 'Formatura da Beatriz', location: 'Theatro Municipal de São Paulo, Praça Ramos de Azevedo, s/n, República, São Paulo - SP, 01037-010' }, en: { title: 'Class of 2026', location: 'Boch Center Wang Theatre, 270 Tremont Street, Boston, MA 02116' } },
 };
 function landingPreviewEvent() {
   const model = landingPreviewEvents[landingPreview];
@@ -20,6 +23,7 @@ function landingPreviewEvent() {
   const language = query.get('lang') === 'en' ? 'en' : 'pt';
   const copy = model[language];
   const style = ['foto-editorial', 'ilustrado', 'gravado'].includes(query.get('style')) ? query.get('style') : 'foto-editorial';
+  const portuguese = language === 'pt';
   return {
     eventTitle: copy.title,
     eventDate: '2026-11-21T18:00:00',
@@ -33,7 +37,19 @@ function landingPreviewEvent() {
     rsvpPaletteId: model.palette,
     rsvpCoverImageUrl: model.photo,
     rsvpLocationInfo: copy.location,
-    rsvpOrganizerMessage: language === 'pt' ? 'Esperamos você para celebrar este momento especial.' : 'We hope you can join us for this special celebration.',
+    rsvpSignature: portuguese ? 'Com carinho' : 'With love',
+    rsvpOrganizerMessage: portuguese ? 'Esperamos você para celebrar este momento especial. Sua presença deixa essa história ainda mais bonita.' : 'We hope you can join us for this special celebration. Your presence will make this story even more meaningful.',
+    schedule: portuguese
+      ? [{time: '18h00', title: 'Recepção', description: 'Chegue com calma para aproveitar esse primeiro encontro.'}, {time: '19h00', title: 'Momento principal', description: 'Vamos reunir todos para celebrar juntos.'}, {time: '20h30', title: 'Brinde e celebração', description: 'A noite continua com música, conversa e bons encontros.'}]
+      : [{time: '6:00 PM', title: 'Welcome', description: 'Arrive with time to settle in and enjoy the first moments together.'}, {time: '7:00 PM', title: 'Main celebration', description: 'We will gather everyone for the moment we have been waiting for.'}, {time: '8:30 PM', title: 'Toast and celebration', description: 'Stay for music, conversation and a memorable evening.'}],
+    rsvpDressCode: portuguese ? 'Esporte fino. Use algo em que você se sinta bem para celebrar.' : 'Dressy casual. Wear something that feels good for a celebration.',
+    infoItems: portuguese
+      ? [{title: 'Chegada', description: 'A entrada principal estará sinalizada a partir das 17h30.'}, {title: 'Estacionamento', description: 'Consulte a recepção do local ao chegar para as orientações de acesso.'}]
+      : [{title: 'Arrival', description: 'The main entrance will be signposted from 5:30 PM.'}, {title: 'Parking', description: 'Please check with the venue reception when you arrive for access guidance.'}],
+    rsvpFaq: portuguese ? 'Pedimos a confirmação até 7 de novembro para preparar cada detalhe com cuidado.' : 'Please RSVP by November 7 so we can prepare every detail with care.',
+    faqItems: portuguese
+      ? [{question: 'Posso levar acompanhante?', answer: 'Sim. Informe no RSVP quem vem com você para podermos recebê-los bem.'}, {question: 'Como encontro o local?', answer: 'Use o botão de mapa neste convite. O endereço completo já está preenchido para facilitar a chegada.'}]
+      : [{question: 'May I bring a guest?', answer: 'Yes. Let us know who is joining you in the RSVP so we can welcome you both.'}, {question: 'How do I find the venue?', answer: 'Use the map button in this invitation. The full address is already set up for easy directions.'}],
     previewThumbnail: true,
   };
 }
