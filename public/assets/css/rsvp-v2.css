@@ -350,9 +350,9 @@
     html[data-invite-style="ilustrado"] .hero::after { border: 0; }
     html[data-invite-style="gravado"] .ornament-editorial { display: none; }
     html[data-invite-style="gravado"] .ornament-engraved { display: block; }
-    html[data-invite-style="gravado"] .page-ornament { color: oklch(55% .075 66); opacity: .55; }
+    html[data-invite-style="gravado"] .page-ornament { color: var(--accent); opacity: .55; }
     html[data-invite-style="gravado"] .hero::after { border-style: double; border-width: 3px; }
-    html[data-invite-style="gravado"] .section-divider { color: oklch(55% .075 66); }
+    html[data-invite-style="gravado"] .section-divider { color: var(--accent); }
 
     /* Estado sem foto de capa: um convite continua completo, sem espaço vazio. */
     .hero-no-photo { display: none; }
@@ -402,8 +402,8 @@
     }
     html[data-invite-style="ilustrado"] .hero.no-cover .hero-no-photo::before,
     html[data-invite-style="ilustrado"] .hero.no-cover .hero-no-photo::after { border-radius: 46% 54% 44% 56%; }
-    html[data-invite-style="gravado"] .hero.no-cover .hero-grid { border: 5px double oklch(55% .075 66); background: var(--surface); }
-    html[data-invite-style="gravado"] .hero.no-cover .hero-no-photo { color: oklch(55% .075 66); opacity: .3; }
+    html[data-invite-style="gravado"] .hero.no-cover .hero-grid { border: 5px double var(--accent); background: var(--surface); }
+    html[data-invite-style="gravado"] .hero.no-cover .hero-no-photo { color: var(--accent); opacity: .3; }
     html[data-invite-style="gravado"] .hero.no-cover .hero-no-photo::before,
     html[data-invite-style="gravado"] .hero.no-cover .hero-no-photo::after { border-radius: 0; transform: none; width: calc(100% - 42px); height: calc(100% - 42px); }
     html[data-invite-style="gravado"] .hero.no-cover .hero-no-photo::after { width: calc(100% - 62px); height: calc(100% - 62px); }
@@ -415,6 +415,10 @@
       .section-divider { max-width: 190px; margin-top: 16px; }
       .hero.no-cover .hero-grid { min-height: 500px; }
     }
+
+/* Cartões incorporados mostram uma fatia fixa do convite, sem barra interna. */
+html[data-invite-embed="true"],
+html[data-invite-embed="true"] body { overflow: hidden; }
 
 /* Marca independente da paleta do evento; o papel preserva o loading original. */
 .invite-loading { overflow: hidden; }

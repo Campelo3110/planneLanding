@@ -11,18 +11,19 @@ window.__rsvpSlug = !window.__rsvpToken && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(pat
 window.__getAppCheckToken = async () => null;
 let currentEvent = {};
 const landingPreviewEvents = {
-  wedding: { palette: 'dourado', photo: '/assets/video/wedding-poster.webp', pt: { title: 'Camila & Rafael', signature: 'Camila & Rafael', location: 'Casa das Caldeiras, Av. Francisco Matarazzo, 2000, Água Branca, São Paulo - SP, 05001-400' }, en: { title: 'Olivia & Noah', signature: 'Olivia & Noah', location: 'The Foundry, 42-38 9th Street, Long Island City, NY 11101' } },
-  birthday: { palette: 'coral-tropical', photo: '/assets/video/birthday-poster.webp', pt: { title: '30 anos da Marina', signature: 'Marina', location: 'Museu do Amanhã, Praça Mauá, 1, Centro, Rio de Janeiro - RJ, 20081-240' }, en: { title: "Ethan's 30th", signature: 'Ethan', location: 'Lady Bird Johnson Wildflower Center, 4801 La Crosse Avenue, Austin, TX 78739' } },
-  'baby-shower': { palette: 'indigo', photo: '/assets/video/baby-shower-poster.webp', pt: { title: 'Chá da Sofia', signature: 'Família da Sofia', location: 'Jardim Botânico de Curitiba, Rua Engenheiro Ostoja Roguski, s/n, Jardim Botânico, Curitiba - PR, 80210-390' }, en: { title: 'Baby Sofia', signature: "Sofia's family", location: 'The Conservatory at Waterworks, 250 North 24th Street, Philadelphia, PA 19103' } },
-  quinceanera: { palette: 'framboesa', photo: '/assets/video/quinceanera-poster.jpg', pt: { title: '15 anos da Laura', signature: 'Laura', location: 'Theatro Municipal de São Paulo, Praça Ramos de Azevedo, s/n, República, São Paulo - SP, 01037-010' }, en: { title: "Sofia's quinceañera", signature: 'Sofia', location: 'Vizcaya Museum and Gardens, 3251 South Miami Avenue, Miami, FL 33129' } },
-  graduation: { palette: 'grafite', photo: '/assets/video/graduation-poster.jpg', pt: { title: 'Formatura da Beatriz', signature: 'Beatriz', location: 'Theatro Municipal de São Paulo, Praça Ramos de Azevedo, s/n, República, São Paulo - SP, 01037-010' }, en: { title: 'Class of 2026', signature: 'Class of 2026', location: 'Boch Center Wang Theatre, 270 Tremont Street, Boston, MA 02116' } },
+  wedding: { palettes: ['dourado', 'ameixa', 'grafite'], photo: '/assets/video/wedding-poster.webp', pt: { title: 'Camila & Rafael', signature: 'Camila & Rafael', location: 'Casa das Caldeiras, Av. Francisco Matarazzo, 2000, Água Branca, São Paulo - SP, 05001-400' }, en: { title: 'Olivia & Noah', signature: 'Olivia & Noah', location: 'The Foundry, 42-38 9th Street, Long Island City, NY 11101' } },
+  birthday: { palettes: ['coral-tropical', 'framboesa', 'dourado'], photo: '/assets/video/birthday-poster.webp', pt: { title: '30 anos da Marina', signature: 'Marina', location: 'Museu do Amanhã, Praça Mauá, 1, Centro, Rio de Janeiro - RJ, 20081-240' }, en: { title: "Ethan's 30th", signature: 'Ethan', location: 'Lady Bird Johnson Wildflower Center, 4801 La Crosse Avenue, Austin, TX 78739' } },
+  'baby-shower': { palettes: ['indigo', 'ameixa', 'dourado'], photo: '/assets/video/baby-shower-poster.webp', pt: { title: 'Chá da Sofia', signature: 'Família da Sofia', location: 'Jardim Botânico de Curitiba, Rua Engenheiro Ostoja Roguski, s/n, Jardim Botânico, Curitiba - PR, 80210-390' }, en: { title: 'Baby Sofia', signature: "Sofia's family", location: 'The Conservatory at Waterworks, 250 North 24th Street, Philadelphia, PA 19103' } },
+  quinceanera: { palettes: ['framboesa', 'dourado', 'ameixa'], photo: '/assets/video/quinceanera-poster.jpg', pt: { title: '15 anos da Laura', signature: 'Laura', location: 'Theatro Municipal de São Paulo, Praça Ramos de Azevedo, s/n, República, São Paulo - SP, 01037-010' }, en: { title: "Sofia's quinceañera", signature: 'Sofia', location: 'Vizcaya Museum and Gardens, 3251 South Miami Avenue, Miami, FL 33129' } },
+  graduation: { palettes: ['grafite', 'indigo', 'dourado'], photo: '/assets/video/graduation-poster.jpg', pt: { title: 'Formatura da Beatriz', signature: 'Beatriz', location: 'Theatro Municipal de São Paulo, Praça Ramos de Azevedo, s/n, República, São Paulo - SP, 01037-010' }, en: { title: 'Class of 2026', signature: 'Class of 2026', location: 'Boch Center Wang Theatre, 270 Tremont Street, Boston, MA 02116' } },
 };
 function landingPreviewEvent() {
   const model = landingPreviewEvents[landingPreview];
   if (!model) return null;
   const language = query.get('lang') === 'en' ? 'en' : 'pt';
   const copy = model[language];
-  const style = ['foto-editorial', 'ilustrado', 'gravado'].includes(query.get('style')) ? query.get('style') : 'foto-editorial';
+  const styles = ['foto-editorial', 'ilustrado', 'gravado'];
+  const style = styles.includes(query.get('style')) ? query.get('style') : styles[0];
   const portuguese = language === 'pt';
   return {
     eventTitle: copy.title,
@@ -34,7 +35,7 @@ function landingPreviewEvent() {
     rsvpMaxCompanions: 2,
     rsvpDefaultCountry: language === 'pt' ? 'BR' : 'US',
     rsvpTemplateId: style,
-    rsvpPaletteId: model.palette,
+    rsvpPaletteId: model.palettes[styles.indexOf(style)],
     rsvpCoverImageUrl: model.photo,
     rsvpLocationInfo: copy.location,
     rsvpSignature: copy.signature,

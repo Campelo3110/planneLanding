@@ -106,49 +106,6 @@
   });
 })();
 
-/* On phones, invitation previews stay swipeable while discreet controls make the
-   next card discoverable without exposing a browser scrollbar. */
-(() => {
-  const root = document.querySelector('.planne-institutional');
-  if (!root) return;
-  const mobile = matchMedia('(max-width: 760px)');
-  const portuguese = document.documentElement.lang.startsWith('pt');
-  root.querySelectorAll('.m-invite-shots').forEach(shots => {
-    const cards = [...shots.querySelectorAll(':scope > figure')];
-    if (cards.length < 2) return;
-    const controls = document.createElement('div');
-    controls.className = 'm-invite-controls';
-    controls.setAttribute('aria-label', portuguese ? 'Navegação entre estilos de convite' : 'Invitation style navigation');
-    const previous = document.createElement('button');
-    previous.type = 'button';
-    previous.innerHTML = `<span aria-hidden="true">←</span>${portuguese ? 'Anterior' : 'Previous'}`;
-    const position = document.createElement('output');
-    position.className = 'm-invite-position';
-    position.setAttribute('aria-live', 'polite');
-    const next = document.createElement('button');
-    next.type = 'button';
-    next.innerHTML = `${portuguese ? 'Próximo' : 'Next'}<span aria-hidden="true">→</span>`;
-    controls.append(previous, position, next);
-    shots.after(controls);
-    let active = 0;
-    const update = () => {
-      if (!mobile.matches) return;
-      const midpoint = shots.scrollLeft + shots.clientWidth / 2;
-      active = cards.reduce((closest, card, index) => Math.abs(card.offsetLeft + card.offsetWidth / 2 - midpoint) < Math.abs(cards[closest].offsetLeft + cards[closest].offsetWidth / 2 - midpoint) ? index : closest, active);
-      position.value = `${active + 1} / ${cards.length}`;
-      position.textContent = `${active + 1} / ${cards.length}`;
-      previous.disabled = active === 0;
-      next.disabled = active === cards.length - 1;
-    };
-    const go = index => cards[Math.max(0, Math.min(cards.length - 1, index))].scrollIntoView({behavior: 'smooth', block: 'nearest', inline: 'center'});
-    previous.addEventListener('click', () => go(active - 1));
-    next.addEventListener('click', () => go(active + 1));
-    shots.addEventListener('scroll', () => requestAnimationFrame(update), {passive: true});
-    mobile.addEventListener('change', update);
-    update();
-  });
-})();
-
 /* Home page storytelling: reveal each group only when it reaches the viewport.
    Content remains visible without JavaScript, IntersectionObserver, or when the
    visitor prefers less motion. */
