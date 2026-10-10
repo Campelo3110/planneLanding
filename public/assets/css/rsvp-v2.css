@@ -416,26 +416,6 @@
       .hero.no-cover .hero-grid { min-height: 500px; }
     }
 
-/* A vitrine usa uma capa compacta; o convite aberto conserva o layout completo. */
-html[data-invite-embed="true"],
-html[data-invite-embed="true"] body { height: 100%; overflow: hidden; }
-html[data-invite-embed="true"] .site-header { justify-content: center; padding: 16px 12px 5px; }
-html[data-invite-embed="true"] .site-header .brand { width: auto; font-size: 1.15rem; }
-html[data-invite-embed="true"] .site-nav,
-html[data-invite-embed="true"] .hero-actions,
-html[data-invite-embed="true"] .mobile-rsvp { display: none !important; }
-html[data-invite-embed="true"] .hero { padding: 16px 13px 0; }
-html[data-invite-embed="true"] .hero-grid { gap: 15px; }
-html[data-invite-embed="true"] .hero-copy { padding-top: 0; }
-html[data-invite-embed="true"] .eyebrow { margin-bottom: 9px; font-size: .57rem; }
-html[data-invite-embed="true"] h1,
-html[data-invite-embed="true"][data-invite-style="ilustrado"] h1 { max-width: none; margin-bottom: 10px; font-size: clamp(2rem, 10vw, 2.55rem); line-height: 1.02; }
-html[data-invite-embed="true"] .hero-lead { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; margin-bottom: 12px; font-size: .78rem; line-height: 1.45; }
-html[data-invite-embed="true"] .hero-meta { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; margin: 0; font-size: .74rem; line-height: 1.45; }
-html[data-invite-embed="true"] .hero-photo,
-html[data-invite-embed="true"] .hero-photo img { min-height: 0; }
-html[data-invite-embed="true"] .hero-photo { max-height: none; aspect-ratio: 4 / 5; }
-
 /* Marca independente da paleta do evento; o papel preserva o loading original. */
 .invite-loading { overflow: hidden; }
 .invite-loading .site-header, .invite-loading main, .invite-loading .site-footer,

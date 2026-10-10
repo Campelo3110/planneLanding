@@ -436,10 +436,10 @@
 .planne-institutional.m-dark .m-button:not(.m-button-secondary){background:#13b8a7;color:#101826!important;border-color:#13b8a7}
 .planne-institutional.m-dark .m-button:not(.m-button-secondary):hover{background:#70dacf;color:#101826!important;border-color:#70dacf}
 @media(max-width:760px){.m-theme-toggle{padding:9px;min-width:44px}.m-theme-toggle [data-theme-label]{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}}
-.m-invite-frame{position:relative}
+.m-invite-frame{position:relative;container-type:inline-size;aspect-ratio:390/1040}
 .m-invite-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:20px;text-align:center;background:#f6f0e8;color:#453a32;font-family:Planne Display,sans-serif}
 .m-invite-placeholder span:first-child{font-size:clamp(1.2rem,2vw,1.9rem)}
 .m-invite-placeholder span:last-child{font-size:.75rem;letter-spacing:.1em;text-transform:uppercase}
-.m-invite-frame iframe{opacity:0}
+.m-invite-frame iframe{position:absolute;inset:0 auto auto 0;width:390px;height:1040px;aspect-ratio:auto;transform:scale(calc(100cqw / 390px));transform-origin:top left;opacity:0}
 .m-invite-frame.is-loaded iframe{opacity:1}
 .m-invite-frame.is-loaded .m-invite-placeholder{display:none}

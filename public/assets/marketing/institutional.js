@@ -97,30 +97,13 @@
   });
 })();
 
-/* Load each working invitation preview when its card approaches the viewport.
-   The full-preview link remains available even before the iframe loads. */
+/* The browser loads previews lazily; show each card as soon as its iframe is ready. */
 (() => {
-  const frames = [...document.querySelectorAll('.m-invite-frame iframe[data-src]')];
-  if (!frames.length) return;
-  const load = frame => {
-    const source = frame.dataset.src;
-    if (!source) return;
-    delete frame.dataset.src;
-    frame.addEventListener('load', () => frame.closest('.m-invite-frame')?.classList.add('is-loaded'), {once: true});
-    frame.src = source;
-  };
-  if (!('IntersectionObserver' in window)) {
-    frames.forEach(load);
-    return;
-  }
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      observer.unobserve(entry.target);
-      load(entry.target);
-    });
-  }, {rootMargin: '250px 0px', threshold: 0});
-  frames.forEach(frame => observer.observe(frame));
+  document.querySelectorAll('.m-invite-frame iframe').forEach(frame => {
+    const ready = () => frame.closest('.m-invite-frame')?.classList.add('is-loaded');
+    frame.addEventListener('load', ready, {once: true});
+    if (frame.contentDocument?.readyState === 'complete' && frame.contentDocument?.URL !== 'about:blank') ready();
+  });
 })();
 
 /* On phones, invitation previews stay swipeable while discreet controls make the
