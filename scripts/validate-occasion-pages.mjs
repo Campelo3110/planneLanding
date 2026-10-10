@@ -22,20 +22,20 @@ if (!previewCsp.includes("frame-ancestors 'self'")) errors.push('hosting: invita
 if (!previewHeaders.some(({ key, value }) => key === 'X-Frame-Options' && value === 'SAMEORIGIN')) errors.push('hosting: invitation previews need SAMEORIGIN framing');
 if (!previewCleanUrlHeaders.some(({ key, value }) => key === 'X-Frame-Options' && value === 'SAMEORIGIN')) errors.push('hosting: clean invitation preview URL needs SAMEORIGIN framing');
 if (!(previewCleanUrlHeaders.find(({ key }) => key === 'Content-Security-Policy')?.value ?? '').includes("frame-ancestors 'self'")) errors.push('hosting: clean invitation preview URL cannot be embedded by Planne');
-if (!rewrites.some(({ source, destination }) => source === '/*' && destination === '/rsvp-v2.html')) errors.push('hosting: custom invitation slugs must be limited to one path segment');
+if (!rewrites.some(({ regex, destination }) => regex === '^/[a-z0-9]+(?:-[a-z0-9]+)*$' && destination === '/rsvp-v2.html')) errors.push('hosting: custom invitation slugs must use the validated one-segment pattern');
 if (rewrites.some(({ source }) => source === '**')) errors.push('hosting: universal rewrite causes soft 404s');
 if (!rsvp.includes('name="robots" content="noindex, nofollow, noarchive"')) errors.push('rsvp: public invitations must not be indexed');
 if (!rsvpScript.includes("!window.__rsvpToken &&") || !rsvpScript.includes("pathSlug !== 'rsvp-v2'")) errors.push('rsvp: token URLs must not resolve the renderer route as a custom slug');
 if (!existsSync(resolve(root, 'public/llms.txt'))) errors.push('geo: missing llms.txt');
-if (!sitemap.includes('<loc>https://planneapp.com/pt-br/</loc>') || !sitemap.includes('hreflang="pt-br" href="https://planneapp.com/pt-br/"')) errors.push('sitemap: Portuguese home URL must match its canonical URL');
+if (!sitemap.includes('<loc>https://planneapp.com/pt-br</loc>') || !sitemap.includes('hreflang="pt-BR" href="https://planneapp.com/pt-br"')) errors.push('sitemap: Portuguese home URL must match its canonical URL');
 for (const [en, pt] of pairs) {
   for (const [locale, route, otherRoute] of [['en', en, `pt-br/${pt}`], ['pt', `pt-br/${pt}`, en]]) {
     const file = resolve(root, 'public', route, 'index.html');
     const html = readFileSync(file, 'utf8');
-    const language = locale === 'pt' ? 'pt-BR' : 'en';
+    const language = locale === 'pt' ? 'pt-BR' : 'en-US';
     if (!html.includes(`<html lang="${language}">`)) errors.push(`${route}: incorrect document language`);
-    if (!html.includes(`hreflang="${locale === 'pt' ? 'en' : 'pt-BR'}"`) || !html.includes(`href="/${otherRoute}"`)) errors.push(`${route}: language switch does not target its counterpart`);
-    if (!html.includes(`<link rel="alternate" hreflang="en" href="https://planneapp.com/${en}">`) || !html.includes(`<link rel="alternate" hreflang="pt-BR" href="https://planneapp.com/pt-br/${pt}">`)) errors.push(`${route}: invalid hreflang pair`);
+    if (!html.includes(`hreflang="${locale === 'pt' ? 'en-US' : 'pt-BR'}"`) || !html.includes(`href="/${otherRoute}"`)) errors.push(`${route}: language switch does not target its counterpart`);
+    if (!html.includes(`<link rel="alternate" hreflang="en-US" href="https://planneapp.com/${en}">`) || !html.includes(`<link rel="alternate" hreflang="pt-BR" href="https://planneapp.com/pt-br/${pt}">`)) errors.push(`${route}: invalid hreflang pair`);
     if (!html.includes('poppins-medium.woff2') || !html.includes('poppins-regular.woff2')) errors.push(`${route}: missing critical WOFF2 font preload`);
     for (const section of requiredSections) if (!html.includes(section)) errors.push(`${route}: missing shared section ${section}`);
     const previewPrefix = `/rsvp-v2?landing-preview=${en}&amp;lang=${locale}&amp;style=`;
@@ -50,7 +50,7 @@ for (const [en, pt] of pairs) {
   }
 }
 const ptHome = readFileSync(resolve(root, 'public/pt-br/index.html'), 'utf8');
-if (!ptHome.includes('hreflang="en" href="https://planneapp.com/"')) errors.push('pt-br home: English hreflang is incorrect');
+if (!ptHome.includes('hreflang="en-US" href="https://planneapp.com/"')) errors.push('pt-br home: English hreflang is incorrect');
 if (!ptHome.includes('property="og:locale" content="pt_BR"')) errors.push('pt-br home: Open Graph locale is incorrect');
 if (/website with RSVP|opens a new tab|Event planning app/.test(ptHome)) errors.push('pt-br home: English metadata or accessible labels remain');
 if (errors.length) {

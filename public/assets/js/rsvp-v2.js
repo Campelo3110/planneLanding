@@ -72,6 +72,27 @@ async function callRsvpApi(payload) {
 function companionOptions(max) {
   return Array.from({length:Math.max(0,Math.min(20,max || 0))+1},(_,value) => `<option value="${value}">${value === 0 ? tr('Somente eu','Just me') : value + ' ' + tr(value === 1 ? 'acompanhante' : 'acompanhantes',value === 1 ? 'companion' : 'companions')}</option>`).join('');
 }
+const mealLabels = () => [
+  tr('Regular','Regular'), tr('Vegetariano','Vegetarian'),
+  tr('Vegano','Vegan'), tr('Infantil','Children’s meal'),
+  tr('Sem glúten','Gluten free'), tr('Sem lactose','Lactose free'),
+  tr('Outro','Other'),
+];
+function mealSelect(id, value = 1) {
+  const select = document.createElement('select'); select.id = id;
+  mealLabels().forEach((label,index) => select.add(new Option(label,String(index + 1))));
+  select.value = String(value || 1); return select;
+}
+function addPrimaryMeal(form) {
+  const row = document.createElement('div'); row.className = 'field'; row.hidden = true;
+  const label = document.createElement('label');
+  const select = mealSelect(`${form.id}-meal`);
+  label.htmlFor = select.id;
+  label.textContent = tr('Minha refeição','My meal');
+  row.append(label,select);
+  form.querySelector('button[type="submit"]').before(row);
+  form._mealRow = row; form._mealSelect = select;
+}
 function feedback(form, text, success) {
   const message = form.querySelector('.form-message');
   message.textContent = text; message.style.borderColor = success ? 'var(--success)' : 'var(--danger)';
@@ -110,8 +131,76 @@ function showCompletion(target, value, focus = false) {
   ornament.setAttribute('aria-hidden','true');
   ornament.innerHTML = '<svg viewBox="0 0 80 32"><use href="#ornament-divider"/></svg>';
   card.replaceChildren(ornament,heading,message);
+  if (value.correctionCode) {
+    const code = document.createElement('p');
+    code.textContent = `${tr('Código para corrigir sua resposta','Code to correct your response')}: ${value.correctionCode}`;
+    code.style.overflowWrap = 'anywhere';
+    card.append(code);
+  }
+  const edit = document.createElement('button');
+  edit.type = 'button'; edit.className = 'button';
+  edit.textContent = tr('Revisar minha resposta','Review my response');
+  edit.addEventListener('click', () => openCorrection(target,value));
+  card.append(edit);
   if (focus) card.focus();
   document.querySelector('.mobile-rsvp').hidden = true;
+}
+async function openCorrection(target, value) {
+  const code = value.correctionCode || window.prompt(tr(
+    'Digite o código recebido ao responder. Sem ele, peça ajuda ao anfitrião.',
+    'Enter the code you received after responding. Ask the host for help if you lost it.'));
+  if (!code) return;
+  const card = target.querySelector('.rsvp-completion');
+  try {
+    const response = await callRsvpApi({action:'getResponse',correctionCode:code});
+    const review = document.createElement('form'); review.className = 'rsvp-form'; review.noValidate = true;
+    const title = document.createElement('h3');
+    title.textContent = tr('Sua resposta, pessoa por pessoa','Your response, person by person');
+    review.append(title);
+    const attendance = document.createElement('select');
+    attendance.add(new Option(tr('Vou comparecer','I will attend'),'1'));
+    attendance.add(new Option(tr('Não poderei ir','I cannot attend'),'0'));
+    attendance.value = String(response.confirmationStatus === 1 ? 1 : 0);
+    const attendanceLabel = document.createElement('label');
+    attendanceLabel.textContent = tr('Presença','Attendance'); review.append(attendanceLabel,attendance);
+    if (currentEvent.rsvpAskMeals === true) response.people.forEach(person => {
+      const row = document.createElement('div'); row.className = 'field';
+      const label = document.createElement('label'), select = mealSelect(`correct-${person.id}`,person.menu);
+      label.textContent = `${person.name} · ${tr('refeição','meal')}`;
+      label.htmlFor = select.id;
+      select.dataset.personId = person.id;
+      row.append(label,select); review.append(row);
+    });
+    const send = document.createElement('button'); send.className = 'button'; send.type = 'submit';
+    send.textContent = tr('Salvar correção','Save correction'); review.append(send);
+    const message = document.createElement('p'); message.className = 'form-message';
+    message.setAttribute('role','status'); message.tabIndex = -1; review.append(message);
+    const requestId = crypto.randomUUID();
+    review.addEventListener('submit',async event => {
+      event.preventDefault(); if (send.disabled) return;
+      send.disabled = true;
+      try {
+        await callRsvpApi({action:'correctResponse',correctionCode:code,requestId,
+          confirmationStatus:Number(attendance.value),
+          people:[...review.querySelectorAll('select[data-person-id]')].map(select =>
+            ({id:select.dataset.personId,menu:Number(select.value)}))});
+        const updated = {...value, attending: attendance.value === '1', correctionCode:code};
+        try { localStorage.setItem(completionKey(),JSON.stringify(updated)); } catch (_) {}
+        review.remove();
+        showCompletion(target,updated,true);
+      } catch (_) {
+        message.textContent = tr('Não foi possível salvar. Tente novamente.',
+          'Could not save. Please try again.'); message.classList.add('show');
+        send.disabled = false; message.focus();
+      }
+    });
+    card.replaceWith(review);
+  } catch (_) {
+    const note = document.createElement('p');
+    note.textContent = tr('Código inválido ou resposta indisponível.',
+      'Invalid code or response unavailable.');
+    card.append(note);
+  }
 }
 function renderCompanionNames(target, count) {
   let list = target.querySelector('.companion-names');
@@ -120,7 +209,8 @@ function renderCompanionNames(target, count) {
     target.querySelector('button[type="submit"]').before(list);
   }
   const names = [...list.querySelectorAll('input')].map(input => input.value);
-  const types = [...list.querySelectorAll('select')].map(input => input.value);
+  const types = [...list.querySelectorAll('select:not([data-meal])')].map(input => input.value);
+  const meals = [...list.querySelectorAll('select[data-meal]')].map(input => input.value);
   list.replaceChildren();
   for (let i = 0; i < count; i++) {
     const row = document.createElement('div'); row.className = 'field';
@@ -132,7 +222,12 @@ function renderCompanionNames(target, count) {
     type.id = input.id + '-type'; typeLabel.htmlFor = type.id; typeLabel.textContent = tr('Tipo de convidado','Guest type');
     [['companion',tr('Acompanhante','Companion')],['child',tr('Criança','Child')]].forEach(([value,text]) => type.add(new Option(text,value)));
     type.value = types[i] || 'companion';
-    row.append(label,input,typeLabel,type); list.append(row);
+    const mealLabel = document.createElement('label'), meal = mealSelect(input.id + '-meal',meals[i] || 1);
+    meal.dataset.meal = 'true'; mealLabel.htmlFor = meal.id;
+    mealLabel.textContent = tr('Refeição desta pessoa','This person’s meal');
+    row.append(label,input,typeLabel,type);
+    if (currentEvent.rsvpAskMeals === true) row.append(mealLabel,meal);
+    list.append(row);
   }
   list.hidden = count === 0;
 }
@@ -144,7 +239,8 @@ function companionData(target) {
     missing.focus(); return null;
   }
   return { companions: inputs.length, companionNames: inputs.map(input => input.value.trim()),
-    companionTypes: [...target.querySelectorAll('.companion-names select')].map(input => input.value) };
+    companionTypes: [...target.querySelectorAll('.companion-names select:not([data-meal])')].map(input => input.value),
+    companionMenus: [...target.querySelectorAll('.companion-names select[data-meal]')].map(input => Number(input.value)) };
 }
 async function sendResponse(target, payload) {
   if (submitting || completion) return;
@@ -162,7 +258,8 @@ async function sendResponse(target, payload) {
   try {
     const result = await callRsvpApi(payload);
     const value = { attending: (result.confirmationStatus ?? payload.confirmationStatus) === 1,
-      pendingApproval: result.pendingApproval === true, ts: Date.now() };
+      pendingApproval: result.pendingApproval === true,
+      correctionCode: result.correctionCode || null, ts: Date.now() };
     try { localStorage.setItem(completionKey(),JSON.stringify(value)); } catch (_) { /* Server still prevents repeated writes. */ }
     showCompletion(target,value,true);
   } catch (error) {
@@ -201,8 +298,10 @@ function configureRsvpForm(event, enabled) {
     <button class="button" type="submit">${tr('Confirmar resposta','Send RSVP')}</button><p class="form-message" role="status" tabindex="-1"></p>`;
   document.querySelector('.rsvp-wrap').append(form);
   form.querySelectorAll('input,select,button').forEach(control => control.disabled = !enabled);
+  addPrimaryMeal(form);
   form.querySelectorAll('[name="privateAttendance"]').forEach(input => input.addEventListener('change', () => {
     const attending = form.querySelector('[name="privateAttendance"]:checked')?.value === 'yes';
+    form._mealRow.hidden = !attending || currentEvent.rsvpAskMeals !== true;
     if (byId('privateCompanions')) byId('privateCompanions').hidden = !attending;
     if (!attending && byId('privateGuests')) byId('privateGuests').value = '0';
     renderCompanionNames(form,attending ? Number(byId('privateGuests')?.value || 0) : 0);
@@ -217,14 +316,16 @@ function configureRsvpForm(event, enabled) {
       feedback(form,tr('Preencha seu nome, os 4 números do telefone e a sua resposta.','Enter your name, the last 4 phone digits and your response.'),false); return;
     }
     const companions = companionData(form); if (!companions) return;
-    await sendResponse(form,{action:'verifyAndSubmitPrivate',name,phoneLast4:last4,confirmationStatus:attendance === 'yes' ? 1 : 0,menu:1,...companions});
+    await sendResponse(form,{action:'verifyAndSubmitPrivate',name,phoneLast4:last4,confirmationStatus:attendance === 'yes' ? 1 : 0,menu:Number(form._mealSelect.value),...companions});
   });
 }
 const form = byId('publicRsvp');
+addPrimaryMeal(form);
 form.querySelectorAll('[name="attendance"]').forEach(radio => {
   radio.setAttribute('aria-describedby','attendanceError');
   radio.addEventListener('change', () => {
     const companions = currentEvent.rsvpAllowCompanions === true && form.elements.attendance.value === 'yes';
+    form._mealRow.hidden = form.elements.attendance.value !== 'yes' || currentEvent.rsvpAskMeals !== true;
     byId('companionsField').hidden = !companions; byId('guestCount').disabled = !companions;
     if (!companions) byId('guestCount').value = '0';
     renderCompanionNames(form,companions ? Number(byId('guestCount').value) : 0);
@@ -243,7 +344,7 @@ form.addEventListener('submit', async event => {
   if (!phone) { byId('guestPhone').setAttribute('aria-invalid','true'); byId('guestPhone').focus(); return; }
   byId('guestPhone').removeAttribute('aria-invalid');
   const companions = companionData(form); if (!companions) return;
-  await sendResponse(form,{action:'submitPublic',name,phone,phoneCountry:byId('phoneCountry').value,confirmationStatus:attendance === 'yes' ? 1 : 0,menu:1,...companions});
+  await sendResponse(form,{action:'submitPublic',name,phone,phoneCountry:byId('phoneCountry').value,confirmationStatus:attendance === 'yes' ? 1 : 0,menu:Number(form._mealSelect.value),...companions});
 });
 const floatingLink = document.querySelector('.mobile-rsvp');
 if ('IntersectionObserver' in window) {
@@ -264,6 +365,7 @@ function loadingError(message) {
 (async () => {
   const previewEvent = landingPreviewEvent();
   if (previewEvent) {
+    if (window.self !== window.top) document.documentElement.dataset.inviteEmbed = 'true';
     currentEvent = previewEvent;
     window.PlanneInvite.render(currentEvent, {preview: true, loadMap: false, animateEntrance: false});
     byId('inviteStatus').hidden = true;

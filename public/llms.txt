@@ -3,20 +3,28 @@
 
 ## Public pages
 - [Planne home](https://planneapp.com/): Event websites, digital invitations, RSVP, guest planning, tasks and budgets.
-- [Planne em português](https://planneapp.com/pt-br/): Página principal em português do Brasil.
+- [Planne em português](https://planneapp.com/pt-br): Página principal em português do Brasil e planejador de eventos.
+- [Digital event invitations](https://planneapp.com/digital-invitations): How to create and share an event invitation with online RSVP.
+- [Convite digital para evento](https://planneapp.com/pt-br/convite-digital): Como criar e compartilhar convite com confirmação de presença online.
 - [Wedding planning](https://planneapp.com/wedding): Wedding website, invitation and RSVP with planning tools.
 - [Casamento](https://planneapp.com/pt-br/casamento): Site de casamento, convite e RSVP em português.
 - [Birthday invitations](https://planneapp.com/birthday): Birthday invitation and RSVP planning.
+- [Aniversário](https://planneapp.com/pt-br/aniversario): Convite digital de aniversário, RSVP e organização do evento em português.
 - [Baby shower invitations](https://planneapp.com/baby-shower): Baby shower invitation and RSVP planning.
+- [Chá de bebê](https://planneapp.com/pt-br/cha-de-bebe): Convite digital de chá de bebê, RSVP e organização em português.
 - [Quinceañera invitations](https://planneapp.com/quinceanera): Quinceañera invitation and RSVP planning.
+- [Debutante](https://planneapp.com/pt-br/debutante): Convite digital de 15 anos, RSVP e organização em português.
 - [Graduation invitations](https://planneapp.com/graduation): Graduation invitation and RSVP planning.
+- [Formatura](https://planneapp.com/pt-br/formatura): Convite digital de formatura, RSVP e organização em português.
 
 ## Key facts
 - Guests can view an invitation and respond through their browser; they do not need the app.
 - A basic public invitation with RSVP is available. Premium features are managed in the Android app.
-- Premium features include visual customisation, private invitations, content sync and guest photo uploads by QR code.
+- Premium features include visual customization, private invitations, content sync and guest photo uploads by QR code.
 
 ## Official product
 - [Google Play listing](https://play.google.com/store/apps/details?id=com.planne.planne): Planne for Android.
 - [Privacy policy](https://planneapp.com/privacy): Privacy information.
 - [Terms](https://planneapp.com/terms): Terms of use.
+- [Privacidade em português](https://planneapp.com/pt-br/privacidade): Orientação em português e link para a política completa em inglês.
+- [Termos em português](https://planneapp.com/pt-br/termos): Orientação em português e link para os termos completos em inglês.

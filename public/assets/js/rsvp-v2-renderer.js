@@ -45,6 +45,10 @@
 
   let lastCover = null, lastMap = null, lastFont = null, lastReveal = null;
   let mapTimer;
+  const hasCompleteAddress = value => {
+    const parts = String(value || '').trim().split(',').map(part => part.trim()).filter(Boolean);
+    return /\d/.test(value || '') && parts.length >= 3 && parts.slice(2).some(part => /[A-Za-zÀ-ÿ]/.test(part));
+  };
   let entranceAnimations = [], envelopeLayer = null;
   const entranceCSS = document.createElement('style');
   entranceCSS.textContent = `
@@ -173,9 +177,12 @@
     const names = title.split(/\s+(?:&|e|and)\s+/i).filter(Boolean);
     byId('eventMonogram').textContent = (event.rsvpSignature || '').trim() || (names.length > 1 ? names.slice(0,2).map(name => name.trim()[0].toUpperCase()).join(' & ') : title.trim().slice(0,1).toUpperCase());
     const date = event.eventDate ? new Date(event.eventDate) : null;
-    const dateText = date && !Number.isNaN(date.valueOf()) ? new Intl.DateTimeFormat(en ? 'en-US' : 'pt-BR',{dateStyle:'long',timeStyle:'short'}).format(date) : tr('Data a definir','Date to be announced');
+    const dateText = date && !Number.isNaN(date.valueOf())
+      ? `${new Intl.DateTimeFormat(en ? 'en-US' : 'pt-BR', {dateStyle:'long'}).format(date)} ${tr('às','at')} ${new Intl.DateTimeFormat(en ? 'en-US' : 'pt-BR', {hour:'2-digit',minute:'2-digit',hour12:en}).format(date)}`
+      : tr('Data a definir','Date to be announced');
     byId('eventDate').textContent = dateText; byId('summaryDate').textContent = dateText;
     const location = (event.rsvpLocationInfo || '').trim();
+    const showMap = hasCompleteAddress(location);
     byId('eventLocation').textContent = location; byId('summaryLocation').textContent = location || tr('Local a definir','Location to be announced');
     byId('organizerMessage').textContent = event.rsvpOrganizerMessage || ''; byId('organizerMessage').hidden = !event.rsvpOrganizerMessage;
     setCover(event.rsvpCoverImageUrl || '');
@@ -196,11 +203,11 @@
     questions.forEach(item => { if (!item.question && !item.answer) return; const d = node('details',''), answer = node('div','','faq-answer'); answer.append(node('p',item.answer)); d.append(node('summary',item.question),answer); if (preview) d.open = true; faq.append(d); });
     sectionNodes.faq.hidden = !faq.children.length;
     byId('venueAddress').textContent = location;
-    sectionNodes.location.hidden = !location;
+    sectionNodes.location.hidden = !showMap;
     byId('mapLink').href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(location);
     if (options.loadMap !== false && lastMap !== location) {
       lastMap = location; clearTimeout(mapTimer);
-      const updateMap = () => { const frame = byId('venueMap'); if (location) frame.src = 'https://www.google.com/maps?q=' + encodeURIComponent(location) + '&output=embed'; else frame.removeAttribute('src'); };
+      const updateMap = () => { const frame = byId('venueMap'); if (showMap) frame.src = 'https://www.google.com/maps?q=' + encodeURIComponent(location) + '&output=embed'; else frame.removeAttribute('src'); };
       if (preview) mapTimer = setTimeout(updateMap, 700); else updateMap();
     }
     sectionNodes.hero.hidden = false; sectionNodes.summary.hidden = false; sectionNodes.rsvp.hidden = false;

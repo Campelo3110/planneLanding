@@ -4,85 +4,99 @@
 
   <url>
     <loc>https://planneapp.com/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://planneapp.com/" />
-    <xhtml:link rel="alternate" hreflang="pt-br" href="https://planneapp.com/pt-br" />
+    <xhtml:link rel="alternate" hreflang="en-US" href="https://planneapp.com/" />
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://planneapp.com/pt-br" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://planneapp.com/" />
   </url>
 
   <url>
-    <loc>https://planneapp.com/pt-br/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://planneapp.com/" />
-    <xhtml:link rel="alternate" hreflang="pt-br" href="https://planneapp.com/pt-br/" />
+    <loc>https://planneapp.com/pt-br</loc>
+    <xhtml:link rel="alternate" hreflang="en-US" href="https://planneapp.com/" />
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://planneapp.com/pt-br" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://planneapp.com/" />
+  </url>
+
+  <url>
+    <loc>https://planneapp.com/digital-invitations</loc>
+    <xhtml:link rel="alternate" hreflang="en-US" href="https://planneapp.com/digital-invitations" />
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://planneapp.com/pt-br/convite-digital" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://planneapp.com/digital-invitations" />
+  </url>
+
+  <url>
+    <loc>https://planneapp.com/pt-br/convite-digital</loc>
+    <xhtml:link rel="alternate" hreflang="en-US" href="https://planneapp.com/digital-invitations" />
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://planneapp.com/pt-br/convite-digital" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://planneapp.com/digital-invitations" />
   </url>
 
   <url>
     <loc>https://planneapp.com/wedding</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://planneapp.com/wedding" />
-    <xhtml:link rel="alternate" hreflang="pt-br" href="https://planneapp.com/pt-br/casamento" />
+    <xhtml:link rel="alternate" hreflang="en-US" href="https://planneapp.com/wedding" />
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://planneapp.com/pt-br/casamento" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://planneapp.com/wedding" />
   </url>
 
   <url>
     <loc>https://planneapp.com/pt-br/casamento</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://planneapp.com/wedding" />
-    <xhtml:link rel="alternate" hreflang="pt-br" href="https://planneapp.com/pt-br/casamento" />
+    <xhtml:link rel="alternate" hreflang="en-US" href="https://planneapp.com/wedding" />
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://planneapp.com/pt-br/casamento" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://planneapp.com/wedding" />
   </url>
 
   <url>
     <loc>https://planneapp.com/baby-shower</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://planneapp.com/baby-shower" />
-    <xhtml:link rel="alternate" hreflang="pt-br" href="https://planneapp.com/pt-br/cha-de-bebe" />
+    <xhtml:link rel="alternate" hreflang="en-US" href="https://planneapp.com/baby-shower" />
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://planneapp.com/pt-br/cha-de-bebe" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://planneapp.com/baby-shower" />
   </url>
 
   <url>
     <loc>https://planneapp.com/pt-br/cha-de-bebe</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://planneapp.com/baby-shower" />
-    <xhtml:link rel="alternate" hreflang="pt-br" href="https://planneapp.com/pt-br/cha-de-bebe" />
+    <xhtml:link rel="alternate" hreflang="en-US" href="https://planneapp.com/baby-shower" />
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://planneapp.com/pt-br/cha-de-bebe" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://planneapp.com/baby-shower" />
   </url>
 
   <url>
     <loc>https://planneapp.com/birthday</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://planneapp.com/birthday" />
-    <xhtml:link rel="alternate" hreflang="pt-br" href="https://planneapp.com/pt-br/aniversario" />
+    <xhtml:link rel="alternate" hreflang="en-US" href="https://planneapp.com/birthday" />
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://planneapp.com/pt-br/aniversario" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://planneapp.com/birthday" />
   </url>
 
   <url>
     <loc>https://planneapp.com/pt-br/aniversario</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://planneapp.com/birthday" />
-    <xhtml:link rel="alternate" hreflang="pt-br" href="https://planneapp.com/pt-br/aniversario" />
+    <xhtml:link rel="alternate" hreflang="en-US" href="https://planneapp.com/birthday" />
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://planneapp.com/pt-br/aniversario" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://planneapp.com/birthday" />
   </url>
 
   <url>
     <loc>https://planneapp.com/quinceanera</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://planneapp.com/quinceanera" />
-    <xhtml:link rel="alternate" hreflang="pt-br" href="https://planneapp.com/pt-br/debutante" />
+    <xhtml:link rel="alternate" hreflang="en-US" href="https://planneapp.com/quinceanera" />
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://planneapp.com/pt-br/debutante" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://planneapp.com/quinceanera" />
   </url>
 
   <url>
     <loc>https://planneapp.com/pt-br/debutante</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://planneapp.com/quinceanera" />
-    <xhtml:link rel="alternate" hreflang="pt-br" href="https://planneapp.com/pt-br/debutante" />
+    <xhtml:link rel="alternate" hreflang="en-US" href="https://planneapp.com/quinceanera" />
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://planneapp.com/pt-br/debutante" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://planneapp.com/quinceanera" />
   </url>
 
   <url>
     <loc>https://planneapp.com/graduation</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://planneapp.com/graduation" />
-    <xhtml:link rel="alternate" hreflang="pt-br" href="https://planneapp.com/pt-br/formatura" />
+    <xhtml:link rel="alternate" hreflang="en-US" href="https://planneapp.com/graduation" />
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://planneapp.com/pt-br/formatura" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://planneapp.com/graduation" />
   </url>
 
   <url>
     <loc>https://planneapp.com/pt-br/formatura</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://planneapp.com/graduation" />
-    <xhtml:link rel="alternate" hreflang="pt-br" href="https://planneapp.com/pt-br/formatura" />
+    <xhtml:link rel="alternate" hreflang="en-US" href="https://planneapp.com/graduation" />
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://planneapp.com/pt-br/formatura" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://planneapp.com/graduation" />
   </url>
 

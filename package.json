@@ -4,7 +4,7 @@
   "private": true,
   "description": "Landing page estatica da Planne em HTML, CSS e JavaScript puro.",
   "scripts": {
-    "build": "node scripts/generate-occasion-pages.mjs && node scripts/normalize-pt-home.mjs",
+    "build": "node scripts/generate-occasion-pages.mjs && node scripts/generate-invitation-pages.mjs && node scripts/normalize-pt-home.mjs",
     "validate:occasions": "node scripts/validate-occasion-pages.mjs",
     "deploy": "firebase deploy"
   }

@@ -5,6 +5,11 @@
   const preferenceKey = 'planne-site-theme';
   const systemDark = matchMedia('(prefers-color-scheme: dark)');
   const portuguese = document.documentElement.lang.startsWith('pt');
+  root.querySelectorAll('.m-language').forEach(link => {
+    link.addEventListener('click', () => {
+      try { localStorage.setItem('planne-language', link.lang.toLowerCase().startsWith('pt') ? 'pt' : 'en'); } catch (_) {}
+    });
+  });
   let savedTheme = null;
   try { savedTheme = localStorage.getItem(preferenceKey); } catch (_) {}
   const applyTheme = dark => {
@@ -92,6 +97,32 @@
   });
 })();
 
+/* Load each working invitation preview when its card approaches the viewport.
+   The full-preview link remains available even before the iframe loads. */
+(() => {
+  const frames = [...document.querySelectorAll('.m-invite-frame iframe[data-src]')];
+  if (!frames.length) return;
+  const load = frame => {
+    const source = frame.dataset.src;
+    if (!source) return;
+    delete frame.dataset.src;
+    frame.addEventListener('load', () => frame.closest('.m-invite-frame')?.classList.add('is-loaded'), {once: true});
+    frame.src = source;
+  };
+  if (!('IntersectionObserver' in window)) {
+    frames.forEach(load);
+    return;
+  }
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      observer.unobserve(entry.target);
+      load(entry.target);
+    });
+  }, {rootMargin: '250px 0px', threshold: 0});
+  frames.forEach(frame => observer.observe(frame));
+})();
+
 /* On phones, invitation previews stay swipeable while discreet controls make the
    next card discoverable without exposing a browser scrollbar. */
 (() => {
@@ -133,6 +164,65 @@
     mobile.addEventListener('change', update);
     update();
   });
+})();
+
+/* Home page storytelling: reveal each group only when it reaches the viewport.
+   Content remains visible without JavaScript, IntersectionObserver, or when the
+   visitor prefers less motion. */
+(() => {
+  const home = document.querySelector('.planne-institutional.m-home');
+  if (!home || !('IntersectionObserver' in window)) return;
+
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  let observer;
+
+  function stop() {
+    observer?.disconnect();
+    observer = undefined;
+    home.classList.remove('m-motion-ready');
+    home.querySelectorAll('.m-reveal').forEach(item => {
+      item.classList.remove('m-reveal', 'is-visible');
+      item.style.removeProperty('--m-reveal-delay');
+    });
+  }
+
+  function start() {
+    if (reducedMotion.matches || observer) return;
+    const groups = [
+      '.m-photo-heading', '.m-photo-links', '.m-app-shots',
+      '.m-statement', '.m-invitation-copy', '.m-invitation-flow ol',
+      '.m-feature-list', '.m-guide ol',
+      '.m-premium', '.m-occasions nav', '.m-close .m-wrap'
+    ];
+    const items = groups.flatMap(selector => {
+      return [...home.querySelectorAll(selector)].flatMap(group =>
+        [...group.children]
+          .filter(child => child.matches('div, p, h2, h3, figure, article, li, a'))
+          .map((item, index) => ({item, index})));
+    });
+    if (!items.length) return;
+
+    // Give the first visible content its final state before the enhancement
+    // class is applied, so the page never flashes hidden during startup.
+    const fold = innerHeight * 0.9;
+    items.forEach(({item, index}) => {
+      item.classList.add('m-reveal');
+      item.style.setProperty('--m-reveal-delay', `${Math.min(index, 3) * 85}ms`);
+      if (item.getBoundingClientRect().top < fold) item.classList.add('is-visible');
+    });
+    home.classList.add('m-motion-ready');
+    observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      });
+    }, {rootMargin: '0px 0px -8% 0px', threshold: 0.08});
+    items.map(({item}) => item).filter(item => !item.classList.contains('is-visible')).forEach(item => observer.observe(item));
+  }
+
+  reducedMotion.addEventListener('change', () => reducedMotion.matches ? stop() : start());
+  start();
 })();
 
 /* Existing celebration films: optional motion, explicit pause, poster fallback. */
