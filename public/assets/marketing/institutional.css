@@ -129,8 +129,7 @@
 .m-close .m-wrap{position:relative}
 .m-close .m-eyebrow{color:#8be5d9;margin-bottom:22px}
 .m-close h2{font-size:clamp(2.3rem,4.1vw,4.4rem);max-width:21ch}
-.m-close .m-button{margin-top:35px;background:var(--brand);color:var(--ink)!important}
-.m-close .m-button:hover{background:#70dacf}
+.m-close .m-button{margin-top:35px}
 .m-close .m-small{color:#bbc9cf}
 .m-footer{padding-block:45px 30px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:40px}
 .m-footer>.m-brand{font-size:1.8rem}
@@ -441,3 +440,8 @@ html[lang^="pt"] .m-home .m-living-stage figcaption{max-width:20ch;font-size:cla
 @media(min-width:761px) and (max-width:1050px){html[lang^="pt"] .m-home .m-living-stage figcaption{max-width:calc(100% - 205px);font-size:.875rem}}
 @media(max-width:760px){html[lang^="pt"] .m-home .m-living-stage figcaption{left:-4px;max-width:calc(100% - 185px);font-size:1rem}}
 @media(max-width:359px){html[lang^="pt"] .m-home .m-living-stage figcaption{max-width:calc(100% - 165px)}}
+.planne-institutional .m-close h2{color:#fff}
+.planne-institutional .m-close .m-button,
+.planne-institutional.m-dark .m-close .m-button{background:#075e57;border-color:#13b8a7;color:#fff!important;font-family:Planne Display,sans-serif;font-weight:500}
+.planne-institutional .m-close .m-button:hover,
+.planne-institutional.m-dark .m-close .m-button:hover{background:#034a44;border-color:#70dacf;color:#fff!important}

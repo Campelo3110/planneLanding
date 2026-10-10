@@ -78,6 +78,12 @@
         ]
       }
     ],
+    "redirects": [
+      { "source": "/pt-br/privacidade", "destination": "/privacy", "type": 301 },
+      { "source": "/pt-br/privacidade/", "destination": "/privacy", "type": 301 },
+      { "source": "/pt-br/termos", "destination": "/terms", "type": 301 },
+      { "source": "/pt-br/termos/", "destination": "/terms", "type": 301 }
+    ],
     "rewrites": [
       { "regex": "^/[a-z0-9]+(?:-[a-z0-9]+)*$", "destination": "/rsvp-v2.html" }
     ]

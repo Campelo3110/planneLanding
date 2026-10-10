@@ -101,7 +101,7 @@ function render(locale) {
   const c = copy[locale];
   const pt = locale === 'pt';
   const home = pt ? '/pt-br' : '/';
-  const legal = pt ? ['/pt-br/privacidade', '/pt-br/termos'] : ['/privacy', '/terms'];
+  const legal = ['/privacy', '/terms'];
   const pageUrl = base + c.path;
   const image = base + '/assets/brand/graphic_feature.png';
   const schema = JSON.stringify({
@@ -126,7 +126,7 @@ function render(locale) {
 <title>${c.title}</title><meta name="description" content="${c.description}"><meta name="robots" content="index, follow, max-image-preview:large">
 <link rel="canonical" href="${pageUrl}"><link rel="alternate" hreflang="en-US" href="${base + enPath}"><link rel="alternate" hreflang="pt-BR" href="${base + ptPath}"><link rel="alternate" hreflang="x-default" href="${base + enPath}">
 <meta property="og:type" content="website"><meta property="og:site_name" content="Planne"><meta property="og:locale" content="${pt ? 'pt_BR' : 'en_US'}"><meta property="og:locale:alternate" content="${pt ? 'en_US' : 'pt_BR'}"><meta property="og:url" content="${pageUrl}"><meta property="og:title" content="${c.title}"><meta property="og:description" content="${c.description}"><meta property="og:image" content="${image}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${c.title}"><meta name="twitter:description" content="${c.description}"><meta name="twitter:image" content="${image}">
-<link rel="icon" type="image/png" sizes="32x32" href="/assets/brand/favicon-32x32.png"><link rel="preload" href="/assets/marketing/poppins-medium.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/assets/marketing/institutional.css"><link rel="stylesheet" href="/assets/marketing/topics.css"><script src="/assets/marketing/institutional.js" defer></script>
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/brand/favicon-32x32.png"><link rel="preload" href="/assets/marketing/poppins-medium.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/assets/marketing/institutional.css?v=20261010-close-contrast"><link rel="stylesheet" href="/assets/marketing/topics.css"><script src="/assets/marketing/institutional.js" defer></script>
 <script type="application/ld+json">${schema}</script>
 </head>
 <body class="planne-institutional m-topic">

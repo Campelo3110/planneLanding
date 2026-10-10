@@ -26,5 +26,3 @@
 - [Google Play listing](https://play.google.com/store/apps/details?id=com.planne.planne): Planne for Android.
 - [Privacy policy](https://planneapp.com/privacy): Privacy information.
 - [Terms](https://planneapp.com/terms): Terms of use.
-- [Privacidade em português](https://planneapp.com/pt-br/privacidade): Orientação em português e link para a política completa em inglês.
-- [Termos em português](https://planneapp.com/pt-br/termos): Orientação em português e link para os termos completos em inglês.
