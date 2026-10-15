@@ -36,7 +36,7 @@ function landingPreviewEvent() {
     rsvpDefaultCountry: language === 'pt' ? 'BR' : 'US',
     rsvpTemplateId: style,
     rsvpPaletteId: model.palettes[styles.indexOf(style)],
-    rsvpCoverImageUrl: model.photo,
+    rsvpCoverImageUrl: query.get('no-cover') === '1' ? '' : model.photo,
     rsvpLocationInfo: copy.location,
     rsvpSignature: copy.signature,
     rsvpOrganizerMessage: portuguese ? 'Esperamos você para celebrar este momento especial. Sua presença deixa essa história ainda mais bonita.' : 'We hope you can join us for this special celebration. Your presence will make this story even more meaningful.',
@@ -369,6 +369,17 @@ function loadingError(message) {
     if (window.self !== window.top) document.documentElement.dataset.inviteEmbed = 'true';
     currentEvent = previewEvent;
     window.PlanneInvite.render(currentEvent, {loadMap: window.self === window.top, animateEntrance: false});
+    if (query.get('builder-demo') === '1' && window.self !== window.top) {
+      const allowed = new Set(['eventTitle', 'eventDate', 'rsvpEnabled', 'rsvpTemplateId', 'rsvpPaletteId', 'rsvpAccentColor', 'rsvpFontPairId', 'rsvpCoverImageUrl', 'rsvpLocationInfo', 'rsvpSignature', 'rsvpOrganizerMessage', 'rsvpDressCode', 'rsvpFaq', 'schedule', 'infoItems', 'faqItems', 'rsvpHiddenBlocks', 'rsvpBlockOrder', 'rsvpRevealStyle']);
+      window.addEventListener('message', message => {
+        if (message.origin !== location.origin || message.source !== window.parent || message.data?.type !== 'planne-builder-preview') return;
+        const changes = message.data.event;
+        if (!changes || typeof changes !== 'object' || Array.isArray(changes)) return;
+        for (const [key, value] of Object.entries(changes)) if (allowed.has(key)) currentEvent[key] = value;
+        window.PlanneInvite.render(currentEvent, {loadMap: false, animateEntrance: false});
+        if (message.data.replay) window.PlanneInvite.playEntrance(currentEvent.rsvpRevealStyle, currentEvent);
+      });
+    }
     byId('inviteStatus').hidden = true;
     document.body.classList.remove('invite-loading');
     document.querySelectorAll('[data-loading-inert]').forEach(element => { element.inert = false; element.removeAttribute('data-loading-inert'); });

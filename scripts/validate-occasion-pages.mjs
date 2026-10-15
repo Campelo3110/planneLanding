@@ -36,7 +36,7 @@ for (const [en, pt] of pairs) {
     if (!html.includes(`<html lang="${language}">`)) errors.push(`${route}: incorrect document language`);
     if (!html.includes(`hreflang="${locale === 'pt' ? 'en-US' : 'pt-BR'}"`) || !html.includes(`href="/${otherRoute}"`)) errors.push(`${route}: language switch does not target its counterpart`);
     if (!html.includes(`<link rel="alternate" hreflang="en-US" href="https://planneapp.com/${en}">`) || !html.includes(`<link rel="alternate" hreflang="pt-BR" href="https://planneapp.com/pt-br/${pt}">`)) errors.push(`${route}: invalid hreflang pair`);
-    if (!html.includes('poppins-medium.woff2') || !html.includes('poppins-regular.woff2')) errors.push(`${route}: missing critical WOFF2 font preload`);
+    if (!html.includes('poppins-medium.woff2') || !html.includes('inter-var-latin.woff2')) errors.push(`${route}: missing critical WOFF2 font preload`);
     for (const section of requiredSections) if (!html.includes(section)) errors.push(`${route}: missing shared section ${section}`);
     const previewPrefix = `/rsvp-v2?landing-preview=${en}&amp;lang=${locale}&amp;style=`;
     if (!html.includes(previewPrefix) || (html.match(/\/rsvp-v2\?landing-preview=/g) ?? []).length !== 6) errors.push(`${route}: previews do not use the Planne invitation renderer for this occasion`);
